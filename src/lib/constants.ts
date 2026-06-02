@@ -30,6 +30,20 @@ export const PRIORITY_STYLES: Record<string, string> = {
   High: "bg-rose-100 text-rose-700 ring-rose-300",
 };
 
+// Hex colors for status (used by the lifecycle graph / charts).
+export const STATUS_HEX: Record<string, string> = {
+  "Not Started": "#9ca3af", // gray-400
+  "On Track": "#22c55e", // green-500
+  "At Risk": "#f59e0b", // amber-500
+  "Off Track": "#ef4444", // red-500
+  "On Hold": "#3b82f6", // blue-500
+  Completed: "#10b981", // emerald-500
+};
+
+export function statusHex(status: string): string {
+  return STATUS_HEX[status] ?? STATUS_HEX["Not Started"];
+}
+
 export function statusBadgeClass(status: string): string {
   return STATUS_STYLES[status] ?? STATUS_STYLES["Not Started"];
 }
