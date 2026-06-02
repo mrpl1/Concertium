@@ -111,6 +111,36 @@ run both manually from the Automations page at any time.
 Relevant `.env` settings: `CRON_SECRET`, `NOTIFY_EMAIL`, `SLACK_WEBHOOK_URL`,
 `WEEKLY_REPORT_DAY` (Slack uses an [Incoming Webhook](https://api.slack.com/messaging/webhooks)).
 
+### Slack alerts + scheduling on an always-on host (e.g. a Mac mini)
+
+1. **Create a Slack Incoming Webhook**: https://api.slack.com/messaging/webhooks
+   → *Create app* → enable *Incoming Webhooks* → *Add New Webhook to Workspace*
+   → pick a channel → copy the `https://hooks.slack.com/services/…` URL.
+2. **Add it to `.env`** on the host and verify:
+   ```env
+   SLACK_WEBHOOK_URL="https://hooks.slack.com/services/XXX/YYY/ZZZ"
+   ```
+   ```bash
+   npm run notify:test     # posts a test message to the channel
+   ```
+3. **Pick ONE scheduling mechanism** (running both double-sends):
+   - **In-process (simplest for an always-on machine):** in `.env` set
+     ```env
+     ENABLE_SCHEDULER="true"
+     SCHEDULER_HOUR="8"      # 24h local time for the daily digest
+     ```
+     then restart the server (`npm start`). The running app sends the digest
+     itself — no cron needed.
+   - **External (launchd), if the server isn't always up:** set `CRON_SECRET`
+     in `.env`, keep `ENABLE_SCHEDULER="false"`, then install the provided job:
+     ```bash
+     # edit ops/com.concertium.cron.plist and replace __CRON_SECRET__
+     cp ops/com.concertium.cron.plist ~/Library/LaunchAgents/
+     launchctl load ~/Library/LaunchAgents/com.concertium.cron.plist
+     ```
+4. **Test the whole digest path anytime** from **Automations → "Send alert
+   digest now"** in the app (admin only).
+
 ## Moving to a shared/hosted database
 
 SQLite is great for a single host. To use Postgres (e.g. for a hosted
