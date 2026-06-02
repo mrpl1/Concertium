@@ -1,13 +1,13 @@
 "use client";
 
 import { useRef } from "react";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { createTeamMemberAction } from "@/app/actions/auth";
 import { SubmitButton } from "@/components/SubmitButton";
 
 export function TeamMemberForm() {
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction] = useFormState(
+  const [state, formAction] = useActionState(
     async (prev: { error?: string } | undefined, formData: FormData) => {
       const result = await createTeamMemberAction(prev, formData);
       if (!result?.error) formRef.current?.reset();

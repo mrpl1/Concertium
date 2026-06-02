@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { SubmitButton } from "@/components/SubmitButton";
 import { DELIVERABLE_STATUSES, deliverableBadgeClass } from "@/lib/constants";
 import { slippageDays } from "@/lib/risk";
@@ -223,7 +223,7 @@ function DeliverableForm({
   mode: "create" | "edit";
 }) {
   const action = mode === "create" ? createDeliverableAction : updateDeliverableAction;
-  const [state, formAction] = useFormState<DeliverableActionState, FormData>(
+  const [state, formAction] = useActionState<DeliverableActionState, FormData>(
     async (prev, fd) => {
       const result = await action(prev, fd);
       if (!result?.error) onDone();

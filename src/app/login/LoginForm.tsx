@@ -1,11 +1,11 @@
 "use client";
 
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { loginAction } from "@/app/actions/auth";
 import { SubmitButton } from "@/components/SubmitButton";
 
 export function LoginForm({ next }: { next: string }) {
-  const [state, formAction] = useFormState(loginAction, undefined);
+  const [state, formAction] = useActionState(loginAction, undefined);
 
   return (
     <form action={formAction} className="space-y-4">

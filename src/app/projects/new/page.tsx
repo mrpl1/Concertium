@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export default async function NewProjectPage({
   searchParams,
 }: {
-  searchParams: { clientId?: string };
+  searchParams: Promise<{ clientId?: string }>;
 }) {
   const user = await requireUser();
 
@@ -49,7 +49,7 @@ export default async function NewProjectPage({
           clients={clients}
           users={users}
           defaults={{
-            clientId: searchParams.clientId,
+            clientId: (await searchParams).clientId,
             ownerId: user.id,
           }}
           submitLabel="Create project"

@@ -10,10 +10,10 @@ export const dynamic = "force-dynamic";
 export default async function SharedStatusPage({
   params,
 }: {
-  params: { token: string };
+  params: Promise<{ token: string }>;
 }) {
   const client = await prisma.client.findUnique({
-    where: { shareToken: params.token },
+    where: { shareToken: (await params).token },
     include: {
       projects: {
         include: {

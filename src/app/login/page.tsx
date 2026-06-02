@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: { next?: string };
+  searchParams: Promise<{ next?: string }>;
 }) {
   // If there are no users yet, steer first-run users to create an account.
   const userCount = await prisma.user.count();
@@ -43,7 +43,7 @@ export default async function LoginPage({
               </Link>
             </div>
           ) : (
-            <LoginForm next={searchParams.next ?? "/"} />
+            <LoginForm next={(await searchParams).next ?? "/"} />
           )}
         </div>
       </div>

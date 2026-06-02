@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { SubmitButton } from "@/components/SubmitButton";
 import {
   runAlertsNowAction,
@@ -15,11 +15,11 @@ function Result({ state }: { state: AutomationState }) {
 }
 
 export function AutomationsPanel() {
-  const [alertState, runAlerts] = useFormState<AutomationState, FormData>(
+  const [alertState, runAlerts] = useActionState<AutomationState, FormData>(
     () => runAlertsNowAction(),
     undefined
   );
-  const [weeklyState, runWeekly] = useFormState<AutomationState, FormData>(
+  const [weeklyState, runWeekly] = useActionState<AutomationState, FormData>(
     () => runWeeklyReportsNowAction(),
     undefined
   );
