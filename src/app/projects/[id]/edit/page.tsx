@@ -10,13 +10,13 @@ export const dynamic = "force-dynamic";
 export default async function EditProjectPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   await requireUser();
 
   const [project, clients, users] = await Promise.all([
     prisma.project.findUnique({
-      where: { id: params.id },
+      where: { id: (await params).id },
       include: { tags: true },
     }),
     prisma.client.findMany({ orderBy: { name: "asc" } }),

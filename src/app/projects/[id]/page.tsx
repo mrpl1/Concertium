@@ -21,13 +21,13 @@ export const dynamic = "force-dynamic";
 export default async function ProjectDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   await requireUser();
 
   const [project, users] = await Promise.all([
     prisma.project.findUnique({
-      where: { id: params.id },
+      where: { id: (await params).id },
       include: {
         client: true,
         owner: true,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { SubmitButton } from "@/components/SubmitButton";
 import {
   generateReportAction,
@@ -26,11 +26,11 @@ export function ReportBuilder({
   const [to, setTo] = useState("");
   const [copied, setCopied] = useState(false);
 
-  const [genState, generate] = useFormState<GenerateState, FormData>(
+  const [genState, generate] = useActionState<GenerateState, FormData>(
     generateReportAction,
     undefined
   );
-  const [sendState, send] = useFormState<SendState, FormData>(
+  const [sendState, send] = useActionState<SendState, FormData>(
     sendReportAction,
     undefined
   );

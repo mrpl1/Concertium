@@ -10,11 +10,11 @@ export const dynamic = "force-dynamic";
 export default async function EditClientPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   await requireUser();
 
-  const client = await prisma.client.findUnique({ where: { id: params.id } });
+  const client = await prisma.client.findUnique({ where: { id: (await params).id } });
   if (!client) notFound();
 
   const action = updateClientAction.bind(null, client.id);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { SubmitButton } from "@/components/SubmitButton";
 import {
   addTimeEntryAction,
@@ -34,7 +34,7 @@ export function TimeTracking({
   budgetHours: number | null;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, action] = useFormState<ExtrasState, FormData>(
+  const [state, action] = useActionState<ExtrasState, FormData>(
     async (prev, fd) => {
       const r = await addTimeEntryAction(prev, fd);
       if (!r?.error) formRef.current?.reset();

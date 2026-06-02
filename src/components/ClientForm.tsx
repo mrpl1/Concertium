@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import Link from "next/link";
 import { SubmitButton } from "@/components/SubmitButton";
 import type { ClientActionState } from "@/app/actions/clients";
@@ -28,7 +28,7 @@ export function ClientForm({
   submitLabel: string;
   cancelHref: string;
 }) {
-  const [state, formAction] = useFormState(action, undefined);
+  const [state, formAction] = useActionState(action, undefined);
 
   return (
     <form action={formAction} className="space-y-4">

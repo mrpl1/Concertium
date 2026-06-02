@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export default async function ReportsPage({
   searchParams,
 }: {
-  searchParams: { clientId?: string };
+  searchParams: Promise<{ clientId?: string }>;
 }) {
   await requireUser();
 
@@ -40,7 +40,7 @@ export default async function ReportsPage({
             name: c.name,
             company: c.company,
           }))}
-          initialClientId={searchParams.clientId ?? "all"}
+          initialClientId={(await searchParams).clientId ?? "all"}
           emailConfigured={isEmailConfigured()}
         />
       )}

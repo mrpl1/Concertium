@@ -10,13 +10,13 @@ export const dynamic = "force-dynamic";
 export default async function ProjectsPage({
   searchParams,
 }: {
-  searchParams: { status?: string; clientId?: string; tag?: string };
+  searchParams: Promise<{ status?: string; clientId?: string; tag?: string }>;
 }) {
   await requireUser();
 
-  const statusFilter = searchParams.status;
-  const clientFilter = searchParams.clientId;
-  const tagFilter = searchParams.tag;
+  const statusFilter = (await searchParams).status;
+  const clientFilter = (await searchParams).clientId;
+  const tagFilter = (await searchParams).tag;
 
   const where: {
     status?: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { SubmitButton } from "@/components/SubmitButton";
 import { PROJECT_STATUSES } from "@/lib/constants";
 import type { ProjectActionState } from "@/app/actions/projects";
@@ -17,7 +17,7 @@ export function AddUpdateForm({
   currentStatus: string;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction] = useFormState(
+  const [state, formAction] = useActionState(
     async (prev: ProjectActionState, formData: FormData) => {
       const result = await action(prev, formData);
       if (!result?.error) formRef.current?.reset();

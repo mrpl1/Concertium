@@ -12,12 +12,12 @@ export const dynamic = "force-dynamic";
 export default async function ClientDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   await requireUser();
 
   const client = await prisma.client.findUnique({
-    where: { id: params.id },
+    where: { id: (await params).id },
     include: {
       projects: {
         include: { owner: true },

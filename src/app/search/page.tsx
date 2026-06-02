@@ -8,10 +8,10 @@ export const dynamic = "force-dynamic";
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: { q?: string };
+  searchParams: Promise<{ q?: string }>;
 }) {
   await requireUser();
-  const q = (searchParams.q || "").trim();
+  const q = ((await searchParams).q || "").trim();
 
   const [clients, projects] = q
     ? await Promise.all([
