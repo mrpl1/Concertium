@@ -15,6 +15,25 @@ function parseDate(value: FormDataEntryValue | null): Date | null {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
+// Parse a comma-separated tags field into a unique, trimmed list.
+function parseTags(formData: FormData): string[] {
+  const raw = String(formData.get("tags") || "");
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const t of raw.split(",").map((s) => s.trim()).filter(Boolean)) {
+    const key = t.toLowerCase();
+    if (!seen.has(key)) {
+      seen.add(key);
+      out.push(t);
+    }
+  }
+  return out;
+}
+
+function tagConnect(names: string[]) {
+  return names.map((name) => ({ where: { name }, create: { name } }));
+}
+
 function readProjectForm(formData: FormData) {
   const status = String(formData.get("status") || "Not Started");
   const priority = String(formData.get("priority") || "Medium");
@@ -22,9 +41,16 @@ function readProjectForm(formData: FormData) {
   if (Number.isNaN(progress)) progress = 0;
   progress = Math.max(0, Math.min(100, Math.round(progress)));
 
+  const budgetRaw = String(formData.get("budgetHours") || "").trim();
+  const budgetHours =
+    budgetRaw && Number.isFinite(Number(budgetRaw)) && Number(budgetRaw) > 0
+      ? Number(budgetRaw)
+      : null;
+
   return {
     name: String(formData.get("name") || "").trim(),
     description: String(formData.get("description") || "").trim() || null,
+    budgetHours,
     status: (PROJECT_STATUSES as readonly string[]).includes(status)
       ? status
       : "Not Started",
@@ -43,12 +69,30 @@ export async function createProjectAction(
   _prev: ProjectActionState,
   formData: FormData
 ): Promise<ProjectActionState> {
-  await requireUser();
+  const user = await requireUser();
   const data = readProjectForm(formData);
   if (!data.name) return { error: "Project name is required." };
   if (!data.clientId) return { error: "Please choose a client." };
 
-  const project = await prisma.project.create({ data });
+  const tags = parseTags(formData);
+  const project = await prisma.project.create({
+    // The first agreed due date becomes the baseline for slippage tracking.
+    data: {
+      ...data,
+      baselineDueDate: data.dueDate,
+      tags: tags.length ? { connectOrCreate: tagConnect(tags) } : undefined,
+    },
+  });
+  if (data.dueDate) {
+    await prisma.deadlineChange.create({
+      data: {
+        projectId: project.id,
+        oldDate: null,
+        newDate: data.dueDate,
+        changedById: user.id,
+      },
+    });
+  }
   revalidatePath("/projects");
   revalidatePath("/");
   revalidatePath(`/clients/${data.clientId}`);
@@ -60,12 +104,36 @@ export async function updateProjectAction(
   _prev: ProjectActionState,
   formData: FormData
 ): Promise<ProjectActionState> {
-  await requireUser();
+  const user = await requireUser();
   const data = readProjectForm(formData);
   if (!data.name) return { error: "Project name is required." };
   if (!data.clientId) return { error: "Please choose a client." };
 
-  await prisma.project.update({ where: { id }, data });
+  const existing = await prisma.project.findUnique({ where: { id } });
+  const oldMs = existing?.dueDate?.getTime() ?? null;
+  const newMs = data.dueDate?.getTime() ?? null;
+  const baselineDueDate = existing?.baselineDueDate ?? data.dueDate;
+
+  if (existing && oldMs !== newMs && (oldMs != null || newMs != null)) {
+    await prisma.deadlineChange.create({
+      data: {
+        projectId: id,
+        oldDate: existing.dueDate,
+        newDate: data.dueDate,
+        changedById: user.id,
+      },
+    });
+  }
+
+  const tags = parseTags(formData);
+  await prisma.project.update({
+    where: { id },
+    data: {
+      ...data,
+      baselineDueDate,
+      tags: { set: [], connectOrCreate: tagConnect(tags) },
+    },
+  });
   revalidatePath("/projects");
   revalidatePath(`/projects/${id}`);
   revalidatePath("/");

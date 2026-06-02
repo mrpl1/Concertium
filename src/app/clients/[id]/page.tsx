@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { StatusBadge, PriorityBadge, ProgressBar } from "@/components/Badge";
 import { formatDate } from "@/lib/report";
 import { deleteClientAction } from "@/app/actions/clients";
+import { ShareLink } from "@/components/ShareLink";
 
 export const dynamic = "force-dynamic";
 
@@ -118,6 +119,9 @@ export default async function ClientDetailPage({
           </ul>
         )}
       </section>
+
+      {/* Share link */}
+      <ShareLink clientId={client.id} token={client.shareToken} />
 
       {/* Danger zone */}
       <form action={deleteClientAction} className="pt-2">

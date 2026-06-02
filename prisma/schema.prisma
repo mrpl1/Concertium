@@ -19,8 +19,11 @@ model User {
   role         String   @default("member") // "admin" | "member"
   createdAt    DateTime @default(now())
 
-  ownedProjects Project[]      @relation("ProjectOwner")
-  updates       StatusUpdate[]
+  ownedProjects     Project[]      @relation("ProjectOwner")
+  updates           StatusUpdate[]
+  ownedDeliverables Deliverable[]  @relation("DeliverableOwner")
+  deadlineChanges   DeadlineChange[]
+  timeEntries       TimeEntry[]
 }
 
 model Client {
@@ -30,6 +33,12 @@ model Client {
   email     String?
   phone     String?
   notes     String?
+  // When true, the scheduled job emails this client a status report on the
+  // configured weekly day (requires SMTP + the client's email).
+  weeklyReport     Boolean   @default(false)
+  lastReportSentAt DateTime?
+  // When set, exposes a read-only public status page at /share/<shareToken>.
+  shareToken       String?   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -47,6 +56,11 @@ model Project {
   progress    Int       @default(0) // 0-100
   startDate   DateTime?
   dueDate     DateTime?
+  // The originally agreed-upon due date, captured the first time a due date is
+  // set. Compared against dueDate to surface deadline slippage.
+  baselineDueDate DateTime?
+  // Budgeted/estimated hours for the engagement (for time-tracking burn).
+  budgetHours Float?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
@@ -56,7 +70,85 @@ model Project {
   ownerId String?
   owner   User?   @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: SetNull)
 
-  updates StatusUpdate[]
+  updates         StatusUpdate[]
+  deliverables    Deliverable[]
+  deadlineChanges DeadlineChange[]
+  links           ProjectLink[]
+  timeEntries     TimeEntry[]
+  tags            Tag[]
+}
+
+// A labeled link/resource attached to a project (SOW, contract, asset, doc…).
+model ProjectLink {
+  id        String   @id @default(cuid())
+  label     String
+  url       String
+  createdAt DateTime @default(now())
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+// Logged work against a project, for budget burn.
+model TimeEntry {
+  id        String   @id @default(cuid())
+  hours     Float
+  note      String?
+  date      DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model Tag {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  projects Project[]
+}
+
+model Deliverable {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  // status: "Pending" | "In Progress" | "In Review" | "Approved" | "Blocked"
+  status      String    @default("Pending")
+  dueDate     DateTime?
+  baselineDueDate DateTime?
+  approvedAt  DateTime?
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  ownerId String?
+  owner   User?   @relation("DeliverableOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+
+  deadlineChanges DeadlineChange[]
+}
+
+// An audit log of due-date changes for projects and deliverables, so slippage
+// can be reported ("slipped twice, +12 days").
+model DeadlineChange {
+  id        String   @id @default(cuid())
+  oldDate   DateTime?
+  newDate   DateTime?
+  reason    String?
+  createdAt DateTime @default(now())
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  deliverableId String?
+  deliverable   Deliverable? @relation(fields: [deliverableId], references: [id], onDelete: Cascade)
+
+  changedById String?
+  changedBy   User?   @relation(fields: [changedById], references: [id], onDelete: SetNull)
 }
 
 model StatusUpdate {

@@ -14,6 +14,7 @@ function readClientForm(formData: FormData) {
     email: String(formData.get("email") || "").trim() || null,
     phone: String(formData.get("phone") || "").trim() || null,
     notes: String(formData.get("notes") || "").trim() || null,
+    weeklyReport: formData.get("weeklyReport") === "on",
   };
 }
 
@@ -44,6 +45,24 @@ export async function updateClientAction(
   revalidatePath("/clients");
   revalidatePath(`/clients/${id}`);
   redirect(`/clients/${id}`);
+}
+
+export async function generateShareLinkAction(formData: FormData): Promise<void> {
+  await requireUser();
+  const id = String(formData.get("id") || "");
+  if (!id) return;
+  const { randomBytes } = await import("node:crypto");
+  const token = randomBytes(18).toString("base64url");
+  await prisma.client.update({ where: { id }, data: { shareToken: token } });
+  revalidatePath(`/clients/${id}`);
+}
+
+export async function revokeShareLinkAction(formData: FormData): Promise<void> {
+  await requireUser();
+  const id = String(formData.get("id") || "");
+  if (!id) return;
+  await prisma.client.update({ where: { id }, data: { shareToken: null } });
+  revalidatePath(`/clients/${id}`);
 }
 
 export async function deleteClientAction(formData: FormData): Promise<void> {

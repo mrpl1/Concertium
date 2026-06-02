@@ -1,18 +1,25 @@
 import Link from "next/link";
 import { logoutAction } from "@/app/actions/auth";
+import { SearchBox } from "@/components/SearchBox";
 import type { SessionUser } from "@/lib/auth";
 
 const baseLinks = [
   { href: "/", label: "Dashboard" },
   { href: "/clients", label: "Clients" },
   { href: "/projects", label: "Projects" },
+  { href: "/timeline", label: "Timeline" },
+  { href: "/analytics", label: "Analytics" },
   { href: "/reports", label: "Reports" },
 ];
 
 export function NavBar({ user }: { user: SessionUser }) {
   const links =
     user.role === "admin"
-      ? [...baseLinks, { href: "/team", label: "Team" }]
+      ? [
+          ...baseLinks,
+          { href: "/automations", label: "Automations" },
+          { href: "/team", label: "Team" },
+        ]
       : baseLinks;
 
   return (
@@ -38,6 +45,7 @@ export function NavBar({ user }: { user: SessionUser }) {
           </nav>
         </div>
         <div className="flex items-center gap-3">
+          <SearchBox />
           <span className="hidden text-sm text-gray-500 sm:inline">
             {user.name}
           </span>

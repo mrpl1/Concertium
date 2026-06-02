@@ -16,6 +16,7 @@ type Defaults = {
   dueDate?: Date | string | null;
   clientId?: string;
   ownerId?: string | null;
+  budgetHours?: number | null;
 };
 
 function toDateInput(d: Date | string | null | undefined): string {
@@ -30,6 +31,7 @@ export function ProjectForm({
   clients,
   users,
   defaults,
+  tagsDefault,
   submitLabel,
   cancelHref,
 }: {
@@ -40,6 +42,7 @@ export function ProjectForm({
   clients: { id: string; name: string; company: string | null }[];
   users: { id: string; name: string }[];
   defaults?: Defaults;
+  tagsDefault?: string;
   submitLabel: string;
   cancelHref: string;
 }) {
@@ -177,6 +180,36 @@ export function ProjectForm({
             type="date"
             defaultValue={toDateInput(defaults?.dueDate)}
             className="input"
+          />
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label className="label" htmlFor="tags">
+            Tags
+          </label>
+          <input
+            id="tags"
+            name="tags"
+            defaultValue={tagsDefault ?? ""}
+            className="input"
+            placeholder="comma, separated, tags"
+          />
+        </div>
+        <div>
+          <label className="label" htmlFor="budgetHours">
+            Budget (hours)
+          </label>
+          <input
+            id="budgetHours"
+            name="budgetHours"
+            type="number"
+            min={0}
+            step="0.5"
+            defaultValue={defaults?.budgetHours ?? ""}
+            className="input"
+            placeholder="e.g. 80"
           />
         </div>
       </div>

@@ -15,7 +15,10 @@ export default async function EditProjectPage({
   await requireUser();
 
   const [project, clients, users] = await Promise.all([
-    prisma.project.findUnique({ where: { id: params.id } }),
+    prisma.project.findUnique({
+      where: { id: params.id },
+      include: { tags: true },
+    }),
     prisma.client.findMany({ orderBy: { name: "asc" } }),
     prisma.user.findMany({ orderBy: { name: "asc" } }),
   ]);
@@ -23,6 +26,7 @@ export default async function EditProjectPage({
   if (!project) notFound();
 
   const action = updateProjectAction.bind(null, project.id);
+  const tagsDefault = project.tags.map((t) => t.name).join(", ");
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
@@ -40,6 +44,7 @@ export default async function EditProjectPage({
           clients={clients}
           users={users}
           defaults={project}
+          tagsDefault={tagsDefault}
           submitLabel="Save changes"
           cancelHref={`/projects/${project.id}`}
         />

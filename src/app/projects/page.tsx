@@ -10,23 +10,29 @@ export const dynamic = "force-dynamic";
 export default async function ProjectsPage({
   searchParams,
 }: {
-  searchParams: { status?: string; clientId?: string };
+  searchParams: { status?: string; clientId?: string; tag?: string };
 }) {
   await requireUser();
 
   const statusFilter = searchParams.status;
   const clientFilter = searchParams.clientId;
+  const tagFilter = searchParams.tag;
 
-  const where: { status?: string; clientId?: string } = {};
+  const where: {
+    status?: string;
+    clientId?: string;
+    tags?: { some: { name: string } };
+  } = {};
   if (statusFilter && (PROJECT_STATUSES as readonly string[]).includes(statusFilter)) {
     where.status = statusFilter;
   }
   if (clientFilter) where.clientId = clientFilter;
+  if (tagFilter) where.tags = { some: { name: tagFilter } };
 
   const [projects, clients] = await Promise.all([
     prisma.project.findMany({
       where,
-      include: { client: true, owner: true },
+      include: { client: true, owner: true, tags: true },
       orderBy: [{ dueDate: "asc" }, { updatedAt: "desc" }],
     }),
     prisma.client.findMany({ orderBy: { name: "asc" } }),
@@ -49,14 +55,14 @@ export default async function ProjectsPage({
       <div className="flex flex-wrap gap-2">
         <FilterChip
           label="All"
-          href={buildHref({ clientId: clientFilter })}
+          href={buildHref({ clientId: clientFilter, tag: tagFilter })}
           active={!statusFilter}
         />
         {PROJECT_STATUSES.map((s) => (
           <FilterChip
             key={s}
             label={s}
-            href={buildHref({ status: s, clientId: clientFilter })}
+            href={buildHref({ status: s, clientId: clientFilter, tag: tagFilter })}
             active={statusFilter === s}
           />
         ))}
@@ -70,7 +76,20 @@ export default async function ProjectsPage({
           </span>{" "}
           ·{" "}
           <Link
-            href={buildHref({ status: statusFilter })}
+            href={buildHref({ status: statusFilter, tag: tagFilter })}
+            className="text-brand-600"
+          >
+            clear
+          </Link>
+        </p>
+      ) : null}
+
+      {tagFilter ? (
+        <p className="text-sm text-gray-500">
+          Tagged{" "}
+          <span className="font-medium text-gray-700">#{tagFilter}</span> ·{" "}
+          <Link
+            href={buildHref({ status: statusFilter, clientId: clientFilter })}
             className="text-brand-600"
           >
             clear
@@ -115,10 +134,15 @@ export default async function ProjectsPage({
   );
 }
 
-function buildHref(params: { status?: string; clientId?: string }): string {
+function buildHref(params: {
+  status?: string;
+  clientId?: string;
+  tag?: string;
+}): string {
   const sp = new URLSearchParams();
   if (params.status) sp.set("status", params.status);
   if (params.clientId) sp.set("clientId", params.clientId);
+  if (params.tag) sp.set("tag", params.tag);
   const qs = sp.toString();
   return qs ? `/projects?${qs}` : "/projects";
 }

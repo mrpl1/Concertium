@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  launchd job (macOS) that triggers Concertium's scheduled automations once a
+  day by calling /api/cron. This is the EXTERNAL-CRON option — use it only if
+  you are NOT running the in-process scheduler (ENABLE_SCHEDULER=true), or you'll
+  send alerts twice.
+
+  Setup:
+    1. Replace __CRON_SECRET__ below with your CRON_SECRET from .env.
+    2. Adjust the URL/host if not running on localhost:3000.
+    3. Install:
+         cp ops/com.concertium.cron.plist ~/Library/LaunchAgents/
+         launchctl load ~/Library/LaunchAgents/com.concertium.cron.plist
+    4. Logs go to /tmp/concertium-cron.log. To remove:
+         launchctl unload ~/Library/LaunchAgents/com.concertium.cron.plist
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.concertium.cron</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/curl</string>
+    <string>-fsS</string>
+    <string>http://localhost:3000/api/cron?secret=__CRON_SECRET__</string>
+  </array>
+
+  <!-- Run every day at 08:00 local time. -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>8</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+
+  <key>StandardOutPath</key>
+  <string>/tmp/concertium-cron.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/concertium-cron.log</string>
+</dict>
+</plist>

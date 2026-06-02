@@ -63,6 +63,8 @@ async function main() {
       phone: "+1 555-0100",
       notes:
         "Long-standing client. Quarterly business reviews. Prefers weekly email summaries on Fridays.",
+      weeklyReport: true,
+      shareToken: "demo-acme-status",
     },
   });
 
@@ -110,6 +112,14 @@ async function main() {
   const projects: {
     data: Parameters<typeof prisma.project.create>[0]["data"];
     updates?: { author: string; status?: string; body: string; daysAgo: number }[];
+    deliverables?: {
+      name: string;
+      status: string;
+      owner?: string;
+      dueInDays?: number | null;
+    }[];
+    links?: { label: string; url: string }[];
+    time?: { hours: number; note?: string; daysAgo: number; user?: string }[];
   }[] = [
     {
       data: {
@@ -121,9 +131,25 @@ async function main() {
         progress: 65,
         startDate: daysFromNow(-30),
         dueDate: daysFromNow(21),
+        budgetHours: 120,
         clientId: acme.id,
         ownerId: admin.id,
+        tags: {
+          connectOrCreate: ["web", "design", "high-touch"].map((name) => ({
+            where: { name },
+            create: { name },
+          })),
+        },
       },
+      links: [
+        { label: "Statement of Work", url: "https://example.com/acme-sow.pdf" },
+        { label: "Figma designs", url: "https://figma.com/file/acme-redesign" },
+      ],
+      time: [
+        { hours: 12, note: "Discovery workshops", daysAgo: 26, user: admin.id },
+        { hours: 30, note: "Design", daysAgo: 12, user: priya.id },
+        { hours: 28, note: "Homepage build", daysAgo: 3, user: priya.id },
+      ],
       updates: [
         {
           author: admin.id,
@@ -137,6 +163,12 @@ async function main() {
           body: "Design mockups approved. Homepage and nav are in development.",
           daysAgo: 6,
         },
+      ],
+      deliverables: [
+        { name: "Discovery & sitemap", status: "Approved", owner: admin.id, dueInDays: -20 },
+        { name: "Design mockups", status: "Approved", owner: priya.id, dueInDays: -5 },
+        { name: "Homepage build", status: "In Progress", owner: priya.id, dueInDays: 7 },
+        { name: "CMS migration", status: "Pending", owner: sam.id, dueInDays: 18 },
       ],
     },
     {
@@ -213,6 +245,11 @@ async function main() {
           body: "Source data quality is worse than expected; deadline missed. Escalated to client for a revised timeline.",
           daysAgo: 1,
         },
+      ],
+      deliverables: [
+        { name: "Data audit", status: "Approved", owner: admin.id, dueInDays: -18 },
+        { name: "Field mapping", status: "Blocked", owner: admin.id, dueInDays: -4 },
+        { name: "Trial migration", status: "Pending", owner: sam.id, dueInDays: -1 },
       ],
     },
     {
@@ -307,7 +344,9 @@ async function main() {
   ];
 
   for (const p of projects) {
-    const created = await prisma.project.create({ data: p.data });
+    const created = await prisma.project.create({
+      data: { ...p.data, baselineDueDate: p.data.dueDate ?? null },
+    });
     for (const u of p.updates ?? []) {
       await prisma.statusUpdate.create({
         data: {
@@ -316,6 +355,38 @@ async function main() {
           status: u.status ?? null,
           body: u.body,
           createdAt: daysFromNow(-u.daysAgo),
+        },
+      });
+    }
+    let order = 0;
+    for (const d of p.deliverables ?? []) {
+      const due = d.dueInDays == null ? null : daysFromNow(d.dueInDays);
+      await prisma.deliverable.create({
+        data: {
+          projectId: created.id,
+          name: d.name,
+          status: d.status,
+          ownerId: d.owner ?? null,
+          dueDate: due,
+          baselineDueDate: due,
+          approvedAt: d.status === "Approved" ? daysFromNow(-2) : null,
+          order: order++,
+        },
+      });
+    }
+    for (const l of p.links ?? []) {
+      await prisma.projectLink.create({
+        data: { projectId: created.id, label: l.label, url: l.url },
+      });
+    }
+    for (const t of p.time ?? []) {
+      await prisma.timeEntry.create({
+        data: {
+          projectId: created.id,
+          userId: t.user ?? null,
+          hours: t.hours,
+          note: t.note ?? null,
+          date: daysFromNow(-t.daysAgo),
         },
       });
     }
