@@ -37,13 +37,29 @@ const SANS = "DejaVu Sans, Liberation Sans, Arial, sans-serif";
 const MONO = "DejaVu Sans Mono, Liberation Mono, monospace";
 
 // Curated section order + display.
-const SECTION_ORDER = ["dashboard", "clients", "projects", "reports", "team"];
+const SECTION_ORDER = [
+  "dashboard",
+  "clients",
+  "projects",
+  "timeline",
+  "analytics",
+  "reports",
+  "automations",
+  "team",
+  "search",
+  "share",
+];
 const SECTION_META = {
   dashboard: { name: "Dashboard", color: COLORS.dashboard },
   clients: { name: "Clients", color: COLORS.clients },
   projects: { name: "Projects", color: COLORS.projects },
+  timeline: { name: "Timeline", color: "#0891b2" },
+  analytics: { name: "Analytics", color: "#0d9488" },
   reports: { name: "Reports", color: COLORS.reports },
+  automations: { name: "Automations", color: "#db2777", suffix: "admin" },
   team: { name: "Team", color: COLORS.team, suffix: "admin" },
+  search: { name: "Search", color: "#475569" },
+  share: { name: "Client portal", color: "#0ea5e9", suffix: "public" },
 };
 
 // Curated per-route content. Routes not listed still render with defaults.
@@ -81,6 +97,31 @@ const META = {
     title: "Team",
     tag: "admin",
     desc: ["Admin-only.", "List members; add a teammate", "(member or admin role)."],
+  },
+  "/timeline": {
+    title: "Timeline",
+    tag: "view",
+    desc: "Upcoming project & deliverable deadlines, bucketed by urgency.",
+  },
+  "/analytics": {
+    title: "Analytics",
+    tag: "view",
+    desc: "On-time delivery, slippage, status mix, per-client health.",
+  },
+  "/automations": {
+    title: "Automations",
+    tag: "admin",
+    desc: ["Admin-only.", "Alert digest (email + Slack) +", "scheduled weekly reports."],
+  },
+  "/search": {
+    title: "Search",
+    tag: "util",
+    desc: "Global search across clients & projects.",
+  },
+  "/share/[token]": {
+    title: "Client status page",
+    tag: "public",
+    desc: "Read-only, tokenized status — no login required.",
   },
 };
 
@@ -197,11 +238,13 @@ const sections = orderedKeys.map((key) => ({
 }));
 
 // ---------------- layout ----------------
-const W = 1480;
 const MARGIN = 40;
-const usableW = W - 2 * MARGIN;
 const colGap = 26;
 const colCount = Math.max(1, sections.length);
+// Widen the canvas when there are many sections so cards stay readable.
+const MIN_COL_W = 232;
+const W = Math.max(1480, MARGIN * 2 + colCount * MIN_COL_W + (colCount - 1) * colGap);
+const usableW = W - 2 * MARGIN;
 const colW = (usableW - (colCount - 1) * colGap) / colCount;
 const colX = (i) => MARGIN + i * (colW + colGap);
 const INDENT = 18;
