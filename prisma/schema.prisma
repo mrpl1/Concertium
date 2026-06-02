@@ -19,8 +19,10 @@ model User {
   role         String   @default("member") // "admin" | "member"
   createdAt    DateTime @default(now())
 
-  ownedProjects Project[]      @relation("ProjectOwner")
-  updates       StatusUpdate[]
+  ownedProjects     Project[]      @relation("ProjectOwner")
+  updates           StatusUpdate[]
+  ownedDeliverables Deliverable[]  @relation("DeliverableOwner")
+  deadlineChanges   DeadlineChange[]
 }
 
 model Client {
@@ -47,6 +49,9 @@ model Project {
   progress    Int       @default(0) // 0-100
   startDate   DateTime?
   dueDate     DateTime?
+  // The originally agreed-upon due date, captured the first time a due date is
+  // set. Compared against dueDate to surface deadline slippage.
+  baselineDueDate DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
@@ -56,7 +61,50 @@ model Project {
   ownerId String?
   owner   User?   @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: SetNull)
 
-  updates StatusUpdate[]
+  updates         StatusUpdate[]
+  deliverables    Deliverable[]
+  deadlineChanges DeadlineChange[]
+}
+
+model Deliverable {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  // status: "Pending" | "In Progress" | "In Review" | "Approved" | "Blocked"
+  status      String    @default("Pending")
+  dueDate     DateTime?
+  baselineDueDate DateTime?
+  approvedAt  DateTime?
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  ownerId String?
+  owner   User?   @relation("DeliverableOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+
+  deadlineChanges DeadlineChange[]
+}
+
+// An audit log of due-date changes for projects and deliverables, so slippage
+// can be reported ("slipped twice, +12 days").
+model DeadlineChange {
+  id        String   @id @default(cuid())
+  oldDate   DateTime?
+  newDate   DateTime?
+  reason    String?
+  createdAt DateTime @default(now())
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  deliverableId String?
+  deliverable   Deliverable? @relation(fields: [deliverableId], references: [id], onDelete: Cascade)
+
+  changedById String?
+  changedBy   User?   @relation(fields: [changedById], references: [id], onDelete: SetNull)
 }
 
 model StatusUpdate {

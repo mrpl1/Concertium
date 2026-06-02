@@ -14,6 +14,27 @@ export type ProjectStatus = (typeof PROJECT_STATUSES)[number];
 export const PRIORITIES = ["Low", "Medium", "High"] as const;
 export type Priority = (typeof PRIORITIES)[number];
 
+export const DELIVERABLE_STATUSES = [
+  "Pending",
+  "In Progress",
+  "In Review",
+  "Approved",
+  "Blocked",
+] as const;
+export type DeliverableStatus = (typeof DELIVERABLE_STATUSES)[number];
+
+export const DELIVERABLE_STATUS_STYLES: Record<string, string> = {
+  Pending: "bg-gray-100 text-gray-700 ring-gray-300",
+  "In Progress": "bg-brand-100 text-brand-700 ring-brand-300",
+  "In Review": "bg-amber-100 text-amber-800 ring-amber-300",
+  Approved: "bg-emerald-100 text-emerald-800 ring-emerald-300",
+  Blocked: "bg-red-100 text-red-800 ring-red-300",
+};
+
+export function deliverableBadgeClass(status: string): string {
+  return DELIVERABLE_STATUS_STYLES[status] ?? DELIVERABLE_STATUS_STYLES.Pending;
+}
+
 // Tailwind classes for status badges.
 export const STATUS_STYLES: Record<string, string> = {
   "Not Started": "bg-gray-100 text-gray-700 ring-gray-300",

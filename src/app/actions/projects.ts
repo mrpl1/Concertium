@@ -43,12 +43,25 @@ export async function createProjectAction(
   _prev: ProjectActionState,
   formData: FormData
 ): Promise<ProjectActionState> {
-  await requireUser();
+  const user = await requireUser();
   const data = readProjectForm(formData);
   if (!data.name) return { error: "Project name is required." };
   if (!data.clientId) return { error: "Please choose a client." };
 
-  const project = await prisma.project.create({ data });
+  const project = await prisma.project.create({
+    // The first agreed due date becomes the baseline for slippage tracking.
+    data: { ...data, baselineDueDate: data.dueDate },
+  });
+  if (data.dueDate) {
+    await prisma.deadlineChange.create({
+      data: {
+        projectId: project.id,
+        oldDate: null,
+        newDate: data.dueDate,
+        changedById: user.id,
+      },
+    });
+  }
   revalidatePath("/projects");
   revalidatePath("/");
   revalidatePath(`/clients/${data.clientId}`);
@@ -60,12 +73,31 @@ export async function updateProjectAction(
   _prev: ProjectActionState,
   formData: FormData
 ): Promise<ProjectActionState> {
-  await requireUser();
+  const user = await requireUser();
   const data = readProjectForm(formData);
   if (!data.name) return { error: "Project name is required." };
   if (!data.clientId) return { error: "Please choose a client." };
 
-  await prisma.project.update({ where: { id }, data });
+  const existing = await prisma.project.findUnique({ where: { id } });
+  const oldMs = existing?.dueDate?.getTime() ?? null;
+  const newMs = data.dueDate?.getTime() ?? null;
+  const baselineDueDate = existing?.baselineDueDate ?? data.dueDate;
+
+  if (existing && oldMs !== newMs && (oldMs != null || newMs != null)) {
+    await prisma.deadlineChange.create({
+      data: {
+        projectId: id,
+        oldDate: existing.dueDate,
+        newDate: data.dueDate,
+        changedById: user.id,
+      },
+    });
+  }
+
+  await prisma.project.update({
+    where: { id },
+    data: { ...data, baselineDueDate },
+  });
   revalidatePath("/projects");
   revalidatePath(`/projects/${id}`);
   revalidatePath("/");

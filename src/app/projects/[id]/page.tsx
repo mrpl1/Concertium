@@ -5,7 +5,14 @@ import { prisma } from "@/lib/db";
 import { StatusBadge, PriorityBadge, ProgressBar } from "@/components/Badge";
 import { formatDate } from "@/lib/report";
 import { AddUpdateForm } from "@/components/AddUpdateForm";
+import { Deliverables, type DeliverableItem } from "@/components/Deliverables";
 import { addUpdateAction, deleteProjectAction } from "@/app/actions/projects";
+import {
+  computeRisk,
+  slippageDays,
+  RISK_STYLES,
+  RISK_LABELS,
+} from "@/lib/risk";
 
 export const dynamic = "force-dynamic";
 
@@ -16,21 +23,56 @@ export default async function ProjectDetailPage({
 }) {
   await requireUser();
 
-  const project = await prisma.project.findUnique({
-    where: { id: params.id },
-    include: {
-      client: true,
-      owner: true,
-      updates: {
-        include: { author: true },
-        orderBy: { createdAt: "desc" },
+  const [project, users] = await Promise.all([
+    prisma.project.findUnique({
+      where: { id: params.id },
+      include: {
+        client: true,
+        owner: true,
+        updates: {
+          include: { author: true },
+          orderBy: { createdAt: "desc" },
+        },
+        deliverables: {
+          include: { owner: true, _count: { select: { deadlineChanges: true } } },
+          orderBy: [{ order: "asc" }, { createdAt: "asc" }],
+        },
       },
-    },
-  });
+    }),
+    prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+  ]);
 
   if (!project) notFound();
 
   const addUpdate = addUpdateAction.bind(null, project.id);
+
+  const deliverableItems: DeliverableItem[] = project.deliverables.map((d) => ({
+    id: d.id,
+    name: d.name,
+    description: d.description,
+    status: d.status,
+    ownerId: d.ownerId,
+    ownerName: d.owner?.name ?? null,
+    dueDate: d.dueDate ? d.dueDate.getTime() : null,
+    baselineDueDate: d.baselineDueDate ? d.baselineDueDate.getTime() : null,
+    changeCount: d._count.deadlineChanges,
+  }));
+
+  const risk = computeRisk({
+    status: project.status,
+    progress: project.progress,
+    dueDate: project.dueDate ? project.dueDate.getTime() : null,
+    lastUpdateAt: project.updates[0]?.createdAt.getTime() ?? null,
+    deliverables: deliverableItems.map((d) => ({
+      status: d.status,
+      dueDate: d.dueDate,
+    })),
+  });
+
+  const slip = slippageDays(
+    project.baselineDueDate ? project.baselineDueDate.getTime() : null,
+    project.dueDate ? project.dueDate.getTime() : null
+  );
 
   return (
     <div className="space-y-6">
@@ -55,8 +97,20 @@ export default async function ProjectDetailPage({
         </Link>
       </div>
 
+      {/* Risk banner */}
+      {risk.level !== "none" ? (
+        <div className={`rounded-lg p-4 ring-1 ring-inset ${RISK_STYLES[risk.level]}`}>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-semibold">
+              {RISK_LABELS[risk.level]}
+            </span>
+            <span className="text-sm">— {risk.reasons.join(" · ")}</span>
+          </div>
+        </div>
+      ) : null}
+
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Left: details + updates */}
+        {/* Left: details + deliverables + updates */}
         <div className="space-y-6 lg:col-span-2">
           {project.description ? (
             <div className="card p-5">
@@ -65,6 +119,12 @@ export default async function ProjectDetailPage({
               </p>
             </div>
           ) : null}
+
+          <Deliverables
+            projectId={project.id}
+            deliverables={deliverableItems}
+            users={users}
+          />
 
           <section className="card p-5">
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
@@ -108,11 +168,24 @@ export default async function ProjectDetailPage({
               Progress
             </p>
             <ProgressBar value={project.progress} />
+            {risk.deliverableCompletion != null ? (
+              <p className="mt-2 text-xs text-gray-500">
+                Deliverables: {risk.approved}/{risk.totalDeliverables} approved (
+                {risk.deliverableCompletion}%)
+              </p>
+            ) : null}
             <dl className="mt-4 space-y-3 text-sm">
               <Meta label="Owner" value={project.owner?.name ?? "Unassigned"} />
               <Meta label="Client" value={project.client.company || project.client.name} />
               <Meta label="Start" value={formatDate(project.startDate)} />
               <Meta label="Due" value={formatDate(project.dueDate)} />
+              {slip > 0 ? (
+                <Meta
+                  label="Deadline"
+                  value={`Slipped ${slip}d from ${formatDate(project.baselineDueDate)}`}
+                  warn
+                />
+              ) : null}
               <Meta label="Created" value={formatDate(project.createdAt)} />
             </dl>
           </div>
@@ -129,11 +202,23 @@ export default async function ProjectDetailPage({
   );
 }
 
-function Meta({ label, value }: { label: string; value: string }) {
+function Meta({
+  label,
+  value,
+  warn,
+}: {
+  label: string;
+  value: string;
+  warn?: boolean;
+}) {
   return (
     <div className="flex justify-between gap-3">
       <dt className="text-gray-500">{label}</dt>
-      <dd className="text-right font-medium text-gray-800">{value}</dd>
+      <dd
+        className={`text-right font-medium ${warn ? "text-amber-600" : "text-gray-800"}`}
+      >
+        {value}
+      </dd>
     </div>
   );
 }

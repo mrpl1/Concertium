@@ -28,6 +28,9 @@ export type DashProject = {
   clientId: string;
   clientName: string;
   ownerName: string | null;
+  riskLevel: "none" | "watch" | "at-risk" | "overdue";
+  riskReasons: string[];
+  overdueDeliverables: number;
 };
 
 function clientLabel(c: DashClient): string {
@@ -109,13 +112,11 @@ export function DashboardClient({
     const total = scopedProjects.length;
     const active = scopedProjects.filter((p) => p.status !== "Completed").length;
     const attention = scopedProjects.filter(
-      (p) => p.status === "At Risk" || p.status === "Off Track"
+      (p) => p.riskLevel === "at-risk" || p.riskLevel === "overdue"
     ).length;
-    const completed = scopedProjects.filter(
-      (p) => p.status === "Completed"
-    ).length;
+    const overdue = scopedProjects.filter((p) => p.riskLevel === "overdue").length;
     const avg = averageProgress(scopedProjects);
-    return { total, active, attention, completed, avg };
+    return { total, active, attention, overdue, avg };
   }, [scopedProjects]);
 
   // Status distribution for the stacked bar.
@@ -126,11 +127,12 @@ export function DashboardClient({
     return counts;
   }, [scopedProjects]);
 
+  const riskOrder = { overdue: 0, "at-risk": 1, watch: 2, none: 3 } as const;
   const needsAttention = useMemo(
     () =>
-      scopedProjects.filter(
-        (p) => p.status === "At Risk" || p.status === "Off Track"
-      ),
+      scopedProjects
+        .filter((p) => p.riskLevel === "at-risk" || p.riskLevel === "overdue")
+        .sort((a, b) => riskOrder[a.riskLevel] - riskOrder[b.riskLevel]),
     [scopedProjects]
   );
 
@@ -196,9 +198,10 @@ export function DashboardClient({
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         <Stat label="Projects" value={metrics.total} />
         <Stat label="Active" value={metrics.active} />
+        <Stat label="Overdue" value={metrics.overdue} warn />
         <Stat label="Need attention" value={metrics.attention} warn />
         <Stat label="Avg. progress" value={`${metrics.avg}%`} />
       </div>
@@ -284,12 +287,14 @@ export function DashboardClient({
       <div className="grid gap-6 lg:grid-cols-2">
         <ListCard
           title="Needs attention"
-          empty="Nothing at risk or off track. 🎉"
+          empty="Nothing at risk or overdue. 🎉"
           items={needsAttention.map((p) => ({
             id: p.id,
             href: `/projects/${p.id}`,
             primary: p.name,
-            secondary: p.clientName,
+            secondary: p.riskReasons[0]
+              ? `${p.clientName} · ${p.riskReasons.join(" · ")}`
+              : p.clientName,
             right: <StatusBadge status={p.status} />,
           }))}
         />
