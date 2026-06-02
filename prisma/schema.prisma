@@ -1,0 +1,73 @@
+// Concertium — data model
+// Provider is SQLite for easy local/self-hosting. To move to Postgres later,
+// change `provider` to "postgresql" and update DATABASE_URL — the models stay the same.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         String   @default("member") // "admin" | "member"
+  createdAt    DateTime @default(now())
+
+  ownedProjects Project[]      @relation("ProjectOwner")
+  updates       StatusUpdate[]
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  name      String
+  company   String?
+  email     String?
+  phone     String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects Project[]
+}
+
+model Project {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  // status: "Not Started" | "On Track" | "At Risk" | "Off Track" | "On Hold" | "Completed"
+  status      String    @default("Not Started")
+  // priority: "Low" | "Medium" | "High"
+  priority    String    @default("Medium")
+  progress    Int       @default(0) // 0-100
+  startDate   DateTime?
+  dueDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  ownerId String?
+  owner   User?   @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+
+  updates StatusUpdate[]
+}
+
+model StatusUpdate {
+  id        String   @id @default(cuid())
+  body      String
+  status    String? // status snapshot at time of update
+  createdAt DateTime @default(now())
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  authorId String?
+  author   User?   @relation(fields: [authorId], references: [id], onDelete: SetNull)
+}

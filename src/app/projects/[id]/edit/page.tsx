@@ -1,0 +1,49 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { requireUser } from "@/lib/auth";
+import { prisma } from "@/lib/db";
+import { ProjectForm } from "@/components/ProjectForm";
+import { updateProjectAction } from "@/app/actions/projects";
+
+export const dynamic = "force-dynamic";
+
+export default async function EditProjectPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  await requireUser();
+
+  const [project, clients, users] = await Promise.all([
+    prisma.project.findUnique({ where: { id: params.id } }),
+    prisma.client.findMany({ orderBy: { name: "asc" } }),
+    prisma.user.findMany({ orderBy: { name: "asc" } }),
+  ]);
+
+  if (!project) notFound();
+
+  const action = updateProjectAction.bind(null, project.id);
+
+  return (
+    <div className="mx-auto max-w-2xl space-y-6">
+      <div>
+        <Link href={`/projects/${project.id}`} className="text-sm text-brand-600">
+          ← {project.name}
+        </Link>
+        <h1 className="mt-1 text-2xl font-semibold text-gray-900">
+          Edit project
+        </h1>
+      </div>
+      <div className="card p-6">
+        <ProjectForm
+          action={action}
+          clients={clients}
+          users={users}
+          defaults={project}
+          submitLabel="Save changes"
+          cancelHref={`/projects/${project.id}`}
+        />
+      </div>
+    </div>
+  );
+}
