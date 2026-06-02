@@ -6,6 +6,8 @@ const baseLinks = [
   { href: "/", label: "Dashboard" },
   { href: "/clients", label: "Clients" },
   { href: "/projects", label: "Projects" },
+  { href: "/timeline", label: "Timeline" },
+  { href: "/analytics", label: "Analytics" },
   { href: "/reports", label: "Reports" },
 ];
 

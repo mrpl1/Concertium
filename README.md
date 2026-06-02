@@ -8,15 +8,29 @@ project status, and generate & send email status reports.
 - **Clients** — keep a directory of clients with contact details and notes.
 - **Projects** — track per-client projects with status, priority, progress,
   owner, and start/due dates.
+- **Deliverables/milestones** — break each project into concrete deliverables
+  with their own owner, due date, and acceptance state (Pending → In Progress →
+  In Review → Approved / Blocked).
+- **Deadline integrity** — a baseline due date is captured the first time a date
+  is set; every change is logged so you can see slippage ("+12d, slipped 2×").
+- **Automatic health/risk** — projects are objectively flagged overdue / at-risk
+  (overdue items, blocked work, due-soon-but-behind, stale, off track) without
+  overwriting the manual status.
 - **Status updates** — post timestamped updates to a project and optionally
   change its status in one step.
-- **Dashboard** — at-a-glance view of project health, items needing attention,
-  upcoming deadlines, and recent activity.
+- **Interactive dashboard** — client selector, project-lifecycle graph,
+  risk-driven "needs attention", overdue count, and recent activity.
+- **Timeline** — upcoming project & deliverable deadlines, bucketed by urgency.
+- **Analytics** — on-time delivery rate, average slippage, status distribution,
+  and per-client health.
 - **Status reports** — generate a formatted report for a single client or all
-  clients, then either open a pre-filled draft in your mail client or send it
-  automatically via SMTP/email service.
+  clients, then draft it in your mail client or send via SMTP.
+- **Automations** — daily alert digest (email + Slack) and scheduled weekly
+  client reports (see below).
+- **Client status link** — a tokenized, read-only public page per client
+  (`/share/<token>`) you can share without giving them a login.
 - **Team & auth** — email + password login. The first account becomes the
-  admin, who can add teammates from the Team page.
+  admin, who can add teammates and manage automations.
 
 ## Tech stack
 

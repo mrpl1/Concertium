@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="916" viewBox="0 0 1480 916" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="986" viewBox="0 0 1480 986" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif">
 <defs><filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="1.5" stdDeviation="2.5" flood-color="#0f172a" flood-opacity="0.10"/></filter>
 <marker id="arrow" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#64748b"/></marker></defs>
-<rect x="0" y="0" width="1480" height="916" rx="0" ry="0" fill="#f8fafc" stroke="#f8fafc" stroke-width="1"/>
+<rect x="0" y="0" width="1480" height="986" rx="0" ry="0" fill="#f8fafc" stroke="#f8fafc" stroke-width="1"/>
 <rect x="40" y="34" width="34" height="34" rx="8" fill="#2147d8"/>
 <text x="57" y="58" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="20" font-weight="bold" fill="#fff" text-anchor="middle">C</text>
 <text x="86" y="52" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="27" font-weight="bold" fill="#0f172a" text-anchor="start">Concertium — Site Map</text>
@@ -40,134 +40,165 @@
 <text x="58" y="244" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="bold" fill="#2147d8" text-anchor="start">APP SHELL</text>
 <text x="58" y="260" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Persistent top nav</text>
 <path d="M 190 190 V 222" fill="none" stroke="#64748b" stroke-width="1.6" marker-end="url(#arrow)"/>
-<rect x="50" y="235" width="191.66666666666666" height="28" rx="14" ry="14" fill="#fff" stroke="#bcd2ff" stroke-width="1"/>
-<text x="145.83333333333331" y="253" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#2147d8" text-anchor="middle">Dashboard</text>
-<path d="M 145.83333333333331 276 V 326" fill="none" stroke="#2147d8" stroke-width="1.4" stroke-dasharray="2 4"/>
-<rect x="287.66666666666663" y="235" width="191.66666666666666" height="28" rx="14" ry="14" fill="#fff" stroke="#bcd2ff" stroke-width="1"/>
-<text x="383.49999999999994" y="253" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#2147d8" text-anchor="middle">Clients</text>
-<path d="M 383.49999999999994 276 V 326" fill="none" stroke="#16a34a" stroke-width="1.4" stroke-dasharray="2 4"/>
-<rect x="525.3333333333333" y="235" width="191.66666666666666" height="28" rx="14" ry="14" fill="#fff" stroke="#bcd2ff" stroke-width="1"/>
-<text x="621.1666666666666" y="253" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#2147d8" text-anchor="middle">Projects</text>
-<path d="M 621.1666666666666 276 V 326" fill="none" stroke="#4f46e5" stroke-width="1.4" stroke-dasharray="2 4"/>
-<rect x="763" y="235" width="191.66666666666666" height="28" rx="14" ry="14" fill="#fff" stroke="#bcd2ff" stroke-width="1"/>
-<text x="858.8333333333334" y="253" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#2147d8" text-anchor="middle">Reports</text>
-<path d="M 858.8333333333334 276 V 326" fill="none" stroke="#d97706" stroke-width="1.4" stroke-dasharray="2 4"/>
-<rect x="1000.6666666666666" y="235" width="191.66666666666666" height="28" rx="14" ry="14" fill="#fff" stroke="#bcd2ff" stroke-width="1"/>
-<text x="1096.5" y="253" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#2147d8" text-anchor="middle">Team  ·  admin</text>
-<path d="M 1096.5 276 V 326" fill="none" stroke="#9333ea" stroke-width="1.4" stroke-dasharray="2 4"/>
-<rect x="1238.3333333333333" y="235" width="191.66666666666666" height="28" rx="14" ry="14" fill="#fff" stroke="#bcd2ff" stroke-width="1"/>
-<text x="1334.1666666666665" y="253" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#2147d8" text-anchor="middle">Automations</text>
-<path d="M 1334.1666666666665 276 V 326" fill="none" stroke="#0891b2" stroke-width="1.4" stroke-dasharray="2 4"/>
-<rect x="40" y="326" width="211.66666666666666" height="114" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+<rect x="50" y="235" width="112.44444444444446" height="28" rx="14" ry="14" fill="#fff" stroke="#bcd2ff" stroke-width="1"/>
+<text x="106.22222222222223" y="253" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#2147d8" text-anchor="middle">Dashboard</text>
+<path d="M 106.22222222222223 276 V 326" fill="none" stroke="#2147d8" stroke-width="1.4" stroke-dasharray="2 4"/>
+<rect x="208.44444444444446" y="235" width="112.44444444444446" height="28" rx="14" ry="14" fill="#fff" stroke="#bcd2ff" stroke-width="1"/>
+<text x="264.6666666666667" y="253" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#2147d8" text-anchor="middle">Clients</text>
+<path d="M 264.6666666666667 276 V 326" fill="none" stroke="#16a34a" stroke-width="1.4" stroke-dasharray="2 4"/>
+<rect x="366.8888888888889" y="235" width="112.44444444444446" height="28" rx="14" ry="14" fill="#fff" stroke="#bcd2ff" stroke-width="1"/>
+<text x="423.11111111111114" y="253" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#2147d8" text-anchor="middle">Projects</text>
+<path d="M 423.11111111111114 276 V 326" fill="none" stroke="#4f46e5" stroke-width="1.4" stroke-dasharray="2 4"/>
+<rect x="525.3333333333334" y="235" width="112.44444444444446" height="28" rx="14" ry="14" fill="#fff" stroke="#bcd2ff" stroke-width="1"/>
+<text x="581.5555555555557" y="253" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#2147d8" text-anchor="middle">Reports</text>
+<path d="M 581.5555555555557 276 V 326" fill="none" stroke="#d97706" stroke-width="1.4" stroke-dasharray="2 4"/>
+<rect x="683.7777777777778" y="235" width="112.44444444444446" height="28" rx="14" ry="14" fill="#fff" stroke="#bcd2ff" stroke-width="1"/>
+<text x="740" y="253" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#2147d8" text-anchor="middle">Team  ·  admin</text>
+<path d="M 740 276 V 326" fill="none" stroke="#9333ea" stroke-width="1.4" stroke-dasharray="2 4"/>
+<rect x="842.2222222222223" y="235" width="112.44444444444446" height="28" rx="14" ry="14" fill="#fff" stroke="#bcd2ff" stroke-width="1"/>
+<text x="898.4444444444446" y="253" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#2147d8" text-anchor="middle">Analytics</text>
+<path d="M 898.4444444444446 276 V 326" fill="none" stroke="#0891b2" stroke-width="1.4" stroke-dasharray="2 4"/>
+<rect x="1000.6666666666667" y="235" width="112.44444444444446" height="28" rx="14" ry="14" fill="#fff" stroke="#bcd2ff" stroke-width="1"/>
+<text x="1056.888888888889" y="253" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#2147d8" text-anchor="middle">Automations</text>
+<path d="M 1056.888888888889 276 V 326" fill="none" stroke="#db2777" stroke-width="1.4" stroke-dasharray="2 4"/>
+<rect x="1159.1111111111113" y="235" width="112.44444444444446" height="28" rx="14" ry="14" fill="#fff" stroke="#bcd2ff" stroke-width="1"/>
+<text x="1215.3333333333335" y="253" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#2147d8" text-anchor="middle">Share</text>
+<path d="M 1215.3333333333335 276 V 326" fill="none" stroke="#ca8a04" stroke-width="1.4" stroke-dasharray="2 4"/>
+<rect x="1317.5555555555557" y="235" width="112.44444444444446" height="28" rx="14" ry="14" fill="#fff" stroke="#bcd2ff" stroke-width="1"/>
+<text x="1373.7777777777778" y="253" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#2147d8" text-anchor="middle">Timeline</text>
+<path d="M 1373.7777777777778 276 V 326" fill="none" stroke="#65a30d" stroke-width="1.4" stroke-dasharray="2 4"/>
+<rect x="40" y="326" width="132.44444444444446" height="114" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
 <path d="M 40 336 q 0 -10 10 -10 v 94 q -10 0 -10 -10 Z" fill="#2147d8"/>
 <text x="58" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Dashboard</text>
 <text x="58" y="367" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#2147d8" text-anchor="start">/</text>
-<rect x="202.06666666666666" y="336" width="39.6" height="18" rx="9" ry="9" fill="#2147d81a" stroke="#2147d855" stroke-width="1"/>
-<text x="221.86666666666665" y="348.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#2147d8" text-anchor="middle">home</text>
+<rect x="122.84444444444446" y="336" width="39.6" height="18" rx="9" ry="9" fill="#2147d81a" stroke="#2147d855" stroke-width="1"/>
+<text x="142.64444444444445" y="348.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#2147d8" text-anchor="middle">home</text>
 <text x="58" y="384" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">• Interactive client selector</text>
 <text x="58" y="398" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">• Project-lifecycle graph (drill-in)</text>
 <text x="58" y="412" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">• Status breakdown + stat cards</text>
 <text x="58" y="426" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">• Needs-attention · deadlines · recent</text>
-<path d="M 288.66666666666663 398 V 434 H 295.66666666666663" fill="none" stroke="#16a34a" stroke-width="1.6"/>
-<circle cx="295.66666666666663" cy="434" r="2.6" fill="#16a34a"/>
-<path d="M 306.66666666666663 500 V 536 H 313.66666666666663" fill="none" stroke="#16a34a" stroke-width="1.6"/>
-<circle cx="313.66666666666663" cy="536" r="2.6" fill="#16a34a"/>
-<path d="M 288.66666666666663 398 V 624 H 295.66666666666663" fill="none" stroke="#16a34a" stroke-width="1.6"/>
-<circle cx="295.66666666666663" cy="624" r="2.6" fill="#16a34a"/>
-<rect x="277.66666666666663" y="326" width="211.66666666666666" height="72" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
-<path d="M 277.66666666666663 336 q 0 -10 10 -10 v 52 q -10 0 -10 -10 Z" fill="#16a34a"/>
-<text x="295.66666666666663" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Clients</text>
-<text x="295.66666666666663" y="367" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#16a34a" text-anchor="start">/clients</text>
-<rect x="439.73333333333323" y="336" width="39.6" height="18" rx="9" ry="9" fill="#16a34a1a" stroke="#16a34a55" stroke-width="1"/>
-<text x="459.53333333333325" y="348.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#16a34a" text-anchor="middle">list</text>
-<text x="295.66666666666663" y="384" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Directory of all clients</text>
-<rect x="295.66666666666663" y="414" width="193.66666666666666" height="86" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
-<path d="M 295.66666666666663 424 q 0 -10 10 -10 v 66 q -10 0 -10 -10 Z" fill="#16a34a"/>
-<text x="313.66666666666663" y="438" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Client detail</text>
-<text x="313.66666666666663" y="455" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#16a34a" text-anchor="start">/clients/[id]</text>
-<text x="313.66666666666663" y="472" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Contact info, projects,</text>
-<text x="313.66666666666663" y="486" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">per-client report, delete</text>
-<rect x="313.66666666666663" y="516" width="175.66666666666666" height="72" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
-<path d="M 313.66666666666663 526 q 0 -10 10 -10 v 52 q -10 0 -10 -10 Z" fill="#16a34a"/>
-<text x="331.66666666666663" y="540" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Edit client</text>
-<text x="331.66666666666663" y="557" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#16a34a" text-anchor="start">/clients/[id]/edit</text>
-<rect x="439.73333333333323" y="526" width="39.6" height="18" rx="9" ry="9" fill="#16a34a1a" stroke="#16a34a55" stroke-width="1"/>
-<text x="459.53333333333325" y="538.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#16a34a" text-anchor="middle">form</text>
-<text x="331.66666666666663" y="574" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Update details</text>
-<rect x="295.66666666666663" y="604" width="193.66666666666666" height="72" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
-<path d="M 295.66666666666663 614 q 0 -10 10 -10 v 52 q -10 0 -10 -10 Z" fill="#16a34a"/>
-<text x="313.66666666666663" y="628" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">New client</text>
-<text x="313.66666666666663" y="645" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#16a34a" text-anchor="start">/clients/new</text>
-<rect x="439.73333333333323" y="614" width="39.6" height="18" rx="9" ry="9" fill="#16a34a1a" stroke="#16a34a55" stroke-width="1"/>
-<text x="459.53333333333325" y="626.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#16a34a" text-anchor="middle">form</text>
-<text x="313.66666666666663" y="662" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Create a client</text>
-<path d="M 526.3333333333333 412 V 448 H 533.3333333333333" fill="none" stroke="#4f46e5" stroke-width="1.6"/>
-<circle cx="533.3333333333333" cy="448" r="2.6" fill="#4f46e5"/>
-<path d="M 544.3333333333333 514 V 550 H 551.3333333333333" fill="none" stroke="#4f46e5" stroke-width="1.6"/>
-<circle cx="551.3333333333333" cy="550" r="2.6" fill="#4f46e5"/>
-<path d="M 526.3333333333333 412 V 638 H 533.3333333333333" fill="none" stroke="#4f46e5" stroke-width="1.6"/>
-<circle cx="533.3333333333333" cy="638" r="2.6" fill="#4f46e5"/>
-<rect x="515.3333333333333" y="326" width="211.66666666666666" height="86" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
-<path d="M 515.3333333333333 336 q 0 -10 10 -10 v 66 q -10 0 -10 -10 Z" fill="#4f46e5"/>
-<text x="533.3333333333333" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Projects</text>
-<text x="533.3333333333333" y="367" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#4f46e5" text-anchor="start">/projects</text>
-<rect x="677.3999999999999" y="336" width="39.6" height="18" rx="9" ry="9" fill="#4f46e51a" stroke="#4f46e555" stroke-width="1"/>
-<text x="697.1999999999999" y="348.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#4f46e5" text-anchor="middle">list</text>
-<text x="533.3333333333333" y="384" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">List with status &amp; client</text>
-<text x="533.3333333333333" y="398" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">filters</text>
-<rect x="533.3333333333333" y="428" width="193.66666666666666" height="86" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
-<path d="M 533.3333333333333 438 q 0 -10 10 -10 v 66 q -10 0 -10 -10 Z" fill="#4f46e5"/>
-<text x="551.3333333333333" y="452" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Project detail</text>
-<text x="551.3333333333333" y="469" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#4f46e5" text-anchor="start">/projects/[id]</text>
-<text x="551.3333333333333" y="486" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Status, progress, owner,</text>
-<text x="551.3333333333333" y="500" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">updates timeline, delete</text>
-<rect x="551.3333333333333" y="530" width="175.66666666666666" height="72" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
-<path d="M 551.3333333333333 540 q 0 -10 10 -10 v 52 q -10 0 -10 -10 Z" fill="#4f46e5"/>
-<text x="569.3333333333333" y="554" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Edit project</text>
-<text x="569.3333333333333" y="571" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#4f46e5" text-anchor="start">/projects/[id]/edit</text>
-<rect x="677.3999999999999" y="540" width="39.6" height="18" rx="9" ry="9" fill="#4f46e51a" stroke="#4f46e555" stroke-width="1"/>
-<text x="697.1999999999999" y="552.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#4f46e5" text-anchor="middle">form</text>
-<text x="569.3333333333333" y="588" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Update fields</text>
-<rect x="533.3333333333333" y="618" width="193.66666666666666" height="72" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
-<path d="M 533.3333333333333 628 q 0 -10 10 -10 v 52 q -10 0 -10 -10 Z" fill="#4f46e5"/>
-<text x="551.3333333333333" y="642" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">New project</text>
-<text x="551.3333333333333" y="659" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#4f46e5" text-anchor="start">/projects/new</text>
-<rect x="677.3999999999999" y="628" width="39.6" height="18" rx="9" ry="9" fill="#4f46e51a" stroke="#4f46e555" stroke-width="1"/>
-<text x="697.1999999999999" y="640.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#4f46e5" text-anchor="middle">form</text>
-<text x="551.3333333333333" y="676" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Create a project</text>
-<rect x="753" y="326" width="211.66666666666666" height="114" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
-<path d="M 753 336 q 0 -10 10 -10 v 94 q -10 0 -10 -10 Z" fill="#d97706"/>
-<text x="771" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Status reports</text>
-<text x="771" y="367" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#d97706" text-anchor="start">/reports</text>
-<text x="771" y="384" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Pick a client or all clients</text>
-<text x="771" y="398" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Preview the generated report, then:</text>
-<text x="771" y="412" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">• Draft in your mail client (mailto/copy)</text>
-<text x="771" y="426" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">• Send automatically via SMTP</text>
-<rect x="990.6666666666666" y="326" width="211.66666666666666" height="100" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
-<path d="M 990.6666666666666 336 q 0 -10 10 -10 v 80 q -10 0 -10 -10 Z" fill="#9333ea"/>
-<text x="1008.6666666666666" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Team</text>
-<text x="1008.6666666666666" y="367" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#9333ea" text-anchor="start">/team</text>
-<rect x="1146.3333333333333" y="336" width="46" height="18" rx="9" ry="9" fill="#9333ea1a" stroke="#9333ea55" stroke-width="1"/>
-<text x="1169.3333333333333" y="348.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#9333ea" text-anchor="middle">admin</text>
-<text x="1008.6666666666666" y="384" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Admin-only.</text>
-<text x="1008.6666666666666" y="398" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">List members; add a teammate</text>
-<text x="1008.6666666666666" y="412" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">(member or admin role).</text>
-<rect x="1228.3333333333333" y="326" width="211.66666666666666" height="58" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
-<path d="M 1228.3333333333333 336 q 0 -10 10 -10 v 38 q -10 0 -10 -10 Z" fill="#0891b2"/>
-<text x="1246.3333333333333" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Automations</text>
-<text x="1246.3333333333333" y="367" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#0891b2" text-anchor="start">/automations</text>
-<rect x="40" y="726" width="1400" height="150" rx="12" ry="12" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
-<text x="60" y="754" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#0f172a" text-anchor="start">KEY NAVIGATION FLOWS &amp; CROSS-LINKS</text>
-<circle cx="66" cy="774" r="5" fill="#2147d8"/>
-<text x="80" y="778" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#0f172a" text-anchor="start">Dashboard → filtered Projects list and a per-client Status report (carries the selected client through).</text>
-<circle cx="66" cy="793" r="5" fill="#16a34a"/>
-<text x="80" y="797" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#0f172a" text-anchor="start">Client detail → “New project” pre-filled with that client, and a one-click per-client Status report.</text>
-<circle cx="66" cy="812" r="5" fill="#4f46e5"/>
-<text x="80" y="816" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#0f172a" text-anchor="start">Project detail ↔ Client detail; posting a status update can also change the project’s status.</text>
-<circle cx="66" cy="831" r="5" fill="#d97706"/>
-<text x="80" y="835" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#0f172a" text-anchor="start">Updates &amp; statuses feed the Dashboard graph and the Status reports in real time.</text>
-<circle cx="66" cy="850" r="5" fill="#9333ea"/>
-<text x="80" y="854" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#0f172a" text-anchor="start">Admin adds teammates from Team; everyone signs in at /login (no public self-registration after the first user).</text>
-<text x="40" y="902" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#94a3b8" text-anchor="start">Concertium site map · auto-generated from src/app — do not edit by hand</text>
-<text x="1440" y="902" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#94a3b8" text-anchor="end">14 routes · Next.js App Router</text>
+<path d="M 209.44444444444446 412 V 448 H 216.44444444444446" fill="none" stroke="#16a34a" stroke-width="1.6"/>
+<circle cx="216.44444444444446" cy="448" r="2.6" fill="#16a34a"/>
+<path d="M 227.44444444444446 542 V 578 H 234.44444444444446" fill="none" stroke="#16a34a" stroke-width="1.6"/>
+<circle cx="234.44444444444446" cy="578" r="2.6" fill="#16a34a"/>
+<path d="M 209.44444444444446 412 V 680 H 216.44444444444446" fill="none" stroke="#16a34a" stroke-width="1.6"/>
+<circle cx="216.44444444444446" cy="680" r="2.6" fill="#16a34a"/>
+<rect x="198.44444444444446" y="326" width="132.44444444444446" height="86" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+<path d="M 198.44444444444446 336 q 0 -10 10 -10 v 66 q -10 0 -10 -10 Z" fill="#16a34a"/>
+<text x="216.44444444444446" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Clients</text>
+<text x="216.44444444444446" y="367" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#16a34a" text-anchor="start">/clients</text>
+<rect x="281.2888888888889" y="336" width="39.6" height="18" rx="9" ry="9" fill="#16a34a1a" stroke="#16a34a55" stroke-width="1"/>
+<text x="301.0888888888889" y="348.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#16a34a" text-anchor="middle">list</text>
+<text x="216.44444444444446" y="384" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Directory of all</text>
+<text x="216.44444444444446" y="398" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">clients</text>
+<rect x="216.44444444444446" y="428" width="114.44444444444446" height="114" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+<path d="M 216.44444444444446 438 q 0 -10 10 -10 v 94 q -10 0 -10 -10 Z" fill="#16a34a"/>
+<text x="234.44444444444446" y="452" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Client detail</text>
+<text x="234.44444444444446" y="469" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#16a34a" text-anchor="start">/clients/[id]</text>
+<text x="234.44444444444446" y="486" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Contact info,</text>
+<text x="234.44444444444446" y="500" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">projects,</text>
+<text x="234.44444444444446" y="514" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">per-client</text>
+<text x="234.44444444444446" y="528" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">report, delete</text>
+<rect x="234.44444444444446" y="558" width="96.44444444444446" height="86" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+<path d="M 234.44444444444446 568 q 0 -10 10 -10 v 66 q -10 0 -10 -10 Z" fill="#16a34a"/>
+<text x="252.44444444444446" y="582" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Edit client</text>
+<text x="252.44444444444446" y="599" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#16a34a" text-anchor="start">/clients/[id]/edit</text>
+<rect x="281.2888888888889" y="568" width="39.6" height="18" rx="9" ry="9" fill="#16a34a1a" stroke="#16a34a55" stroke-width="1"/>
+<text x="301.0888888888889" y="580.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#16a34a" text-anchor="middle">form</text>
+<text x="252.44444444444446" y="616" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Update</text>
+<text x="252.44444444444446" y="630" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">details</text>
+<rect x="216.44444444444446" y="660" width="114.44444444444446" height="86" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+<path d="M 216.44444444444446 670 q 0 -10 10 -10 v 66 q -10 0 -10 -10 Z" fill="#16a34a"/>
+<text x="234.44444444444446" y="684" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">New client</text>
+<text x="234.44444444444446" y="701" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#16a34a" text-anchor="start">/clients/new</text>
+<rect x="281.2888888888889" y="670" width="39.6" height="18" rx="9" ry="9" fill="#16a34a1a" stroke="#16a34a55" stroke-width="1"/>
+<text x="301.0888888888889" y="682.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#16a34a" text-anchor="middle">form</text>
+<text x="234.44444444444446" y="718" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Create a</text>
+<text x="234.44444444444446" y="732" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">client</text>
+<path d="M 367.8888888888889 412 V 448 H 374.8888888888889" fill="none" stroke="#4f46e5" stroke-width="1.6"/>
+<circle cx="374.8888888888889" cy="448" r="2.6" fill="#4f46e5"/>
+<path d="M 385.8888888888889 556 V 592 H 392.8888888888889" fill="none" stroke="#4f46e5" stroke-width="1.6"/>
+<circle cx="392.8888888888889" cy="592" r="2.6" fill="#4f46e5"/>
+<path d="M 367.8888888888889 412 V 694 H 374.8888888888889" fill="none" stroke="#4f46e5" stroke-width="1.6"/>
+<circle cx="374.8888888888889" cy="694" r="2.6" fill="#4f46e5"/>
+<rect x="356.8888888888889" y="326" width="132.44444444444446" height="86" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+<path d="M 356.8888888888889 336 q 0 -10 10 -10 v 66 q -10 0 -10 -10 Z" fill="#4f46e5"/>
+<text x="374.8888888888889" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Projects</text>
+<text x="374.8888888888889" y="367" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#4f46e5" text-anchor="start">/projects</text>
+<rect x="439.73333333333335" y="336" width="39.6" height="18" rx="9" ry="9" fill="#4f46e51a" stroke="#4f46e555" stroke-width="1"/>
+<text x="459.53333333333336" y="348.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#4f46e5" text-anchor="middle">list</text>
+<text x="374.8888888888889" y="384" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">List with status</text>
+<text x="374.8888888888889" y="398" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">&amp; client filters</text>
+<rect x="374.8888888888889" y="428" width="114.44444444444446" height="128" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+<path d="M 374.8888888888889 438 q 0 -10 10 -10 v 108 q -10 0 -10 -10 Z" fill="#4f46e5"/>
+<text x="392.8888888888889" y="452" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Project detail</text>
+<text x="392.8888888888889" y="469" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#4f46e5" text-anchor="start">/projects/[id]</text>
+<text x="392.8888888888889" y="486" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Status,</text>
+<text x="392.8888888888889" y="500" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">progress,</text>
+<text x="392.8888888888889" y="514" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">owner, updates</text>
+<text x="392.8888888888889" y="528" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">timeline,</text>
+<text x="392.8888888888889" y="542" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">delete</text>
+<rect x="392.8888888888889" y="572" width="96.44444444444446" height="86" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+<path d="M 392.8888888888889 582 q 0 -10 10 -10 v 66 q -10 0 -10 -10 Z" fill="#4f46e5"/>
+<text x="410.8888888888889" y="596" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Edit project</text>
+<text x="410.8888888888889" y="613" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#4f46e5" text-anchor="start">/projects/[id]/edit</text>
+<rect x="439.73333333333335" y="582" width="39.6" height="18" rx="9" ry="9" fill="#4f46e51a" stroke="#4f46e555" stroke-width="1"/>
+<text x="459.53333333333336" y="594.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#4f46e5" text-anchor="middle">form</text>
+<text x="410.8888888888889" y="630" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Update</text>
+<text x="410.8888888888889" y="644" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">fields</text>
+<rect x="374.8888888888889" y="674" width="114.44444444444446" height="86" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+<path d="M 374.8888888888889 684 q 0 -10 10 -10 v 66 q -10 0 -10 -10 Z" fill="#4f46e5"/>
+<text x="392.8888888888889" y="698" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">New project</text>
+<text x="392.8888888888889" y="715" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#4f46e5" text-anchor="start">/projects/new</text>
+<rect x="439.73333333333335" y="684" width="39.6" height="18" rx="9" ry="9" fill="#4f46e51a" stroke="#4f46e555" stroke-width="1"/>
+<text x="459.53333333333336" y="696.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#4f46e5" text-anchor="middle">form</text>
+<text x="392.8888888888889" y="732" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Create a</text>
+<text x="392.8888888888889" y="746" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">project</text>
+<rect x="515.3333333333334" y="326" width="132.44444444444446" height="114" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+<path d="M 515.3333333333334 336 q 0 -10 10 -10 v 94 q -10 0 -10 -10 Z" fill="#d97706"/>
+<text x="533.3333333333334" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Status reports</text>
+<text x="533.3333333333334" y="367" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#d97706" text-anchor="start">/reports</text>
+<text x="533.3333333333334" y="384" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Pick a client or all clients</text>
+<text x="533.3333333333334" y="398" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Preview the generated report, then:</text>
+<text x="533.3333333333334" y="412" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">• Draft in your mail client (mailto/copy)</text>
+<text x="533.3333333333334" y="426" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">• Send automatically via SMTP</text>
+<rect x="673.7777777777778" y="326" width="132.44444444444446" height="100" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+<path d="M 673.7777777777778 336 q 0 -10 10 -10 v 80 q -10 0 -10 -10 Z" fill="#9333ea"/>
+<text x="691.7777777777778" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Team</text>
+<text x="691.7777777777778" y="367" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#9333ea" text-anchor="start">/team</text>
+<rect x="750.2222222222223" y="336" width="46" height="18" rx="9" ry="9" fill="#9333ea1a" stroke="#9333ea55" stroke-width="1"/>
+<text x="773.2222222222223" y="348.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#9333ea" text-anchor="middle">admin</text>
+<text x="691.7777777777778" y="384" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Admin-only.</text>
+<text x="691.7777777777778" y="398" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">List members; add a teammate</text>
+<text x="691.7777777777778" y="412" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">(member or admin role).</text>
+<rect x="832.2222222222223" y="326" width="132.44444444444446" height="58" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+<path d="M 832.2222222222223 336 q 0 -10 10 -10 v 38 q -10 0 -10 -10 Z" fill="#0891b2"/>
+<text x="850.2222222222223" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Analytics</text>
+<text x="850.2222222222223" y="367" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#0891b2" text-anchor="start">/analytics</text>
+<rect x="990.6666666666667" y="326" width="132.44444444444446" height="58" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+<path d="M 990.6666666666667 336 q 0 -10 10 -10 v 38 q -10 0 -10 -10 Z" fill="#db2777"/>
+<text x="1008.6666666666667" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Automations</text>
+<text x="1008.6666666666667" y="367" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#db2777" text-anchor="start">/automations</text>
+<rect x="1167.1111111111113" y="326" width="114.44444444444446" height="58" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+<path d="M 1167.1111111111113 336 q 0 -10 10 -10 v 38 q -10 0 -10 -10 Z" fill="#ca8a04"/>
+<text x="1185.1111111111113" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Token</text>
+<text x="1185.1111111111113" y="367" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#ca8a04" text-anchor="start">/share/[token]</text>
+<rect x="1307.5555555555557" y="326" width="132.44444444444446" height="58" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+<path d="M 1307.5555555555557 336 q 0 -10 10 -10 v 38 q -10 0 -10 -10 Z" fill="#65a30d"/>
+<text x="1325.5555555555557" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Timeline</text>
+<text x="1325.5555555555557" y="367" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#65a30d" text-anchor="start">/timeline</text>
+<rect x="40" y="796" width="1400" height="150" rx="12" ry="12" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+<text x="60" y="824" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#0f172a" text-anchor="start">KEY NAVIGATION FLOWS &amp; CROSS-LINKS</text>
+<circle cx="66" cy="844" r="5" fill="#2147d8"/>
+<text x="80" y="848" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#0f172a" text-anchor="start">Dashboard → filtered Projects list and a per-client Status report (carries the selected client through).</text>
+<circle cx="66" cy="863" r="5" fill="#16a34a"/>
+<text x="80" y="867" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#0f172a" text-anchor="start">Client detail → “New project” pre-filled with that client, and a one-click per-client Status report.</text>
+<circle cx="66" cy="882" r="5" fill="#4f46e5"/>
+<text x="80" y="886" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#0f172a" text-anchor="start">Project detail ↔ Client detail; posting a status update can also change the project’s status.</text>
+<circle cx="66" cy="901" r="5" fill="#d97706"/>
+<text x="80" y="905" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#0f172a" text-anchor="start">Updates &amp; statuses feed the Dashboard graph and the Status reports in real time.</text>
+<circle cx="66" cy="920" r="5" fill="#9333ea"/>
+<text x="80" y="924" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#0f172a" text-anchor="start">Admin adds teammates from Team; everyone signs in at /login (no public self-registration after the first user).</text>
+<text x="40" y="972" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#94a3b8" text-anchor="start">Concertium site map · auto-generated from src/app — do not edit by hand</text>
+<text x="1440" y="972" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#94a3b8" text-anchor="end">17 routes · Next.js App Router</text>
 </svg>

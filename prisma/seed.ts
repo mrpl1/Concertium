@@ -63,6 +63,8 @@ async function main() {
       phone: "+1 555-0100",
       notes:
         "Long-standing client. Quarterly business reviews. Prefers weekly email summaries on Fridays.",
+      weeklyReport: true,
+      shareToken: "demo-acme-status",
     },
   });
 
