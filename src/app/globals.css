@@ -5,9 +5,15 @@
 :root {
   color-scheme: light;
 }
+.dark {
+  color-scheme: dark;
+}
 
 body {
   @apply bg-gray-50 text-gray-900 antialiased;
+}
+.dark body {
+  @apply bg-gray-950 text-gray-100;
 }
 
 @layer components {
@@ -35,4 +41,60 @@ body {
   .badge {
     @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset;
   }
+
+  /* ---- Dark variants for the shared primitives ---- */
+  .dark .btn-secondary {
+    @apply bg-gray-800 text-gray-200 ring-gray-600 hover:bg-gray-700;
+  }
+  .dark .btn-danger {
+    @apply bg-gray-800 text-red-400 ring-red-900/60 hover:bg-gray-700;
+  }
+  .dark .input {
+    @apply bg-gray-900 text-gray-100 ring-gray-600;
+  }
+  .dark .input::placeholder {
+    color: #6b7280;
+  }
+  .dark .label {
+    @apply text-gray-300;
+  }
+  .dark .card {
+    @apply bg-gray-900 ring-gray-700 shadow-none;
+  }
+}
+
+/*
+ * Retint the common light-mode utility classes used across the app when the
+ * <html> element has the `.dark` class. The `.dark .x` selectors have higher
+ * specificity than the base utilities, so they win without per-file edits.
+ */
+@layer utilities {
+  .dark .bg-white { background-color: #111827; }      /* gray-900 */
+  .dark .bg-gray-50 { background-color: #0b1220; }
+  .dark .bg-gray-100 { background-color: #1f2937; }    /* gray-800 */
+  .dark .bg-gray-200 { background-color: #374151; }    /* gray-700 (progress track) */
+
+  .dark .text-gray-900 { color: #f3f4f6; }
+  .dark .text-gray-800 { color: #e5e7eb; }
+  .dark .text-gray-700 { color: #d1d5db; }
+  .dark .text-gray-600 { color: #b6bdc8; }
+  .dark .text-gray-500 { color: #9aa3b2; }
+  .dark .text-gray-400 { color: #7b8494; }
+
+  .dark .border-gray-100 { border-color: #1f2937; }
+  .dark .border-gray-200 { border-color: #374151; }
+
+  .dark .ring-gray-200 { --tw-ring-color: #374151; }
+  .dark .ring-gray-300 { --tw-ring-color: #4b5563; }
+
+  .dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]) { border-color: #1f2937; }
+
+  /* Hover states */
+  .dark .hover\:bg-gray-50:hover { background-color: #1f2937; }
+  .dark .hover\:bg-gray-100:hover { background-color: #374151; }
+  .dark .hover\:bg-gray-200:hover { background-color: #4b5563; }
+
+  /* Brand-tinted nav bar / chips read better slightly muted in dark */
+  .dark .bg-brand-50 { background-color: #1e293b; }
+  .dark .bg-brand-100 { background-color: #1e3a8a; }
 }
