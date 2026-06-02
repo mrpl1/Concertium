@@ -143,6 +143,13 @@ Relevant `.env` settings: `CRON_SECRET`, `NOTIFY_EMAIL`, `SLACK_WEBHOOK_URL`,
 4. **Test the whole digest path anytime** from **Automations → "Send alert
    digest now"** in the app (admin only).
 
+## Deploying
+
+See **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)** for a step-by-step Hostinger
+(Node.js) guide, including required environment variables, choosing SQLite vs.
+MySQL, first-deploy steps, and troubleshooting (e.g. the
+`Environment variable not found: DATABASE_URL` crash-loop).
+
 ## Moving to a shared/hosted database
 
 SQLite is great for a single host. To use Postgres (e.g. for a hosted
