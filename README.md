@@ -35,6 +35,8 @@ project status, and generate & send email status reports.
   (`/share/<token>`) you can share without giving them a login.
 - **Team & auth** — email + password login. The first account becomes the
   admin, who can add teammates and manage automations.
+- **Dark mode** — a toggle in the nav (and on the sign-in screen) that persists
+  your choice and defaults to your OS preference, with no flash on load.
 
 ## Tech stack
 

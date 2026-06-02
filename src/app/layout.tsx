@@ -16,8 +16,14 @@ export default async function RootLayout({
 }) {
   const user = await getSessionUser();
 
+  // Apply the saved/system theme before paint to avoid a flash of light mode.
+  const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}})();`;
+
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body>
         {user ? <NavBar user={user} /> : null}
         <main className={user ? "mx-auto max-w-6xl px-4 py-8" : ""}>

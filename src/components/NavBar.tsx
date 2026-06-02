@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { logoutAction } from "@/app/actions/auth";
 import { SearchBox } from "@/components/SearchBox";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import type { SessionUser } from "@/lib/auth";
 
 const baseLinks = [
@@ -46,6 +47,7 @@ export function NavBar({ user }: { user: SessionUser }) {
         </div>
         <div className="flex items-center gap-3">
           <SearchBox />
+          <ThemeToggle />
           <span className="hidden text-sm text-gray-500 sm:inline">
             {user.name}
           </span>
