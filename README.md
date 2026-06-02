@@ -163,7 +163,14 @@ deployment shared across the team):
 | `npm run setup`     | Generate client, push schema, seed data      |
 | `npm run db:push`   | Apply the Prisma schema to the database      |
 | `npm run db:seed`   | Seed the admin user + sample data            |
+| `npm run db:reset`  | Recreate the local SQLite DB from scratch + seed |
 | `npm run db:studio` | Open Prisma Studio to browse the database    |
+
+> `npm run dev` automatically syncs the database to the current Prisma schema
+> first (via a `predev` step), so pulling schema changes won't leave your local
+> database out of date. If a change is destructive, it will stop and tell you to
+> run `npm run db:reset` (rebuilds the local DB) or
+> `npx prisma db push --accept-data-loss`.
 | `npm run sitemap`   | Regenerate the visual site map               |
 | `npm run sitemap:check` | Fail if the site map is out of date (CI)  |
 
