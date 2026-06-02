@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { logoutAction } from "@/app/actions/auth";
+import { SearchBox } from "@/components/SearchBox";
 import type { SessionUser } from "@/lib/auth";
 
 const baseLinks = [
@@ -44,6 +45,7 @@ export function NavBar({ user }: { user: SessionUser }) {
           </nav>
         </div>
         <div className="flex items-center gap-3">
+          <SearchBox />
           <span className="hidden text-sm text-gray-500 sm:inline">
             {user.name}
           </span>

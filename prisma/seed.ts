@@ -118,6 +118,8 @@ async function main() {
       owner?: string;
       dueInDays?: number | null;
     }[];
+    links?: { label: string; url: string }[];
+    time?: { hours: number; note?: string; daysAgo: number; user?: string }[];
   }[] = [
     {
       data: {
@@ -129,9 +131,25 @@ async function main() {
         progress: 65,
         startDate: daysFromNow(-30),
         dueDate: daysFromNow(21),
+        budgetHours: 120,
         clientId: acme.id,
         ownerId: admin.id,
+        tags: {
+          connectOrCreate: ["web", "design", "high-touch"].map((name) => ({
+            where: { name },
+            create: { name },
+          })),
+        },
       },
+      links: [
+        { label: "Statement of Work", url: "https://example.com/acme-sow.pdf" },
+        { label: "Figma designs", url: "https://figma.com/file/acme-redesign" },
+      ],
+      time: [
+        { hours: 12, note: "Discovery workshops", daysAgo: 26, user: admin.id },
+        { hours: 30, note: "Design", daysAgo: 12, user: priya.id },
+        { hours: 28, note: "Homepage build", daysAgo: 3, user: priya.id },
+      ],
       updates: [
         {
           author: admin.id,
@@ -353,6 +371,22 @@ async function main() {
           baselineDueDate: due,
           approvedAt: d.status === "Approved" ? daysFromNow(-2) : null,
           order: order++,
+        },
+      });
+    }
+    for (const l of p.links ?? []) {
+      await prisma.projectLink.create({
+        data: { projectId: created.id, label: l.label, url: l.url },
+      });
+    }
+    for (const t of p.time ?? []) {
+      await prisma.timeEntry.create({
+        data: {
+          projectId: created.id,
+          userId: t.user ?? null,
+          hours: t.hours,
+          note: t.note ?? null,
+          date: daysFromNow(-t.daysAgo),
         },
       });
     }

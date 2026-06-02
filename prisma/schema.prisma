@@ -23,6 +23,7 @@ model User {
   updates           StatusUpdate[]
   ownedDeliverables Deliverable[]  @relation("DeliverableOwner")
   deadlineChanges   DeadlineChange[]
+  timeEntries       TimeEntry[]
 }
 
 model Client {
@@ -58,6 +59,8 @@ model Project {
   // The originally agreed-upon due date, captured the first time a due date is
   // set. Compared against dueDate to surface deadline slippage.
   baselineDueDate DateTime?
+  // Budgeted/estimated hours for the engagement (for time-tracking burn).
+  budgetHours Float?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
@@ -70,6 +73,41 @@ model Project {
   updates         StatusUpdate[]
   deliverables    Deliverable[]
   deadlineChanges DeadlineChange[]
+  links           ProjectLink[]
+  timeEntries     TimeEntry[]
+  tags            Tag[]
+}
+
+// A labeled link/resource attached to a project (SOW, contract, asset, doc…).
+model ProjectLink {
+  id        String   @id @default(cuid())
+  label     String
+  url       String
+  createdAt DateTime @default(now())
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+// Logged work against a project, for budget burn.
+model TimeEntry {
+  id        String   @id @default(cuid())
+  hours     Float
+  note      String?
+  date      DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model Tag {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  projects Project[]
 }
 
 model Deliverable {

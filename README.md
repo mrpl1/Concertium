@@ -23,6 +23,10 @@ project status, and generate & send email status reports.
 - **Timeline** — upcoming project & deliverable deadlines, bucketed by urgency.
 - **Analytics** — on-time delivery rate, average slippage, status distribution,
   and per-client health.
+- **Resources, time & budget** — attach links (SOW, contracts, designs) to a
+  project, log time against it, and track burn versus a budgeted hours target.
+- **Tags & search** — tag projects and filter by tag; global search across
+  clients and projects from the nav bar.
 - **Status reports** — generate a formatted report for a single client or all
   clients, then draft it in your mail client or send via SMTP.
 - **Automations** — daily alert digest (email + Slack) and scheduled weekly

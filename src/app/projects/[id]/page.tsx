@@ -6,6 +6,8 @@ import { StatusBadge, PriorityBadge, ProgressBar } from "@/components/Badge";
 import { formatDate } from "@/lib/report";
 import { AddUpdateForm } from "@/components/AddUpdateForm";
 import { Deliverables, type DeliverableItem } from "@/components/Deliverables";
+import { ProjectResources } from "@/components/ProjectResources";
+import { TimeTracking } from "@/components/TimeTracking";
 import { addUpdateAction, deleteProjectAction } from "@/app/actions/projects";
 import {
   computeRisk,
@@ -36,6 +38,12 @@ export default async function ProjectDetailPage({
         deliverables: {
           include: { owner: true, _count: { select: { deadlineChanges: true } } },
           orderBy: [{ order: "asc" }, { createdAt: "asc" }],
+        },
+        links: { orderBy: { createdAt: "asc" } },
+        tags: true,
+        timeEntries: {
+          include: { user: true },
+          orderBy: { date: "desc" },
         },
       },
     }),
@@ -91,6 +99,19 @@ export default async function ProjectDetailPage({
             <StatusBadge status={project.status} />
             <PriorityBadge priority={project.priority} />
           </div>
+          {project.tags.length > 0 ? (
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {project.tags.map((t) => (
+                <Link
+                  key={t.id}
+                  href={`/projects?tag=${encodeURIComponent(t.name)}`}
+                  className="badge bg-gray-100 text-gray-600 ring-gray-300 hover:bg-gray-200"
+                >
+                  {`#${t.name}`}
+                </Link>
+              ))}
+            </div>
+          ) : null}
         </div>
         <Link href={`/projects/${project.id}/edit`} className="btn-secondary">
           Edit
@@ -124,6 +145,23 @@ export default async function ProjectDetailPage({
             projectId={project.id}
             deliverables={deliverableItems}
             users={users}
+          />
+
+          <ProjectResources
+            projectId={project.id}
+            links={project.links.map((l) => ({ id: l.id, label: l.label, url: l.url }))}
+          />
+
+          <TimeTracking
+            projectId={project.id}
+            budgetHours={project.budgetHours}
+            entries={project.timeEntries.map((e) => ({
+              id: e.id,
+              hours: e.hours,
+              note: e.note,
+              date: e.date.getTime(),
+              userName: e.user?.name ?? null,
+            }))}
           />
 
           <section className="card p-5">
