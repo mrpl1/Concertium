@@ -11,6 +11,7 @@ type Defaults = {
   email?: string | null;
   phone?: string | null;
   notes?: string | null;
+  weeklyReport?: boolean;
 };
 
 export function ClientForm({
@@ -96,6 +97,21 @@ export function ClientForm({
           placeholder="Context, history, preferences…"
         />
       </div>
+      <label className="flex items-start gap-2 rounded-lg bg-gray-50 p-3 ring-1 ring-gray-200">
+        <input
+          type="checkbox"
+          name="weeklyReport"
+          defaultChecked={defaults?.weeklyReport ?? false}
+          className="mt-0.5 h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+        />
+        <span className="text-sm">
+          <span className="font-medium text-gray-800">Send weekly status report</span>
+          <span className="block text-xs text-gray-500">
+            Emails this client a status report automatically on the scheduled day
+            (requires the client&apos;s email + SMTP configured).
+          </span>
+        </span>
+      </label>
       {state?.error ? (
         <p className="text-sm text-red-600">{state.error}</p>
       ) : null}

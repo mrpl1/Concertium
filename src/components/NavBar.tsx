@@ -12,7 +12,11 @@ const baseLinks = [
 export function NavBar({ user }: { user: SessionUser }) {
   const links =
     user.role === "admin"
-      ? [...baseLinks, { href: "/team", label: "Team" }]
+      ? [
+          ...baseLinks,
+          { href: "/automations", label: "Automations" },
+          { href: "/team", label: "Team" },
+        ]
       : baseLinks;
 
   return (

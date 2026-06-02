@@ -14,6 +14,7 @@ function readClientForm(formData: FormData) {
     email: String(formData.get("email") || "").trim() || null,
     phone: String(formData.get("phone") || "").trim() || null,
     notes: String(formData.get("notes") || "").trim() || null,
+    weeklyReport: formData.get("weeklyReport") === "on",
   };
 }
 

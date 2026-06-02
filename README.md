@@ -68,6 +68,31 @@ Reports work in two modes:
    SMTP_FROM="Concertium Reports <you@gmail.com>"
    ```
 
+## Automations (alerts & scheduled reports)
+
+Concertium can proactively flag deadline risk and send reports on a schedule
+(Admin → **Automations**):
+
+- **Daily alert digest** — a summary of overdue, at-risk, and due-within-7-days
+  projects, emailed (to `NOTIFY_EMAIL`, or all admins) and/or posted to Slack.
+- **Weekly client reports** — automatically email a status report to each client
+  you've opted in (Clients → Edit → *Send weekly status report*).
+
+These run via a secured endpoint you trigger from any scheduler:
+
+```bash
+# once a day
+curl -s "https://your-host/api/cron?secret=$CRON_SECRET"
+```
+
+It sends the alert digest every day and the weekly reports on
+`WEEKLY_REPORT_DAY` (0=Sun … 6=Sat, default Friday). On macOS/Linux you can use
+`cron`; on a hosted platform use its scheduler (e.g. Vercel Cron). You can also
+run both manually from the Automations page at any time.
+
+Relevant `.env` settings: `CRON_SECRET`, `NOTIFY_EMAIL`, `SLACK_WEBHOOK_URL`,
+`WEEKLY_REPORT_DAY` (Slack uses an [Incoming Webhook](https://api.slack.com/messaging/webhooks)).
+
 ## Moving to a shared/hosted database
 
 SQLite is great for a single host. To use Postgres (e.g. for a hosted

@@ -32,6 +32,10 @@ model Client {
   email     String?
   phone     String?
   notes     String?
+  // When true, the scheduled job emails this client a status report on the
+  // configured weekly day (requires SMTP + the client's email).
+  weeklyReport     Boolean   @default(false)
+  lastReportSentAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
