@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
+// Next.js 16 renamed the "middleware" convention to "proxy".
 const COOKIE_NAME = "concertium_session";
 
 // Public paths that do not require authentication.
@@ -22,7 +23,7 @@ async function hasValidSession(req: NextRequest): Promise<boolean> {
   }
 }
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const isPublic = PUBLIC_PATHS.some((p) => pathname.startsWith(p));
   const isAuthPage = pathname.startsWith("/login") || pathname.startsWith("/register");
