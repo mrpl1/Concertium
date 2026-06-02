@@ -5,9 +5,12 @@
   "description": "Team project management — track clients, project status, and send email status reports.",
   "scripts": {
     "dev": "next dev",
+    "prebuild": "npm run sitemap",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
+    "sitemap": "node scripts/generate-sitemap.mjs",
+    "sitemap:check": "node scripts/generate-sitemap.mjs --check",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
@@ -27,6 +30,7 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.17.10",
     "@types/nodemailer": "^6.4.17",

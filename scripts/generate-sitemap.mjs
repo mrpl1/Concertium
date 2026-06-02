@@ -1,16 +1,22 @@
-// Generates a visual site map of the Concertium app as an SVG.
-// Pure Node, no dependencies:  node scripts/generate-sitemap.mjs
-// Output: docs/sitemap.svg
-import { writeFileSync, mkdirSync } from "node:fs";
+// Generates a visual site map of the Concertium app.
+//
+//   node scripts/generate-sitemap.mjs           → writes docs/sitemap.svg (+ .png if available)
+//   node scripts/generate-sitemap.mjs --check    → fails (exit 1) if docs/sitemap.svg is out of date
+//
+// Routes are DISCOVERED from src/app, so the map auto-updates when pages are
+// added or removed. Curated descriptions live in META below; any new route
+// without an entry still appears (with a default card) and prints a warning.
+//
+// SVG generation is dependency-free. PNG rendering uses @resvg/resvg-js if it
+// is installed (it's a devDependency); if not, the PNG step is skipped.
+import { writeFileSync, mkdirSync, readdirSync, readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
-
-const W = 1480;
-const H = 920;
-const MARGIN = 40;
+const APP_DIR = join(ROOT, "src", "app");
+const CHECK = process.argv.includes("--check");
 
 const COLORS = {
   bg: "#f8fafc",
@@ -25,35 +31,110 @@ const COLORS = {
   reports: "#d97706",
   team: "#9333ea",
 };
+const FALLBACK_PALETTE = ["#0891b2", "#db2777", "#ca8a04", "#65a30d", "#7c3aed"];
 
 const SANS = "DejaVu Sans, Liberation Sans, Arial, sans-serif";
 const MONO = "DejaVu Sans Mono, Liberation Mono, monospace";
 
+// Curated section order + display.
+const SECTION_ORDER = ["dashboard", "clients", "projects", "reports", "team"];
+const SECTION_META = {
+  dashboard: { name: "Dashboard", color: COLORS.dashboard },
+  clients: { name: "Clients", color: COLORS.clients },
+  projects: { name: "Projects", color: COLORS.projects },
+  reports: { name: "Reports", color: COLORS.reports },
+  team: { name: "Team", color: COLORS.team, suffix: "admin" },
+};
+
+// Curated per-route content. Routes not listed still render with defaults.
+const META = {
+  "/login": { title: "Sign in", desc: "Email + password", tag: "public" },
+  "/register": { title: "Create first account", desc: "Bootstrap only → first user = admin", tag: "public" },
+  "/": {
+    title: "Dashboard",
+    tag: "home",
+    desc: [
+      "• Interactive client selector",
+      "• Project-lifecycle graph (drill-in)",
+      "• Status breakdown + stat cards",
+      "• Needs-attention · deadlines · recent",
+    ],
+  },
+  "/clients": { title: "Clients", desc: "Directory of all clients", tag: "list" },
+  "/clients/new": { title: "New client", desc: "Create a client", tag: "form" },
+  "/clients/[id]": { title: "Client detail", desc: "Contact info, projects, per-client report, delete" },
+  "/clients/[id]/edit": { title: "Edit client", desc: "Update details", tag: "form" },
+  "/projects": { title: "Projects", desc: "List with status & client filters", tag: "list" },
+  "/projects/new": { title: "New project", desc: "Create a project", tag: "form" },
+  "/projects/[id]": { title: "Project detail", desc: "Status, progress, owner, updates timeline, delete" },
+  "/projects/[id]/edit": { title: "Edit project", desc: "Update fields", tag: "form" },
+  "/reports": {
+    title: "Status reports",
+    desc: [
+      "Pick a client or all clients",
+      "Preview the generated report, then:",
+      "• Draft in your mail client (mailto/copy)",
+      "• Send automatically via SMTP",
+    ],
+  },
+  "/team": {
+    title: "Team",
+    tag: "admin",
+    desc: ["Admin-only.", "List members; add a teammate", "(member or admin role)."],
+  },
+};
+
+// ---------------- route discovery ----------------
+function discover(dir, base = "") {
+  if (!existsSync(dir)) return [];
+  const entries = readdirSync(dir, { withFileTypes: true });
+  let routes = [];
+  if (entries.some((e) => e.isFile() && /^page\.(tsx|ts|jsx|js)$/.test(e.name))) {
+    routes.push(base === "" ? "/" : base);
+  }
+  for (const e of entries) {
+    if (!e.isDirectory()) continue;
+    const seg = e.name;
+    if (seg.startsWith("_") || seg === "actions" || seg === "components") continue;
+    const isGroup = seg.startsWith("(") && seg.endsWith(")");
+    routes = routes.concat(discover(join(dir, seg), isGroup ? base : `${base}/${seg}`));
+  }
+  return routes;
+}
+
+const sectionKey = (route) =>
+  route === "/login" || route === "/register"
+    ? "auth"
+    : route === "/"
+    ? "dashboard"
+    : route.split("/")[1];
+
+const depthOf = (route) => (route === "/" ? 0 : route.split("/").filter(Boolean).length - 1);
+const parentOf = (route) => {
+  const parts = route.split("/").filter(Boolean);
+  if (parts.length <= 1) return null;
+  return "/" + parts.slice(0, -1).join("/");
+};
+
+function prettify(route) {
+  const last = route.split("/").filter(Boolean).pop() || "Home";
+  return last.replace(/[[\]]/g, "").replace(/[-_]/g, " ").replace(/^\w/, (c) => c.toUpperCase());
+}
+
+// ---------------- svg helpers ----------------
 const out = [];
 const push = (s) => out.push(s);
-
-function esc(s) {
-  return String(s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
+const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 function text(x, y, str, { size = 13, color = COLORS.ink, weight = "normal", family = SANS, anchor = "start" } = {}) {
-  push(
-    `<text x="${x}" y="${y}" font-family="${family}" font-size="${size}" font-weight="${weight}" fill="${color}" text-anchor="${anchor}">${esc(str)}</text>`
-  );
+  push(`<text x="${x}" y="${y}" font-family="${family}" font-size="${size}" font-weight="${weight}" fill="${color}" text-anchor="${anchor}">${esc(str)}</text>`);
 }
-
 function rrect(x, y, w, h, r, { fill = "#fff", stroke = COLORS.cardRing, sw = 1, shadow = false } = {}) {
-  const filter = shadow ? ' filter="url(#shadow)"' : "";
-  push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ry="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"${filter}/>`);
+  push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ry="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"${shadow ? ' filter="url(#shadow)"' : ""}/>`);
 }
-
-// crude word-wrap by character estimate
 function wrap(str, width, size) {
   const max = Math.max(1, Math.floor(width / (size * 0.53)));
-  const words = str.split(" ");
+  const words = String(str).split(" ");
   const lines = [];
   let cur = "";
   for (const w of words) {
@@ -65,12 +146,16 @@ function wrap(str, width, size) {
   if (cur) lines.push(cur);
   return lines;
 }
-
-// ---------- card ----------
+function descLines(meta, width) {
+  if (!meta.desc) return [];
+  return Array.isArray(meta.desc) ? meta.desc : wrap(meta.desc, width - 30, 11);
+}
+function cardHeight(meta, width) {
+  return 46 + descLines(meta, width).length * 14 + 12;
+}
 function card(node) {
-  const { x, y, w, h, accent, title, path, desc, tag } = node;
+  const { x, y, w, h, accent, title, path, lines, tag } = node;
   rrect(x, y, w, h, 10, { shadow: true });
-  // left accent bar
   push(`<path d="M ${x} ${y + 10} q 0 -10 10 -10 v ${h - 20} q -10 0 -10 -10 Z" fill="${accent}"/>`);
   const tx = x + 18;
   text(tx, y + 24, title, { size: 14.5, weight: "bold" });
@@ -80,13 +165,8 @@ function card(node) {
     rrect(x + w - tagW - 10, y + 10, tagW, 18, 9, { fill: accent + "1a", stroke: accent + "55" });
     text(x + w - tagW / 2 - 10, y + 22.5, tag, { size: 10, color: accent, weight: "bold", anchor: "middle" });
   }
-  if (desc) {
-    const lines = Array.isArray(desc) ? desc : wrap(desc, w - 30, 11);
-    lines.forEach((ln, i) => text(tx, y + 58 + i * 14, ln, { size: 11, color: COLORS.sub }));
-  }
+  lines.forEach((ln, i) => text(tx, y + 58 + i * 14, ln, { size: 11, color: COLORS.sub }));
 }
-
-// elbow connector from a parent's left rail to a child's left edge
 function elbow(parent, child, color) {
   const railX = parent.x + 11;
   const cy = child.y + 20;
@@ -94,150 +174,143 @@ function elbow(parent, child, color) {
   push(`<circle cx="${child.x}" cy="${cy}" r="2.6" fill="${color}"/>`);
 }
 
-function vconn(x1, y1, x2, y2, color) {
-  push(`<path d="M ${x1} ${y1} V ${(y1 + y2) / 2} H ${x2} V ${y2}" fill="none" stroke="${color}" stroke-width="1.6"/>`);
-}
+// ---------------- build model ----------------
+const routes = discover(APP_DIR).sort();
+const warnings = [];
+for (const r of routes) if (!META[r]) warnings.push(r);
 
-// ================= build =================
+const authRoutes = routes.filter((r) => sectionKey(r) === "auth").sort();
+
+// Build the ordered section list (known order first, then any new sections).
+const presentKeys = [...new Set(routes.map(sectionKey))].filter((k) => k !== "auth");
+const orderedKeys = [
+  ...SECTION_ORDER.filter((k) => presentKeys.includes(k)),
+  ...presentKeys.filter((k) => !SECTION_ORDER.includes(k)).sort(),
+];
+let fb = 0;
+const sections = orderedKeys.map((key) => ({
+  key,
+  name: SECTION_META[key]?.name || prettify("/" + key),
+  color: SECTION_META[key]?.color || FALLBACK_PALETTE[fb++ % FALLBACK_PALETTE.length],
+  suffix: SECTION_META[key]?.suffix,
+  routes: routes.filter((r) => sectionKey(r) === key).sort(),
+}));
+
+// ---------------- layout ----------------
+const W = 1480;
+const MARGIN = 40;
+const usableW = W - 2 * MARGIN;
+const colGap = 26;
+const colCount = Math.max(1, sections.length);
+const colW = (usableW - (colCount - 1) * colGap) / colCount;
+const colX = (i) => MARGIN + i * (colW + colGap);
+const INDENT = 18;
+const colTop = 326;
+const navY = 222;
+const navH = 54;
+
+// place nodes per section
+let maxBottom = colTop;
+sections.forEach((sec, ci) => {
+  let cursor = colTop;
+  sec.nodes = [];
+  sec.routes.forEach((route) => {
+    const meta = META[route] || { title: prettify(route), desc: "" };
+    const depth = depthOf(route);
+    const w = colW - depth * INDENT;
+    const lines = descLines(meta, w);
+    const h = cardHeight(meta, w);
+    sec.nodes.push({
+      route,
+      x: colX(ci) + depth * INDENT,
+      y: cursor,
+      w,
+      h,
+      accent: sec.color,
+      title: meta.title || prettify(route),
+      path: route,
+      lines,
+      tag: meta.tag || null,
+      parentRoute: parentOf(route),
+    });
+    cursor += h + 16;
+  });
+  maxBottom = Math.max(maxBottom, cursor);
+});
+
+const flowY = maxBottom + 20;
+const flowH = 150;
+const H = flowY + flowH + 40;
+
+// ---------------- render ----------------
 push(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${SANS}">`);
-push(`<defs><filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="1.5" stdDeviation="2.5" flood-color="#0f172a" flood-opacity="0.10"/></filter></defs>`);
+push(`<defs><filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="1.5" stdDeviation="2.5" flood-color="#0f172a" flood-opacity="0.10"/></filter>`);
+push(`<marker id="arrow" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="${COLORS.auth}"/></marker></defs>`);
 rrect(0, 0, W, H, 0, { fill: COLORS.bg, stroke: COLORS.bg });
 
-// Header
+// header
 push(`<rect x="${MARGIN}" y="34" width="34" height="34" rx="8" fill="${COLORS.dashboard}"/>`);
 text(MARGIN + 17, 58, "C", { size: 20, weight: "bold", color: "#fff", anchor: "middle" });
 text(MARGIN + 46, 52, "Concertium — Site Map", { size: 27, weight: "bold" });
 text(MARGIN + 46, 74, "Team project management · routes, hierarchy & navigation", { size: 14, color: COLORS.sub });
 
-// Legend (top-right)
-const legend = [
-  ["auth", "Auth / public"],
-  ["dashboard", "Dashboard"],
-  ["clients", "Clients"],
-  ["projects", "Projects"],
-  ["reports", "Reports"],
-  ["team", "Team (admin)"],
-];
-let lx = W - MARGIN - 470;
-legend.forEach(([k, label], i) => {
-  const cx = lx + (i % 3) * 160;
+// legend
+const legendItems = [["auth", "Auth / public"], ...sections.map((s) => [s.key, s.name + (s.suffix ? " (admin)" : "")])];
+const lx0 = W - MARGIN - 470;
+legendItems.slice(0, 6).forEach(([k, label], i) => {
+  const cx = lx0 + (i % 3) * 160;
   const cyy = 44 + Math.floor(i / 3) * 22;
-  push(`<circle cx="${cx}" cy="${cyy - 4}" r="6" fill="${COLORS[k]}"/>`);
+  const color = k === "auth" ? COLORS.auth : sections.find((s) => s.key === k)?.color || COLORS.sub;
+  push(`<circle cx="${cx}" cy="${cyy - 4}" r="6" fill="${color}"/>`);
   text(cx + 12, cyy, label, { size: 12, color: COLORS.ink });
 });
 
-// ---- Auth row ----
+// auth row
 text(MARGIN, 116, "ENTRY  ·  AUTHENTICATION", { size: 12, weight: "bold", color: COLORS.faint });
 const authW = 300;
-const login = { x: MARGIN, y: 128, w: authW, h: 62, accent: COLORS.auth, title: "Sign in", path: "/login", desc: "Email + password", tag: "public" };
-const register = { x: MARGIN + authW + 22, y: 128, w: authW, h: 62, accent: COLORS.auth, title: "Create first account", path: "/register", desc: "Bootstrap only → first user = admin", tag: "public" };
-card(login);
-card(register);
-// auth note
-const noteX = MARGIN + 2 * authW + 70;
-rrect(noteX, 128, W - MARGIN - noteX, 62, 10, { fill: "#fff7ed", stroke: "#fed7aa" });
-text(noteX + 16, 150, "🔒  Middleware protects every other route", { size: 12.5, weight: "bold", color: "#9a3412" });
-wrap("Unauthenticated visitors are redirected to /login (with a ?next= return path). Sessions use a signed JWT cookie.", W - MARGIN - noteX - 30, 11).forEach((ln, i) =>
-  text(noteX + 16, 168 + i * 13, ln, { size: 11, color: "#9a3412" })
-);
+authRoutes.forEach((route, i) => {
+  const meta = META[route] || { title: prettify(route) };
+  const x = MARGIN + i * (authW + 22);
+  const w = authW;
+  const lines = descLines(meta, w);
+  card({ x, y: 128, w, h: 62, accent: COLORS.auth, title: meta.title || prettify(route), path: route, lines, tag: meta.tag || null });
+});
+const noteX = MARGIN + authRoutes.length * (authW + 22) + 48;
+if (noteX < W - MARGIN - 120) {
+  rrect(noteX, 128, W - MARGIN - noteX, 62, 10, { fill: "#fff7ed", stroke: "#fed7aa" });
+  text(noteX + 16, 150, "🔒  Middleware protects every other route", { size: 12.5, weight: "bold", color: "#9a3412" });
+  wrap("Unauthenticated visitors are redirected to /login (with a ?next= return path). Sessions use a signed JWT cookie.", W - MARGIN - noteX - 30, 11).forEach((ln, i) =>
+    text(noteX + 16, 168 + i * 13, ln, { size: 11, color: "#9a3412" })
+  );
+}
 
-// ---- NavBar bar ----
-const navY = 222;
-const navH = 54;
-rrect(MARGIN, navY, W - 2 * MARGIN, navH, 12, { fill: "#eef4ff", stroke: "#bcd2ff" });
+// navbar
+rrect(MARGIN, navY, usableW, navH, 12, { fill: "#eef4ff", stroke: "#bcd2ff" });
 text(MARGIN + 18, navY + 22, "APP SHELL", { size: 11, weight: "bold", color: COLORS.dashboard });
 text(MARGIN + 18, navY + 38, "Persistent top nav", { size: 11, color: COLORS.sub });
-
-// arrow auth -> navbar
-push(`<path d="M ${MARGIN + authW / 2} 190 V ${navY}" fill="none" stroke="${COLORS.auth}" stroke-width="1.6" marker-end="url(#arrow)"/>`);
-push(`<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="${COLORS.auth}"/></marker></defs>`);
-
-// ---- Columns ----
-const usableW = W - 2 * MARGIN;
-const colGap = 26;
-const colW = (usableW - 4 * colGap) / 5;
-const colX = (i) => MARGIN + i * (colW + colGap);
-const INDENT = 18;
-const colTop = 326;
-const sectionColors = [COLORS.dashboard, COLORS.clients, COLORS.projects, COLORS.reports, COLORS.team];
-const sectionNames = ["Dashboard", "Clients", "Projects", "Reports", "Team"];
-
-// nav pills aligned over each column
-sectionNames.forEach((name, i) => {
+if (authRoutes.length) {
+  push(`<path d="M ${MARGIN + authW / 2} 190 V ${navY}" fill="none" stroke="${COLORS.auth}" stroke-width="1.6" marker-end="url(#arrow)"/>`);
+}
+sections.forEach((sec, i) => {
   const pillW = colW - 20;
   const px = colX(i) + 10;
   rrect(px, navY + 13, pillW, 28, 14, { fill: "#fff", stroke: "#bcd2ff" });
-  text(px + pillW / 2, navY + 31, name + (i === 4 ? "  ·  admin" : ""), { size: 12.5, weight: "bold", color: COLORS.dashboard, anchor: "middle" });
-  // connector pill -> column root
-  push(`<path d="M ${colX(i) + colW / 2} ${navY + navH} V ${colTop}" fill="none" stroke="${sectionColors[i]}" stroke-width="1.4" stroke-dasharray="2 4"/>`);
+  text(px + pillW / 2, navY + 31, sec.name + (sec.suffix ? "  ·  " + sec.suffix : ""), { size: 12.5, weight: "bold", color: COLORS.dashboard, anchor: "middle" });
+  push(`<path d="M ${colX(i) + colW / 2} ${navY + navH} V ${colTop}" fill="none" stroke="${sec.color}" stroke-width="1.4" stroke-dasharray="2 4"/>`);
 });
 
-// column definitions: [depth, title, path, desc, height, parentIndexWithinColumn|null, tag]
-const columns = [
-  // Dashboard
-  [
-    [0, "Dashboard", "/", [
-      "• Interactive client selector",
-      "• Project-lifecycle graph (drill-in)",
-      "• Status breakdown + stat cards",
-      "• Needs-attention · deadlines · recent",
-    ], 150, null, "home"],
-  ],
-  // Clients
-  [
-    [0, "Clients", "/clients", "Directory of all clients", 60, null, "list"],
-    [1, "New client", "/clients/new", "Create a client", 50, 0, "form"],
-    [1, "Client detail", "/clients/[id]", "Contact info, projects, per-client report, delete", 76, 0, ""],
-    [2, "Edit client", "/clients/[id]/edit", "Update details", 50, 2, "form"],
-  ],
-  // Projects
-  [
-    [0, "Projects", "/projects", "List with status & client filters", 60, null, "list"],
-    [1, "New project", "/projects/new", "Create a project", 50, 0, "form"],
-    [1, "Project detail", "/projects/[id]", "Status, progress, owner, updates timeline, delete", 76, 0, ""],
-    [2, "Edit project", "/projects/[id]/edit", "Update fields", 50, 2, "form"],
-  ],
-  // Reports
-  [
-    [0, "Status reports", "/reports", [
-      "Pick a client or all clients",
-      "Preview the generated report, then:",
-      "• Draft in your mail client (mailto/copy)",
-      "• Send automatically via SMTP",
-    ], 110, null, ""],
-  ],
-  // Team
-  [
-    [0, "Team", "/team", [
-      "Admin-only.",
-      "List members; add a teammate",
-      "(member or admin role).",
-    ], 92, null, "admin"],
-  ],
-];
-
-// layout + render each column
-columns.forEach((nodes, ci) => {
-  const accent = sectionColors[ci];
-  let cursor = colTop;
-  const placed = [];
-  nodes.forEach(([depth, title, path, desc, h, parent, tag]) => {
-    const x = colX(ci) + depth * INDENT;
-    const w = colW - depth * INDENT;
-    const node = { x, y: cursor, w, h, accent, title, path, desc, tag: tag || null, parent };
-    placed.push(node);
-    cursor += h + 16;
+// section nodes + connectors
+sections.forEach((sec) => {
+  const byRoute = Object.fromEntries(sec.nodes.map((n) => [n.route, n]));
+  sec.nodes.forEach((n) => {
+    const parent = n.parentRoute && byRoute[n.parentRoute];
+    if (parent) elbow(parent, n, sec.color);
   });
-  // connectors first (under cards)
-  placed.forEach((n) => {
-    if (n.parent !== null && n.parent !== undefined) elbow(placed[n.parent], n, accent);
-  });
-  placed.forEach((n) => card(n));
+  sec.nodes.forEach((n) => card(n));
 });
 
-// ---- Key flows box ----
-const flowY = 700;
-rrect(MARGIN, flowY, usableW, 150, 12, { fill: "#fff", stroke: COLORS.cardRing, shadow: true });
+// key flows box
+rrect(MARGIN, flowY, usableW, flowH, 12, { fill: "#fff", stroke: COLORS.cardRing, shadow: true });
 text(MARGIN + 20, flowY + 28, "KEY NAVIGATION FLOWS & CROSS-LINKS", { size: 12.5, weight: "bold", color: COLORS.ink });
 const flows = [
   ["dashboard", "Dashboard → filtered Projects list and a per-client Status report (carries the selected client through)."],
@@ -248,17 +321,48 @@ const flows = [
 ];
 flows.forEach(([k, txt], i) => {
   const fy = flowY + 52 + i * 19;
-  push(`<circle cx="${MARGIN + 26}" cy="${fy - 4}" r="5" fill="${COLORS[k]}"/>`);
+  const color = sections.find((s) => s.key === k)?.color || COLORS.sub;
+  push(`<circle cx="${MARGIN + 26}" cy="${fy - 4}" r="5" fill="${color}"/>`);
   text(MARGIN + 40, fy, txt, { size: 12, color: COLORS.ink });
 });
 
-// footer
-text(MARGIN, H - 14, `Concertium site map · generated ${new Date().toISOString().slice(0, 10)}`, { size: 10.5, color: COLORS.faint });
-text(W - MARGIN, H - 14, "14 routes · Next.js App Router", { size: 10.5, color: COLORS.faint, anchor: "end" });
+// footer (stable — no timestamp, so rebuilds don't churn the diff)
+text(MARGIN, H - 14, "Concertium site map · auto-generated from src/app — do not edit by hand", { size: 10.5, color: COLORS.faint });
+text(W - MARGIN, H - 14, `${routes.length} routes · Next.js App Router`, { size: 10.5, color: COLORS.faint, anchor: "end" });
 
 push(`</svg>`);
+const svg = out.join("\n");
+
+// ---------------- output / check ----------------
+const svgPath = join(ROOT, "docs", "sitemap.svg");
+
+if (CHECK) {
+  const current = existsSync(svgPath) ? readFileSync(svgPath, "utf8") : "";
+  if (current !== svg) {
+    console.error("✗ docs/sitemap.svg is out of date. Run: npm run sitemap");
+    process.exit(1);
+  }
+  console.log("✓ Site map is up to date.");
+  process.exit(0);
+}
 
 mkdirSync(join(ROOT, "docs"), { recursive: true });
-const svg = out.join("\n");
-writeFileSync(join(ROOT, "docs", "sitemap.svg"), svg);
-console.log("Wrote docs/sitemap.svg (" + svg.length + " bytes)");
+writeFileSync(svgPath, svg);
+console.log(`Wrote docs/sitemap.svg (${routes.length} routes)`);
+if (warnings.length) {
+  console.warn(`⚠ ${warnings.length} route(s) without a description in META — add them for nicer cards:`);
+  warnings.forEach((r) => console.warn(`   ${r}`));
+}
+
+// Optional PNG (skipped silently if @resvg/resvg-js isn't installed).
+try {
+  const { Resvg } = await import("@resvg/resvg-js");
+  const r = new Resvg(svg, {
+    fitTo: { mode: "zoom", value: 2 },
+    font: { fontDirs: ["/usr/share/fonts"], loadSystemFonts: true, defaultFontFamily: "DejaVu Sans" },
+  });
+  writeFileSync(join(ROOT, "docs", "sitemap.png"), r.render().asPng());
+  console.log("Wrote docs/sitemap.png");
+} catch (e) {
+  console.log("PNG step skipped (install @resvg/resvg-js to enable):", e.message);
+}

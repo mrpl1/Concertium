@@ -89,3 +89,19 @@ deployment shared across the team):
 | `npm run db:push`   | Apply the Prisma schema to the database      |
 | `npm run db:seed`   | Seed the admin user + sample data            |
 | `npm run db:studio` | Open Prisma Studio to browse the database    |
+| `npm run sitemap`   | Regenerate the visual site map               |
+| `npm run sitemap:check` | Fail if the site map is out of date (CI)  |
+
+## Site map (auto-generated)
+
+A visual site map of the whole app lives at
+[`docs/sitemap.png`](docs/sitemap.png) (with a scalable
+[`docs/sitemap.svg`](docs/sitemap.svg)).
+
+It is **derived from the routes in `src/app`** by
+`scripts/generate-sitemap.mjs` and **regenerated automatically on every build**
+(via the `prebuild` script), so it stays in sync as pages are added or removed.
+Curated card descriptions live in the `META` table inside that script; a new
+route without an entry still appears, and the generator warns you to describe
+it. Use `npm run sitemap:check` in CI to enforce that the committed map is
+current.
