@@ -1,0 +1,57 @@
+# Deploys Concertium to Hostinger over SSH on every push to main.
+#
+# One-time setup (in GitHub → repo → Settings → Secrets and variables → Actions):
+#   HOSTINGER_HOST     e.g. 123.45.67.89  (or your domain)
+#   HOSTINGER_PORT     Hostinger SSH port (shared hosting is usually 65002)
+#   HOSTINGER_USER     e.g. u294070911
+#   HOSTINGER_SSH_KEY  a PRIVATE SSH key whose public half is added to Hostinger
+#                      (hPanel → Advanced → SSH Access → Manage SSH keys)
+#   HOSTINGER_APP_DIR  e.g. /home/u294070911/domains/lindenlaub.cloud/nodejs
+#   HOSTINGER_PRE      (optional) shell run before npm — on Hostinger you often
+#                      must activate Node, e.g.:
+#                        source /home/u294070911/nodevenv/domains/lindenlaub.cloud/nodejs/22/bin/activate
+#
+# Secrets are stored in GitHub and are never exposed to anyone (including the
+# author of this repo). The server must already be able to `git pull` this repo.
+
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-hostinger
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOSTINGER_HOST }}
+          port: ${{ secrets.HOSTINGER_PORT }}
+          username: ${{ secrets.HOSTINGER_USER }}
+          key: ${{ secrets.HOSTINGER_SSH_KEY }}
+          script_stop: true
+          command_timeout: 20m
+          script: |
+            set -e
+            ${{ secrets.HOSTINGER_PRE }}
+            cd "${{ secrets.HOSTINGER_APP_DIR }}"
+            echo "→ Pulling latest main"
+            git fetch origin main
+            git reset --hard origin/main
+            echo "→ Installing dependencies"
+            npm install --no-audit --no-fund
+            echo "→ Syncing database schema"
+            npx prisma generate
+            npx prisma db push --skip-generate
+            echo "→ Building"
+            npm run build
+            echo "→ Restarting app"
+            mkdir -p tmp && touch tmp/restart.txt
+            echo "✓ Deploy complete"

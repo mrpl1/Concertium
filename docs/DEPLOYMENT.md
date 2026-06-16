@@ -122,3 +122,36 @@ absolute path under your domain's `nodejs/` folder and ensure it exists.
 **App won't start / port issues**
 → Hostinger assigns the port; let the app use `process.env.PORT` (Next's
 `next start` respects `PORT`). Don't hard-code a port in the start command.
+
+---
+
+## 6. Automated deploys (GitHub Actions)
+
+`.github/workflows/deploy.yml` deploys to Hostinger over SSH on every push to
+`main` (and on manual "Run workflow"). It pulls, installs, runs
+`prisma db push`, builds, and restarts the app — so shipping a change is just a
+push. Secrets live in GitHub and are never shared with anyone.
+
+**One-time setup**
+
+1. **Add an SSH key to Hostinger:** hPanel → Advanced → **SSH Access** → add the
+   *public* key. Keep the matching *private* key for the next step.
+2. **Add GitHub secrets:** repo → Settings → Secrets and variables → **Actions**:
+   | Secret | Value |
+   | ------ | ----- |
+   | `HOSTINGER_HOST` | server IP or hostname |
+   | `HOSTINGER_PORT` | SSH port (shared hosting is usually `65002`) |
+   | `HOSTINGER_USER` | e.g. `u294070911` |
+   | `HOSTINGER_SSH_KEY` | the **private** key (full text) |
+   | `HOSTINGER_APP_DIR` | e.g. `/home/u294070911/domains/lindenlaub.cloud/nodejs` |
+   | `HOSTINGER_PRE` | *(optional)* command to activate Node before npm, e.g. `source /home/USER/nodevenv/domains/DOMAIN/nodejs/22/bin/activate` |
+3. **Make sure the server can `git pull`** this repo (it already can if you
+   cloned it there). The first env setup + database creation (sections 1–3)
+   still happens once on the server.
+
+After that, every push to `main` redeploys automatically. You can also run the
+same steps by hand with `bash scripts/deploy.sh` over SSH.
+
+> Note: native modules are kept optional (`@resvg/resvg-js`, used only to render
+> the site-map PNG), so `npm install` won't fail on hosts without a prebuilt
+> binary — the SVG site map is still generated.
