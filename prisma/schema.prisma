@@ -1,13 +1,15 @@
 // Concertium — data model
-// Provider is SQLite for easy local/self-hosting. To move to Postgres later,
-// change `provider` to "postgresql" and update DATABASE_URL — the models stay the same.
+// Provider is MySQL (works on Hostinger and most hosts). For local development
+// run a MySQL instance (see docker-compose.yml) and point DATABASE_URL at it.
+// Long free-text fields use @db.Text so they aren't capped at MySQL's default
+// varchar(191).
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -32,7 +34,7 @@ model Client {
   company   String?
   email     String?
   phone     String?
-  notes     String?
+  notes     String?  @db.Text
   // When true, the scheduled job emails this client a status report on the
   // configured weekly day (requires SMTP + the client's email).
   weeklyReport     Boolean   @default(false)
@@ -48,7 +50,7 @@ model Client {
 model Project {
   id          String    @id @default(cuid())
   name        String
-  description String?
+  description String?   @db.Text
   // status: "Not Started" | "On Track" | "At Risk" | "Off Track" | "On Hold" | "Completed"
   status      String    @default("Not Started")
   // priority: "Low" | "Medium" | "High"
@@ -82,7 +84,7 @@ model Project {
 model ProjectLink {
   id        String   @id @default(cuid())
   label     String
-  url       String
+  url       String   @db.Text
   createdAt DateTime @default(now())
 
   projectId String
@@ -93,7 +95,7 @@ model ProjectLink {
 model TimeEntry {
   id        String   @id @default(cuid())
   hours     Float
-  note      String?
+  note      String?  @db.Text
   date      DateTime @default(now())
   createdAt DateTime @default(now())
 
@@ -113,7 +115,7 @@ model Tag {
 model Deliverable {
   id          String    @id @default(cuid())
   name        String
-  description String?
+  description String?   @db.Text
   // status: "Pending" | "In Progress" | "In Review" | "Approved" | "Blocked"
   status      String    @default("Pending")
   dueDate     DateTime?
@@ -138,7 +140,7 @@ model DeadlineChange {
   id        String   @id @default(cuid())
   oldDate   DateTime?
   newDate   DateTime?
-  reason    String?
+  reason    String?  @db.Text
   createdAt DateTime @default(now())
 
   projectId String
@@ -153,7 +155,7 @@ model DeadlineChange {
 
 model StatusUpdate {
   id        String   @id @default(cuid())
-  body      String
+  body      String   @db.Text
   status    String? // status snapshot at time of update
   createdAt DateTime @default(now())
 
