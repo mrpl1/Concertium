@@ -18,7 +18,7 @@ Node.js → Environment variables**, or create a `.env` file in the app root.
 
 | Variable        | Required | Example / notes |
 | --------------- | -------- | --------------- |
-| `DATABASE_URL`  | ✅       | SQLite: `file:/home/USER/domains/DOMAIN/nodejs/prisma/prod.db` (use an **absolute** path). MySQL: `mysql://user:pass@host:3306/dbname` |
+| `DATABASE_URL`  | ✅       | MySQL connection string: `mysql://USER:PASSWORD@HOST:3306/DBNAME` |
 | `AUTH_SECRET`   | ✅       | A long random string. Generate: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` |
 | `NODE_ENV`      | ⚠️       | `production` (Hostinger usually sets this) |
 | `SLACK_WEBHOOK_URL` | optional | Enables Slack alert digests |
@@ -26,32 +26,22 @@ Node.js → Environment variables**, or create a `.env` file in the app root.
 | `CRON_SECRET`   | optional | Guards `/api/cron` for an external scheduler |
 | `ENABLE_SCHEDULER`, `SCHEDULER_HOUR` | optional | In-process daily scheduler |
 
-If the app's start directory is unclear, always use an **absolute** SQLite path
-so Prisma resolves it consistently.
-
 ---
 
-## 2. Choose a database
+## 2. Create the MySQL database
 
-### Option A — MySQL (recommended for production)
-Shared hosting runs multiple worker processes; a server database handles
-concurrent access properly and survives redeploys.
+The app uses **MySQL**. On Hostinger:
 
-1. Create a MySQL database + user in hPanel (**Databases → MySQL**).
-2. In `prisma/schema.prisma`, set the provider to MySQL:
-   ```prisma
-   datasource db {
-     provider = "mysql"
-     url      = env("DATABASE_URL")
-   }
-   ```
-3. Set `DATABASE_URL="mysql://USER:PASSWORD@HOST:3306/DBNAME"` in the env.
-4. Apply the schema: `npx prisma db push` (then `npm run db:seed`).
+1. hPanel → **Databases → MySQL** → create a database and a user, and grant the
+   user access to it. Note the **host** (often `localhost` for the app, or the
+   hostname shown in the panel), database name, user, and password.
+2. Set `DATABASE_URL="mysql://USER:PASSWORD@HOST:3306/DBNAME"` in the env
+   (section 1).
+3. Apply the schema and seed the first admin (over SSH, section 3):
+   `npx prisma db push` then `npm run db:seed`.
 
-### Option B — SQLite (quick start / low traffic only)
-Works, but writes are serialized and the file can be lost on redeploy. Keep the
-`prod.db` path **outside** anything a deploy overwrites, and use an absolute
-`DATABASE_URL` as shown above. The default schema already uses `sqlite`.
+> For local development, the repo ships a `docker-compose.yml` — run
+> `docker compose up -d` and use the `DATABASE_URL` already in `.env.example`.
 
 ---
 
@@ -115,9 +105,10 @@ wasn't deployed — it's git-ignored). Set it per section 1 and restart.
 **`The column main.X.Y does not exist`** (`P2022`)
 → The database schema is behind the code. Run `npx prisma db push` on the server.
 
-**`Unable to open the database file` (SQLite)**
-→ The `DATABASE_URL` path isn't writable or the directory doesn't exist. Use an
-absolute path under your domain's `nodejs/` folder and ensure it exists.
+**`Can't reach database server` / `Access denied` (MySQL)**
+→ Check the `DATABASE_URL` host/port/credentials match the hPanel MySQL details,
+that the DB user has access to the database, and (for remote access) that your
+IP is allowed. From the app server, the host is usually `localhost`.
 
 **App won't start / port issues**
 → Hostinger assigns the port; let the app use `process.env.PORT` (Next's

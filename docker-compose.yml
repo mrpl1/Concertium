@@ -1,0 +1,23 @@
+# Local MySQL for development (the app now uses MySQL everywhere).
+#
+#   docker compose up -d          # start MySQL in the background
+#   docker compose down           # stop it (data persists in the volume)
+#
+# Then in .env:
+#   DATABASE_URL="mysql://concertium:concertium@localhost:3306/concertium"
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: concertium
+      MYSQL_USER: concertium
+      MYSQL_PASSWORD: concertium
+      MYSQL_ROOT_PASSWORD: concertium
+    ports:
+      - "3306:3306"
+    volumes:
+      - concertium_db:/var/lib/mysql
+
+volumes:
+  concertium_db:

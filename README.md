@@ -42,7 +42,7 @@ project status, and generate & send email status reports.
 
 - [Next.js](https://nextjs.org/) (App Router, TypeScript) — server components +
   server actions
-- [Prisma](https://www.prisma.io/) ORM with **SQLite** (swap to Postgres easily)
+- [Prisma](https://www.prisma.io/) ORM with **MySQL** (local via Docker; any MySQL host in prod)
 - [Tailwind CSS](https://tailwindcss.com/)
 - Auth via bcrypt-hashed passwords + a signed JWT session cookie (`jose`)
 - [Nodemailer](https://nodemailer.com/) for optional automatic email sending
@@ -53,17 +53,24 @@ project status, and generate & send email status reports.
 # 1. Install dependencies
 npm install
 
-# 2. Configure environment
+# 2. Start a local MySQL (uses docker-compose.yml)
+docker compose up -d
+
+# 3. Configure environment
 cp .env.example .env
-#   then edit .env — at minimum set a long random AUTH_SECRET:
+#   .env already points DATABASE_URL at the local MySQL above; also set a
+#   long random AUTH_SECRET:
 #   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
-# 3. Set up the database (creates tables + a starter admin & sample data)
+# 4. Set up the database (creates tables + a starter admin & sample data)
 npm run setup
 
-# 4. Run it
+# 5. Run it
 npm run dev
 ```
+
+> Prefer not to use Docker? Install MySQL locally (e.g. `brew install mysql`),
+> create a `concertium` database, and point `DATABASE_URL` at it.
 
 Open http://localhost:3000. The first time, you'll be prompted to create the
 first account (which becomes the admin), or you can sign in with the seeded
@@ -146,19 +153,13 @@ Relevant `.env` settings: `CRON_SECRET`, `NOTIFY_EMAIL`, `SLACK_WEBHOOK_URL`,
 ## Deploying
 
 See **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)** for a step-by-step Hostinger
-(Node.js) guide, including required environment variables, choosing SQLite vs.
-MySQL, first-deploy steps, and troubleshooting (e.g. the
-`Environment variable not found: DATABASE_URL` crash-loop).
+(Node.js) guide: required environment variables, the MySQL connection string,
+first-deploy steps, automated deploys via GitHub Actions, and troubleshooting
+(e.g. the `Environment variable not found: DATABASE_URL` crash-loop).
 
-## Moving to a shared/hosted database
-
-SQLite is great for a single host. To use Postgres (e.g. for a hosted
-deployment shared across the team):
-
-1. In `prisma/schema.prisma`, change `provider = "sqlite"` to
-   `provider = "postgresql"`.
-2. Set `DATABASE_URL` to your Postgres connection string.
-3. Run `npm run db:push` (and `npm run db:seed` for the initial admin).
+The app uses **MySQL** everywhere. In production, set `DATABASE_URL` to your
+host's MySQL connection string (Hostinger: hPanel → MySQL), then run
+`npx prisma db push` and `npm run db:seed` once on the server.
 
 ## Useful scripts
 
@@ -170,7 +171,7 @@ deployment shared across the team):
 | `npm run setup`     | Generate client, push schema, seed data      |
 | `npm run db:push`   | Apply the Prisma schema to the database      |
 | `npm run db:seed`   | Seed the admin user + sample data            |
-| `npm run db:reset`  | Recreate the local SQLite DB from scratch + seed |
+| `npm run db:reset`  | Drop & recreate the database schema, then seed   |
 | `npm run db:studio` | Open Prisma Studio to browse the database    |
 
 > `npm run dev` automatically syncs the database to the current Prisma schema
