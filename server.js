@@ -18,6 +18,33 @@ console.log("NODE_ENV:", process.env.NODE_ENV);
 console.log("PORT (raw):", JSON.stringify(process.env.PORT));
 console.log("HOSTNAME:", JSON.stringify(process.env.HOSTNAME));
 
+// Redacted view of DATABASE_URL so we can confirm what the runtime actually
+// sees (did the env-var change take? right user/host/db? password length /
+// special chars?) WITHOUT ever printing the password itself.
+(function logDbUrl() {
+  const raw = process.env.DATABASE_URL;
+  if (!raw) {
+    console.log("DATABASE_URL: <undefined> (env var not set at runtime!)");
+    return;
+  }
+  try {
+    const u = new URL(raw);
+    const pw = decodeURIComponent(u.password || "");
+    const hasSpecial = /[^A-Za-z0-9]/.test(pw);
+    console.log("DATABASE_URL parsed:", JSON.stringify({
+      protocol: u.protocol,
+      user: u.username,
+      host: u.hostname,
+      port: u.port,
+      database: u.pathname.replace(/^\//, ""),
+      passwordLength: pw.length,
+      passwordHasSpecialChars: hasSpecial,
+    }));
+  } catch (e) {
+    console.log("DATABASE_URL could not be parsed as a URL:", e.message);
+  }
+})();
+
 const { createServer } = require("http");
 const { parse } = require("url");
 const next = require("next");
