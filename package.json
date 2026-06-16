@@ -16,6 +16,7 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
     "db:reset": "prisma db push --force-reset && npm run db:seed",
+    "prod:deploy": "prisma generate && prisma db push && next build",
     "setup": "prisma generate && prisma db push && npm run db:seed",
     "postinstall": "prisma generate"
   },
