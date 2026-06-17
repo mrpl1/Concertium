@@ -20,6 +20,7 @@ export function NavBar({ user }: { user: SessionUser }) {
           ...baseLinks,
           { href: "/automations", label: "Automations" },
           { href: "/team", label: "Team" },
+          { href: "/settings", label: "Settings" },
         ]
       : baseLinks;
 

@@ -14,8 +14,14 @@ export default async function NewProjectPage({
   const user = await requireUser();
 
   const [clients, users] = await Promise.all([
-    prisma.client.findMany({ orderBy: { name: "asc" } }),
-    prisma.user.findMany({ orderBy: { name: "asc" } }),
+    prisma.client.findMany({
+      where: { workspaceId: user.workspaceId },
+      orderBy: { name: "asc" },
+    }),
+    prisma.user.findMany({
+      where: { workspaceId: user.workspaceId },
+      orderBy: { name: "asc" },
+    }),
   ]);
 
   if (clients.length === 0) {

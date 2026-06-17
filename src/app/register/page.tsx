@@ -35,8 +35,8 @@ export default async function RegisterPage() {
           ) : (
             <div className="text-center">
               <p className="text-sm text-gray-600">
-                Registration is closed. Ask an admin to create an account for
-                you from the Team page.
+                Registration is closed. Ask a workspace admin to send you an
+                invite link.
               </p>
               <Link href="/login" className="btn-secondary mt-4 w-full">
                 Back to sign in

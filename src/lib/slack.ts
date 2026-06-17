@@ -1,15 +1,18 @@
 import "server-only";
 
-// Slack delivery via an Incoming Webhook URL (optional, like SMTP).
-// Set SLACK_WEBHOOK_URL in .env to enable.
+// Slack delivery via an Incoming Webhook URL. The URL is a per-workspace
+// setting (Workspace.slackWebhookUrl); it is passed in explicitly rather than
+// read from a global env var.
 
-export function isSlackConfigured(): boolean {
-  return Boolean(process.env.SLACK_WEBHOOK_URL);
+export function isSlackConfigured(url: string | null | undefined): boolean {
+  return Boolean(url && url.trim());
 }
 
-export async function sendSlack(text: string): Promise<void> {
-  const url = process.env.SLACK_WEBHOOK_URL;
-  if (!url) throw new Error("SLACK_WEBHOOK_URL is not set.");
+export async function sendSlack(
+  url: string | null | undefined,
+  text: string
+): Promise<void> {
+  if (!url) throw new Error("No Slack webhook URL configured for this workspace.");
   const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

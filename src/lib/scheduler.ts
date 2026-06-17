@@ -25,14 +25,14 @@ export function startScheduler() {
       if (now.getHours() < hour || lastDailyKey === dayKey) return;
       lastDailyKey = dayKey;
 
-      const { sendAlertDigest, runWeeklyReports } = await import("./automations");
+      const { sendAllAlertDigests, runAllWeeklyReports } = await import("./automations");
 
-      const alerts = await sendAlertDigest({ sendIfEmpty: false });
-      console.log("[scheduler] alert digest:", JSON.stringify(alerts));
+      const alerts = await sendAllAlertDigests({ sendIfEmpty: false });
+      console.log("[scheduler] alert digests:", JSON.stringify(alerts));
 
       if (now.getDay() === weeklyDay && lastWeeklyKey !== dayKey) {
         lastWeeklyKey = dayKey;
-        const weekly = await runWeeklyReports();
+        const weekly = await runAllWeeklyReports();
         console.log("[scheduler] weekly reports:", JSON.stringify(weekly));
       }
     } catch (e) {

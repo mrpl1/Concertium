@@ -30,8 +30,11 @@ function parseTags(formData: FormData): string[] {
   return out;
 }
 
-function tagConnect(names: string[]) {
-  return names.map((name) => ({ where: { name }, create: { name } }));
+function tagConnect(names: string[], workspaceId: string) {
+  return names.map((name) => ({
+    where: { workspaceId_name: { workspaceId, name } },
+    create: { name, workspaceId },
+  }));
 }
 
 function readProjectForm(formData: FormData) {
@@ -74,13 +77,22 @@ export async function createProjectAction(
   if (!data.name) return { error: "Project name is required." };
   if (!data.clientId) return { error: "Please choose a client." };
 
+  // The chosen client must belong to the user's workspace.
+  const client = await prisma.client.findUnique({ where: { id: data.clientId } });
+  if (!client || client.workspaceId !== user.workspaceId) {
+    return { error: "Please choose a client." };
+  }
+
   const tags = parseTags(formData);
   const project = await prisma.project.create({
     // The first agreed due date becomes the baseline for slippage tracking.
     data: {
       ...data,
+      workspaceId: user.workspaceId,
       baselineDueDate: data.dueDate,
-      tags: tags.length ? { connectOrCreate: tagConnect(tags) } : undefined,
+      tags: tags.length
+        ? { connectOrCreate: tagConnect(tags, user.workspaceId) }
+        : undefined,
     },
   });
   if (data.dueDate) {
@@ -110,6 +122,14 @@ export async function updateProjectAction(
   if (!data.clientId) return { error: "Please choose a client." };
 
   const existing = await prisma.project.findUnique({ where: { id } });
+  if (!existing || existing.workspaceId !== user.workspaceId) {
+    return { error: "Project not found." };
+  }
+  const client = await prisma.client.findUnique({ where: { id: data.clientId } });
+  if (!client || client.workspaceId !== user.workspaceId) {
+    return { error: "Please choose a client." };
+  }
+
   const oldMs = existing?.dueDate?.getTime() ?? null;
   const newMs = data.dueDate?.getTime() ?? null;
   const baselineDueDate = existing?.baselineDueDate ?? data.dueDate;
@@ -131,7 +151,7 @@ export async function updateProjectAction(
     data: {
       ...data,
       baselineDueDate,
-      tags: { set: [], connectOrCreate: tagConnect(tags) },
+      tags: { set: [], connectOrCreate: tagConnect(tags, user.workspaceId) },
     },
   });
   revalidatePath("/projects");
@@ -142,13 +162,15 @@ export async function updateProjectAction(
 }
 
 export async function deleteProjectAction(formData: FormData): Promise<void> {
-  await requireUser();
+  const user = await requireUser();
   const id = String(formData.get("id") || "");
   let clientId = "";
   if (id) {
     const project = await prisma.project.findUnique({ where: { id } });
-    clientId = project?.clientId || "";
-    await prisma.project.delete({ where: { id } });
+    if (project && project.workspaceId === user.workspaceId) {
+      clientId = project.clientId;
+      await prisma.project.delete({ where: { id } });
+    }
   }
   revalidatePath("/projects");
   revalidatePath("/");
@@ -165,6 +187,11 @@ export async function addUpdateAction(
   const body = String(formData.get("body") || "").trim();
   const newStatus = String(formData.get("status") || "").trim();
   if (!body) return { error: "Update note cannot be empty." };
+
+  const project = await prisma.project.findUnique({ where: { id: projectId } });
+  if (!project || project.workspaceId !== user.workspaceId) {
+    return { error: "Project not found." };
+  }
 
   await prisma.statusUpdate.create({
     data: {

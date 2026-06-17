@@ -20,10 +20,10 @@ type Item = {
 const DAY = 1000 * 60 * 60 * 24;
 
 export default async function TimelinePage() {
-  await requireUser();
+  const user = await requireUser();
 
   const projects = await prisma.project.findMany({
-    where: { status: { not: "Completed" } },
+    where: { workspaceId: user.workspaceId, status: { not: "Completed" } },
     include: {
       client: true,
       deliverables: { where: { status: { not: "Approved" } } },

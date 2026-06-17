@@ -1,6 +1,5 @@
-import { redirect } from "next/navigation";
 import Link from "next/link";
-import { requireUser } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { isEmailConfigured } from "@/lib/email";
 import { isSlackConfigured } from "@/lib/slack";
@@ -12,16 +11,19 @@ export const dynamic = "force-dynamic";
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 export default async function AutomationsPage() {
-  const user = await requireUser();
-  if (user.role !== "admin") redirect("/");
+  const user = await requireAdmin();
 
-  const [digest, weeklyClients] = await Promise.all([
-    buildAlertDigest(),
-    prisma.client.findMany({ where: { weeklyReport: true }, orderBy: { name: "asc" } }),
+  const [digest, weeklyClients, workspace] = await Promise.all([
+    buildAlertDigest(user.workspaceId),
+    prisma.client.findMany({
+      where: { weeklyReport: true, workspaceId: user.workspaceId },
+      orderBy: { name: "asc" },
+    }),
+    prisma.workspace.findUnique({ where: { id: user.workspaceId } }),
   ]);
 
   const emailOn = isEmailConfigured();
-  const slackOn = isSlackConfigured();
+  const slackOn = isSlackConfigured(workspace?.slackWebhookUrl);
   const cronOn = Boolean(process.env.CRON_SECRET);
   const weeklyDay = DAYS[Number(process.env.WEEKLY_REPORT_DAY ?? 5)] ?? "Friday";
 
@@ -41,7 +43,7 @@ export default async function AutomationsPage() {
         </h2>
         <div className="grid gap-3 sm:grid-cols-2">
           <Status on={emailOn} label="Email (SMTP)" hint="SMTP_* in .env" />
-          <Status on={slackOn} label="Slack" hint="SLACK_WEBHOOK_URL in .env" />
+          <Status on={slackOn} label="Slack" hint="set the webhook in Settings" />
           <Status on={cronOn} label="Scheduler endpoint" hint="CRON_SECRET in .env" />
           <Status on label={`Weekly reports: ${weeklyDay}`} hint="WEEKLY_REPORT_DAY in .env" />
         </div>

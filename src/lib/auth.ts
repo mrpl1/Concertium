@@ -23,6 +23,7 @@ export type SessionUser = {
   email: string;
   name: string;
   role: string;
+  workspaceId: string;
 };
 
 export async function hashPassword(password: string): Promise<string> {
@@ -41,6 +42,7 @@ export async function createSession(user: SessionUser): Promise<void> {
     email: user.email,
     name: user.name,
     role: user.role,
+    workspaceId: user.workspaceId,
   })
     .setProtectedHeader({ alg: "HS256" })
     .setSubject(user.id)
@@ -74,6 +76,7 @@ export async function getSessionUser(): Promise<SessionUser | null> {
       email: String(payload.email ?? ""),
       name: String(payload.name ?? ""),
       role: String(payload.role ?? "member"),
+      workspaceId: String(payload.workspaceId ?? ""),
     };
   } catch {
     return null;
@@ -84,6 +87,13 @@ export async function getSessionUser(): Promise<SessionUser | null> {
 export async function requireUser(): Promise<SessionUser> {
   const user = await getSessionUser();
   if (!user) redirect("/login");
+  return user;
+}
+
+/** Like requireUser, but additionally redirects non-admins to the dashboard. */
+export async function requireAdmin(): Promise<SessionUser> {
+  const user = await requireUser();
+  if (user.role !== "admin") redirect("/");
   return user;
 }
 
@@ -98,5 +108,11 @@ export async function authenticate(
   if (!user) return null;
   const ok = await verifyPassword(password, user.passwordHash);
   if (!ok) return null;
-  return { id: user.id, email: user.email, name: user.name, role: user.role };
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+    workspaceId: user.workspaceId ?? "",
+  };
 }
