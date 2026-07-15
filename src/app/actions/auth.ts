@@ -14,6 +14,116 @@ import {
 
 export type ActionState = { error?: string } | undefined;
 
+const DAY = 1000 * 60 * 60 * 24;
+const daysFromNow = (n: number) => new Date(Date.now() + n * DAY);
+
+// Seed two clearly-labeled example clients (each with a sample project) into a
+// brand-new workspace, so the person setting it up has a concrete reference for
+// what a filled-in client/project looks like. They're safe to edit or delete.
+async function seedExampleClients(
+  workspaceId: string,
+  ownerId: string
+): Promise<void> {
+  const acme = await prisma.client.create({
+    data: {
+      name: "Jane Doe",
+      company: "Acme Corp",
+      email: "jane@acme.example",
+      phone: "+1 555-0100",
+      notes:
+        "Example client — feel free to edit or delete. Long-standing account; prefers a weekly email summary on Fridays.",
+      workspaceId,
+    },
+  });
+
+  const globex = await prisma.client.create({
+    data: {
+      name: "John Smith",
+      company: "Globex",
+      email: "john@globex.example",
+      phone: "+1 555-0142",
+      notes:
+        "Example client — feel free to edit or delete. Newly onboarded this quarter; key contact is very responsive.",
+      workspaceId,
+    },
+  });
+
+  // A worked example project on the first client: on track, mid-flight, with a
+  // short deliverable list and an update so the dashboard has something to show.
+  const redesign = await prisma.project.create({
+    data: {
+      name: "Website Redesign",
+      description:
+        "Example project — full redesign of the marketing site, design system, and CMS migration.",
+      status: "On Track",
+      priority: "High",
+      progress: 65,
+      startDate: daysFromNow(-30),
+      dueDate: daysFromNow(21),
+      baselineDueDate: daysFromNow(21),
+      budgetHours: 120,
+      clientId: acme.id,
+      ownerId,
+      workspaceId,
+      tags: {
+        connectOrCreate: ["web", "design"].map((name) => ({
+          where: { workspaceId_name: { workspaceId, name } },
+          create: { name, workspaceId },
+        })),
+      },
+    },
+  });
+
+  await prisma.statusUpdate.create({
+    data: {
+      projectId: redesign.id,
+      authorId: ownerId,
+      status: "On Track",
+      body: "Example update — design mockups approved; the homepage is in development.",
+      createdAt: daysFromNow(-6),
+    },
+  });
+
+  let order = 0;
+  for (const d of [
+    { name: "Discovery & sitemap", status: "Approved", dueInDays: -20 },
+    { name: "Design mockups", status: "Approved", dueInDays: -5 },
+    { name: "Homepage build", status: "In Progress", dueInDays: 7 },
+  ]) {
+    const due = daysFromNow(d.dueInDays);
+    await prisma.deliverable.create({
+      data: {
+        projectId: redesign.id,
+        name: d.name,
+        status: d.status,
+        ownerId,
+        dueDate: due,
+        baselineDueDate: due,
+        approvedAt: d.status === "Approved" ? daysFromNow(-2) : null,
+        order: order++,
+      },
+    });
+  }
+
+  // A second, not-yet-started project on the other client for contrast.
+  await prisma.project.create({
+    data: {
+      name: "Onboarding & Setup",
+      description:
+        "Example project — initial account setup, integrations, and team training.",
+      status: "Not Started",
+      priority: "Medium",
+      progress: 0,
+      startDate: daysFromNow(7),
+      dueDate: daysFromNow(35),
+      baselineDueDate: daysFromNow(35),
+      clientId: globex.id,
+      ownerId,
+      workspaceId,
+    },
+  });
+}
+
 // Build a URL-friendly, unique workspace slug from a display name.
 async function uniqueSlug(name: string): Promise<string> {
   const base =
@@ -98,6 +208,14 @@ export async function registerAction(
       workspaceId: workspace.id,
     },
   });
+
+  // Give the fresh workspace a couple of example clients as a reference. A
+  // failure here must never block account creation, so swallow errors.
+  try {
+    await seedExampleClients(workspace.id, user.id);
+  } catch (err) {
+    console.error("Failed to seed example clients:", err);
+  }
 
   await createSession({
     id: user.id,
