@@ -15,8 +15,11 @@ export type GenerateState =
   | { ok: false; error: string }
   | undefined;
 
-async function gatherProjects(clientId: string) {
-  const where = clientId && clientId !== "all" ? { clientId } : {};
+async function gatherProjects(clientId: string, workspaceId: string) {
+  const where =
+    clientId && clientId !== "all"
+      ? { clientId, workspaceId }
+      : { workspaceId };
   return prisma.project.findMany({
     where,
     include: {
@@ -51,13 +54,14 @@ export async function generateReportAction(
   const clientId = String(formData.get("clientId") || "all");
   const intro = String(formData.get("intro") || "");
 
-  const projects = await gatherProjects(clientId);
+  const projects = await gatherProjects(clientId, user.workspaceId);
 
   let client = null;
   let suggestedTo = "";
   if (clientId && clientId !== "all") {
     const c = await prisma.client.findUnique({ where: { id: clientId } });
-    if (!c) return { ok: false, error: "Client not found." };
+    if (!c || c.workspaceId !== user.workspaceId)
+      return { ok: false, error: "Client not found." };
     client = { name: c.name, company: c.company };
     suggestedTo = c.email || "";
   }
@@ -100,11 +104,12 @@ export async function sendReportAction(
     };
   }
 
-  const projects = await gatherProjects(clientId);
+  const projects = await gatherProjects(clientId, user.workspaceId);
   let client = null;
   if (clientId && clientId !== "all") {
     const c = await prisma.client.findUnique({ where: { id: clientId } });
-    if (c) client = { name: c.name, company: c.company };
+    if (c && c.workspaceId === user.workspaceId)
+      client = { name: c.name, company: c.company };
   }
 
   const report = buildReport({

@@ -2,14 +2,14 @@
 
 import { useRef } from "react";
 import { useActionState } from "react";
-import { createTeamMemberAction } from "@/app/actions/auth";
+import { createInviteAction } from "@/app/actions/auth";
 import { SubmitButton } from "@/components/SubmitButton";
 
-export function TeamMemberForm() {
+export function InviteForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction] = useActionState(
     async (prev: { error?: string } | undefined, formData: FormData) => {
-      const result = await createTeamMemberAction(prev, formData);
+      const result = await createInviteAction(prev, formData);
       if (!result?.error) formRef.current?.reset();
       return result;
     },
@@ -20,31 +20,15 @@ export function TeamMemberForm() {
     <form ref={formRef} action={formAction} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="label" htmlFor="name">
-            Name
-          </label>
-          <input id="name" name="name" required className="input" />
-        </div>
-        <div>
           <label className="label" htmlFor="email">
-            Email
-          </label>
-          <input id="email" name="email" type="email" required className="input" />
-        </div>
-      </div>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label className="label" htmlFor="password">
-            Temporary password
+            Email <span className="text-gray-400">(optional)</span>
           </label>
           <input
-            id="password"
-            name="password"
-            type="text"
-            required
-            minLength={8}
+            id="email"
+            name="email"
+            type="email"
             className="input"
-            placeholder="At least 8 characters"
+            placeholder="teammate@company.com"
           />
         </div>
         <div>
@@ -60,8 +44,8 @@ export function TeamMemberForm() {
       {state?.error ? (
         <p className="text-sm text-red-600">{state.error}</p>
       ) : null}
-      <SubmitButton className="btn-primary" pendingText="Adding…">
-        Add team member
+      <SubmitButton className="btn-primary" pendingText="Creating…">
+        Create invite link
       </SubmitButton>
     </form>
   );

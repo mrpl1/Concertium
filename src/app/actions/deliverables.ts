@@ -18,13 +18,22 @@ function cleanStatus(s: string): string {
   return (DELIVERABLE_STATUSES as readonly string[]).includes(s) ? s : "Pending";
 }
 
+// Confirm a project belongs to the workspace.
+async function ownsProject(projectId: string, workspaceId: string): Promise<boolean> {
+  if (!projectId) return false;
+  const p = await prisma.project.findUnique({ where: { id: projectId } });
+  return Boolean(p && p.workspaceId === workspaceId);
+}
+
 export async function createDeliverableAction(
   _prev: DeliverableActionState,
   formData: FormData
 ): Promise<DeliverableActionState> {
-  await requireUser();
+  const user = await requireUser();
   const projectId = String(formData.get("projectId") || "");
   if (!projectId) return { error: "Missing project." };
+  if (!(await ownsProject(projectId, user.workspaceId)))
+    return { error: "Project not found." };
   const name = String(formData.get("name") || "").trim();
   if (!name) return { error: "Deliverable name is required." };
 
@@ -65,6 +74,8 @@ export async function updateDeliverableAction(
   const id = String(formData.get("id") || "");
   const existing = await prisma.deliverable.findUnique({ where: { id } });
   if (!existing) return { error: "Deliverable not found." };
+  if (!(await ownsProject(existing.projectId, user.workspaceId)))
+    return { error: "Deliverable not found." };
 
   const name = String(formData.get("name") || "").trim();
   if (!name) return { error: "Deliverable name is required." };
@@ -117,13 +128,14 @@ export async function updateDeliverableAction(
 export async function setDeliverableStatusAction(
   formData: FormData
 ): Promise<void> {
-  await requireUser();
+  const user = await requireUser();
   const id = String(formData.get("id") || "");
   const status = cleanStatus(String(formData.get("status") || "Pending"));
   if (!id) return;
 
   const existing = await prisma.deliverable.findUnique({ where: { id } });
   if (!existing) return;
+  if (!(await ownsProject(existing.projectId, user.workspaceId))) return;
 
   await prisma.deliverable.update({
     where: { id },
@@ -141,11 +153,12 @@ export async function setDeliverableStatusAction(
 export async function deleteDeliverableAction(
   formData: FormData
 ): Promise<void> {
-  await requireUser();
+  const user = await requireUser();
   const id = String(formData.get("id") || "");
   if (!id) return;
   const existing = await prisma.deliverable.findUnique({ where: { id } });
   if (!existing) return;
+  if (!(await ownsProject(existing.projectId, user.workspaceId))) return;
   await prisma.deliverable.delete({ where: { id } });
   revalidatePath(`/projects/${existing.projectId}`);
   revalidatePath("/");

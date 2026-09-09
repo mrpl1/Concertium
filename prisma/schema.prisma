@@ -13,6 +13,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// A tenant. Every user belongs to exactly one workspace, and all clients,
+// projects, tags, and their descendants are scoped to a workspace. Different
+// workspaces are fully isolated from one another.
+model Workspace {
+  id                  String   @id @default(cuid())
+  name                String
+  slug                String   @unique
+  // Per-workspace Slack Incoming Webhook URL for the daily alert digest.
+  slackWebhookUrl     String?  @db.Text
+  weeklyReportEnabled Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  users    User[]
+  clients  Client[]
+  projects Project[]
+  tags     Tag[]
+  invites  Invite[]
+}
+
+// An invite link tying a single signup to one workspace. Membership is
+// invite-only after the first (bootstrap) account is created.
+model Invite {
+  id          String    @id @default(cuid())
+  token       String    @unique
+  email       String?
+  role        String    @default("member")
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime?
+  acceptedAt  DateTime?
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  invitedById String?
+}
+
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
@@ -20,6 +57,11 @@ model User {
   passwordHash String
   role         String   @default("member") // "admin" | "member"
   createdAt    DateTime @default(now())
+
+  // Nullable in the schema so `prisma db push` succeeds on existing rows, but
+  // treated as required in application logic (every user has a workspace).
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
 
   ownedProjects     Project[]      @relation("ProjectOwner")
   updates           StatusUpdate[]
@@ -44,6 +86,9 @@ model Client {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
   projects Project[]
 }
 
@@ -65,6 +110,9 @@ model Project {
   budgetHours Float?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
   clientId String
   client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
@@ -108,8 +156,13 @@ model TimeEntry {
 
 model Tag {
   id       String    @id @default(cuid())
-  name     String    @unique
+  name     String
   projects Project[]
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, name])
 }
 
 model Deliverable {

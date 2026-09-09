@@ -8,17 +8,18 @@ import { averageProgress } from "@/lib/lifecycle";
 export const dynamic = "force-dynamic";
 
 export default async function AnalyticsPage() {
-  await requireUser();
+  const user = await requireUser();
 
   const [projects, clients] = await Promise.all([
     prisma.project.findMany({
+      where: { workspaceId: user.workspaceId },
       include: {
         client: true,
         deliverables: true,
         updates: { select: { createdAt: true }, orderBy: { createdAt: "desc" }, take: 1 },
       },
     }),
-    prisma.client.findMany(),
+    prisma.client.findMany({ where: { workspaceId: user.workspaceId } }),
   ]);
 
   const now = Date.now();

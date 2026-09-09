@@ -5,9 +5,10 @@ import { prisma } from "@/lib/db";
 export const dynamic = "force-dynamic";
 
 export default async function ClientsPage() {
-  await requireUser();
+  const user = await requireUser();
 
   const clients = await prisma.client.findMany({
+    where: { workspaceId: user.workspaceId },
     orderBy: { name: "asc" },
     include: { _count: { select: { projects: true } } },
   });

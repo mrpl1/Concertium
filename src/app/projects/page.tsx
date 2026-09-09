@@ -12,17 +12,18 @@ export default async function ProjectsPage({
 }: {
   searchParams: Promise<{ status?: string; clientId?: string; tag?: string }>;
 }) {
-  await requireUser();
+  const user = await requireUser();
 
   const statusFilter = (await searchParams).status;
   const clientFilter = (await searchParams).clientId;
   const tagFilter = (await searchParams).tag;
 
   const where: {
+    workspaceId: string;
     status?: string;
     clientId?: string;
     tags?: { some: { name: string } };
-  } = {};
+  } = { workspaceId: user.workspaceId };
   if (statusFilter && (PROJECT_STATUSES as readonly string[]).includes(statusFilter)) {
     where.status = statusFilter;
   }
@@ -35,7 +36,10 @@ export default async function ProjectsPage({
       include: { client: true, owner: true, tags: true },
       orderBy: [{ dueDate: "asc" }, { updatedAt: "desc" }],
     }),
-    prisma.client.findMany({ orderBy: { name: "asc" } }),
+    prisma.client.findMany({
+      where: { workspaceId: user.workspaceId },
+      orderBy: { name: "asc" },
+    }),
   ]);
 
   const activeClient = clientFilter

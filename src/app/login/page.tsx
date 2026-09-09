@@ -21,10 +21,10 @@ export default async function LoginPage({
       <div className="w-full max-w-sm">
         <div className="mb-6 text-center">
           <div className="mx-auto mb-3 grid h-11 w-11 place-items-center rounded-xl bg-brand-600 text-lg font-semibold text-white">
-            C
+            P
           </div>
           <h1 className="text-xl font-semibold text-gray-900">
-            Sign in to Concertium
+            Sign in
           </h1>
           <p className="mt-1 text-sm text-gray-500">
             Project management for your team

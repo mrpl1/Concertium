@@ -143,7 +143,7 @@ export default async function SharedStatusPage({
         )}
 
         <p className="mt-8 text-center text-xs text-gray-400">
-          Shared via Concertium · read-only
+          Read-only shared status
         </p>
       </div>
     </div>

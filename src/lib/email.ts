@@ -16,7 +16,7 @@ export function fromAddress(): string {
   return (
     process.env.SMTP_FROM ||
     process.env.SMTP_USER ||
-    "Concertium <no-reply@concertium.local>"
+    "Project Management <no-reply@localhost>"
   );
 }
 
