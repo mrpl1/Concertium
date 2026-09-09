@@ -11,6 +11,13 @@
   "services": [
     { "binding": "WORKER_SELF_REFERENCE", "service": "concertium" }
   ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "concertium",
+      "database_id": "094db8e6-7001-4a84-80f6-2f4350bf58c6"
+    }
+  ],
   "vars": {
     "WEEKLY_REPORT_DAY": "5"
   },
