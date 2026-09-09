@@ -1,4 +1,4 @@
-// Custom production server for Concertium.
+// Custom production server.
 //
 // Why this exists: managed Node hosts (Hostinger/Passenger, Plesk, etc.) run
 // your app behind a reverse proxy and tell it where to listen via the PORT
@@ -8,42 +8,9 @@
 // both a number and a socket path, so binding to process.env.PORT works
 // everywhere. Locally (PORT unset) it falls back to 3000.
 
-// Loud startup banner — printed before anything can fail, so the host's
-// runtime log proves the file is actually being executed and shows what
-// PORT the platform handed us.
-console.log("=== Concertium server.js starting ===");
-console.log("node:", process.version);
-console.log("cwd:", process.cwd());
-console.log("NODE_ENV:", process.env.NODE_ENV);
-console.log("PORT (raw):", JSON.stringify(process.env.PORT));
-console.log("HOSTNAME:", JSON.stringify(process.env.HOSTNAME));
-
-// Redacted view of DATABASE_URL so we can confirm what the runtime actually
-// sees (did the env-var change take? right user/host/db? password length /
-// special chars?) WITHOUT ever printing the password itself.
-(function logDbUrl() {
-  const raw = process.env.DATABASE_URL;
-  if (!raw) {
-    console.log("DATABASE_URL: <undefined> (env var not set at runtime!)");
-    return;
-  }
-  try {
-    const u = new URL(raw);
-    const pw = decodeURIComponent(u.password || "");
-    const hasSpecial = /[^A-Za-z0-9]/.test(pw);
-    console.log("DATABASE_URL parsed:", JSON.stringify({
-      protocol: u.protocol,
-      user: u.username,
-      host: u.hostname,
-      port: u.port,
-      database: u.pathname.replace(/^\//, ""),
-      passwordLength: pw.length,
-      passwordHasSpecialChars: hasSpecial,
-    }));
-  } catch (e) {
-    console.log("DATABASE_URL could not be parsed as a URL:", e.message);
-  }
-})();
+// One-line startup log: proves the file ran and shows the port the platform
+// assigned. Deliberately does NOT log DATABASE_URL or any credential.
+console.log(`starting: node ${process.version}, NODE_ENV=${process.env.NODE_ENV}, PORT=${JSON.stringify(process.env.PORT)}`);
 
 const { createServer } = require("http");
 const { parse } = require("url");
@@ -72,7 +39,7 @@ app
 
     // listen() takes a numeric port or a Unix-socket path string — let the host decide.
     server.listen(port, () => {
-      console.log(`> Concertium ready, listening on ${JSON.stringify(port)}`);
+      console.log(`> ready, listening on ${JSON.stringify(port)}`);
     });
   })
   .catch((err) => {
