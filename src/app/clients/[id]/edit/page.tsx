@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { clientScope } from "@/lib/access";
 import { ClientForm } from "@/components/ClientForm";
 import { updateClientAction } from "@/app/actions/clients";
 
@@ -14,8 +15,10 @@ export default async function EditClientPage({
 }) {
   const user = await requireUser();
 
-  const client = await prisma.client.findUnique({ where: { id: (await params).id } });
-  if (!client || client.workspaceId !== user.workspaceId) notFound();
+  const client = await prisma.client.findFirst({
+    where: { id: (await params).id, ...clientScope(user) },
+  });
+  if (!client) notFound();
 
   const action = updateClientAction.bind(null, client.id);
 

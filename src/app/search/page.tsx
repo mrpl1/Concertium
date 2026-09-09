@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { clientScope, projectScope } from "@/lib/access";
 import { StatusBadge } from "@/components/Badge";
 
 export const dynamic = "force-dynamic";
@@ -17,11 +18,15 @@ export default async function SearchPage({
     ? await Promise.all([
         prisma.client.findMany({
           where: {
-            workspaceId: user.workspaceId,
-            OR: [
-              { name: { contains: q } },
-              { company: { contains: q } },
-              { email: { contains: q } },
+            AND: [
+              clientScope(user),
+              {
+                OR: [
+                  { name: { contains: q } },
+                  { company: { contains: q } },
+                  { email: { contains: q } },
+                ],
+              },
             ],
           },
           orderBy: { name: "asc" },
@@ -29,11 +34,15 @@ export default async function SearchPage({
         }),
         prisma.project.findMany({
           where: {
-            workspaceId: user.workspaceId,
-            OR: [
-              { name: { contains: q } },
-              { description: { contains: q } },
-              { tags: { some: { name: { contains: q } } } },
+            AND: [
+              projectScope(user),
+              {
+                OR: [
+                  { name: { contains: q } },
+                  { description: { contains: q } },
+                  { tags: { some: { name: { contains: q } } } },
+                ],
+              },
             ],
           },
           include: { client: true },

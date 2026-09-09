@@ -1,5 +1,6 @@
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { clientScope, projectScope } from "@/lib/access";
 import { computeRisk } from "@/lib/risk";
 import {
   DashboardClient,
@@ -14,11 +15,11 @@ export default async function DashboardPage() {
 
   const [clients, projects] = await Promise.all([
     prisma.client.findMany({
-      where: { workspaceId: user.workspaceId },
+      where: clientScope(user),
       orderBy: { name: "asc" },
     }),
     prisma.project.findMany({
-      where: { workspaceId: user.workspaceId },
+      where: projectScope(user),
       include: {
         client: true,
         owner: true,

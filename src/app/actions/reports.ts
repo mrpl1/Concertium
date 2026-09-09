@@ -1,6 +1,8 @@
 "use server";
 
 import { prisma } from "@/lib/db";
+import type { SessionUser } from "@/lib/auth";
+import { clientScope, projectScope } from "@/lib/access";
 import { requireUser } from "@/lib/auth";
 import { buildReport, type BuiltReport, type ReportProject } from "@/lib/report";
 import { isEmailConfigured, sendEmail } from "@/lib/email";
@@ -15,11 +17,10 @@ export type GenerateState =
   | { ok: false; error: string }
   | undefined;
 
-async function gatherProjects(clientId: string, workspaceId: string) {
+async function gatherProjects(clientId: string, user: SessionUser) {
+  const scope = projectScope(user);
   const where =
-    clientId && clientId !== "all"
-      ? { clientId, workspaceId }
-      : { workspaceId };
+    clientId && clientId !== "all" ? { ...scope, clientId } : scope;
   return prisma.project.findMany({
     where,
     include: {
@@ -54,14 +55,15 @@ export async function generateReportAction(
   const clientId = String(formData.get("clientId") || "all");
   const intro = String(formData.get("intro") || "");
 
-  const projects = await gatherProjects(clientId, user.workspaceId);
+  const projects = await gatherProjects(clientId, user);
 
   let client = null;
   let suggestedTo = "";
   if (clientId && clientId !== "all") {
-    const c = await prisma.client.findUnique({ where: { id: clientId } });
-    if (!c || c.workspaceId !== user.workspaceId)
-      return { ok: false, error: "Client not found." };
+    const c = await prisma.client.findFirst({
+      where: { id: clientId, ...clientScope(user) },
+    });
+    if (!c) return { ok: false, error: "Client not found." };
     client = { name: c.name, company: c.company };
     suggestedTo = c.email || "";
   }
@@ -104,12 +106,13 @@ export async function sendReportAction(
     };
   }
 
-  const projects = await gatherProjects(clientId, user.workspaceId);
+  const projects = await gatherProjects(clientId, user);
   let client = null;
   if (clientId && clientId !== "all") {
-    const c = await prisma.client.findUnique({ where: { id: clientId } });
-    if (c && c.workspaceId === user.workspaceId)
-      client = { name: c.name, company: c.company };
+    const c = await prisma.client.findFirst({
+      where: { id: clientId, ...clientScope(user) },
+    });
+    if (c) client = { name: c.name, company: c.company };
   }
 
   const report = buildReport({

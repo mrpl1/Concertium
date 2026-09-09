@@ -2,6 +2,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { clientScope, projectScope } from "@/lib/access";
+import { isAdmin } from "@/lib/access";
+import { AccessPanel } from "@/components/AccessPanel";
+import {
+  addClientAssigneeAction,
+  removeClientAssigneeAction,
+} from "@/app/actions/access";
 import { StatusBadge, PriorityBadge, ProgressBar } from "@/components/Badge";
 import { formatDate } from "@/lib/report";
 import { deleteClientAction } from "@/app/actions/clients";
@@ -16,17 +23,27 @@ export default async function ClientDetailPage({
 }) {
   const user = await requireUser();
 
-  const client = await prisma.client.findUnique({
-    where: { id: (await params).id },
+  const client = await prisma.client.findFirst({
+    where: { id: (await params).id, ...clientScope(user) },
     include: {
+      assignees: { include: { user: true }, orderBy: { createdAt: "asc" } },
       projects: {
+        where: projectScope(user),
         include: { owner: true },
         orderBy: { updatedAt: "desc" },
       },
     },
   });
 
-  if (!client || client.workspaceId !== user.workspaceId) notFound();
+  if (!client) notFound();
+
+  const teammates = isAdmin(user)
+    ? await prisma.user.findMany({
+        where: { workspaceId: user.workspaceId },
+        orderBy: { name: "asc" },
+        select: { id: true, name: true, email: true },
+      })
+    : [];
 
   return (
     <div className="space-y-6">
@@ -122,6 +139,21 @@ export default async function ClientDetailPage({
 
       {/* Share link */}
       <ShareLink clientId={client.id} token={client.shareToken} />
+
+      {isAdmin(user) ? (
+        <AccessPanel
+          title="Client access"
+          hint="These people see every project under this client. Others see only the projects they are a member of."
+          entries={client.assignees.map((a) => ({
+            userId: a.userId,
+            name: a.user.name,
+            email: a.user.email,
+          }))}
+          candidates={teammates}
+          addAction={addClientAssigneeAction.bind(null, client.id)}
+          removeAction={removeClientAssigneeAction.bind(null, client.id)}
+        />
+      ) : null}
 
       {/* Danger zone */}
       <form action={deleteClientAction} className="pt-2">
