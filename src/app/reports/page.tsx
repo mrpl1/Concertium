@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { clientScope } from "@/lib/access";
 import { isEmailConfigured } from "@/lib/email";
 import { ReportBuilder } from "./ReportBuilder";
 
@@ -14,7 +15,7 @@ export default async function ReportsPage({
   const user = await requireUser();
 
   const clients = await prisma.client.findMany({
-    where: { workspaceId: user.workspaceId },
+    where: clientScope(user),
     orderBy: { name: "asc" },
   });
 

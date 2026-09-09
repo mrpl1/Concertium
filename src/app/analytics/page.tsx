@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { clientScope, projectScope } from "@/lib/access";
 import { PROJECT_STATUSES, statusHex } from "@/lib/constants";
 import { computeRisk, slippageDays } from "@/lib/risk";
 import { averageProgress } from "@/lib/lifecycle";
@@ -12,14 +13,14 @@ export default async function AnalyticsPage() {
 
   const [projects, clients] = await Promise.all([
     prisma.project.findMany({
-      where: { workspaceId: user.workspaceId },
+      where: projectScope(user),
       include: {
         client: true,
         deliverables: true,
         updates: { select: { createdAt: true }, orderBy: { createdAt: "desc" }, take: 1 },
       },
     }),
-    prisma.client.findMany({ where: { workspaceId: user.workspaceId } }),
+    prisma.client.findMany({ where: clientScope(user) }),
   ]);
 
   const now = Date.now();

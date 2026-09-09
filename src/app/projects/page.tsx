@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import type { Prisma } from "@prisma/client";
+import { clientScope, projectScope } from "@/lib/access";
 import { PROJECT_STATUSES } from "@/lib/constants";
 import { StatusBadge, PriorityBadge, ProgressBar } from "@/components/Badge";
 import { formatDate } from "@/lib/report";
@@ -18,12 +20,7 @@ export default async function ProjectsPage({
   const clientFilter = (await searchParams).clientId;
   const tagFilter = (await searchParams).tag;
 
-  const where: {
-    workspaceId: string;
-    status?: string;
-    clientId?: string;
-    tags?: { some: { name: string } };
-  } = { workspaceId: user.workspaceId };
+  const where: Prisma.ProjectWhereInput = { ...projectScope(user) };
   if (statusFilter && (PROJECT_STATUSES as readonly string[]).includes(statusFilter)) {
     where.status = statusFilter;
   }
@@ -37,7 +34,7 @@ export default async function ProjectsPage({
       orderBy: [{ dueDate: "asc" }, { updatedAt: "desc" }],
     }),
     prisma.client.findMany({
-      where: { workspaceId: user.workspaceId },
+      where: clientScope(user),
       orderBy: { name: "asc" },
     }),
   ]);
