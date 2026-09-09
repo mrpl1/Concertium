@@ -1,11 +1,15 @@
 import "server-only";
-import nodemailer from "nodemailer";
 
-/** Whether SMTP credentials are configured for automatic sending. */
+// Stubbed for the Cloudflare Workers migration: nodemailer's SMTP transport
+// needs raw TCP/TLS sockets, which Workers doesn't support even with
+// nodejs_compat. isEmailConfigured() returning false keeps every call site
+// (src/lib/automations.ts) on its existing "skip if not configured" path.
+// TODO(cloudflare-migration): wire up an HTTP email API (Resend/SendGrid/
+// MailChannels) here once one is chosen, and flip isEmailConfigured() back on.
+
+/** Whether an email provider is configured for automatic sending. */
 export function isEmailConfigured(): boolean {
-  return Boolean(
-    process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS
-  );
+  return false;
 }
 
 export function fromAddress(): string {
@@ -16,35 +20,14 @@ export function fromAddress(): string {
   );
 }
 
-function buildTransport() {
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT || 587),
-    secure: process.env.SMTP_SECURE === "true",
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
-}
-
 export async function sendEmail(opts: {
   to: string;
   subject: string;
   text: string;
   html?: string;
 }): Promise<void> {
-  if (!isEmailConfigured()) {
-    throw new Error(
-      "Email sending is not configured. Set SMTP_* variables in your .env to enable automatic sending."
-    );
-  }
-  const transport = buildTransport();
-  await transport.sendMail({
-    from: fromAddress(),
-    to: opts.to,
-    subject: opts.subject,
-    text: opts.text,
-    html: opts.html,
-  });
+  console.warn(
+    "[email] sendEmail() is stubbed for Cloudflare Workers — no provider configured yet.",
+    { to: opts.to, subject: opts.subject }
+  );
 }
