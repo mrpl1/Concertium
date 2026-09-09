@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { clientScope, projectScope } from "@/lib/access";
 import { StatusBadge, PriorityBadge, ProgressBar } from "@/components/Badge";
 import { formatDate } from "@/lib/report";
 import { deleteClientAction } from "@/app/actions/clients";
@@ -16,17 +17,18 @@ export default async function ClientDetailPage({
 }) {
   const user = await requireUser();
 
-  const client = await prisma.client.findUnique({
-    where: { id: (await params).id },
+  const client = await prisma.client.findFirst({
+    where: { id: (await params).id, ...clientScope(user) },
     include: {
       projects: {
+        where: projectScope(user),
         include: { owner: true },
         orderBy: { updatedAt: "desc" },
       },
     },
   });
 
-  if (!client || client.workspaceId !== user.workspaceId) notFound();
+  if (!client) notFound();
 
   return (
     <div className="space-y-6">

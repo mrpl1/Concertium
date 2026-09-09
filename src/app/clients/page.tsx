@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { clientScope, projectScope } from "@/lib/access";
 
 export const dynamic = "force-dynamic";
 
@@ -8,9 +9,9 @@ export default async function ClientsPage() {
   const user = await requireUser();
 
   const clients = await prisma.client.findMany({
-    where: { workspaceId: user.workspaceId },
+    where: clientScope(user),
     orderBy: { name: "asc" },
-    include: { _count: { select: { projects: true } } },
+    include: { projects: { where: projectScope(user), select: { id: true } } },
   });
 
   return (
@@ -47,8 +48,8 @@ export default async function ClientsPage() {
                 <p className="mt-2 truncate text-sm text-gray-500">{c.email}</p>
               ) : null}
               <p className="mt-3 text-xs font-medium text-brand-600">
-                {c._count.projects} project
-                {c._count.projects === 1 ? "" : "s"}
+                {c.projects.length} project
+                {c.projects.length === 1 ? "" : "s"}
               </p>
             </Link>
           ))}

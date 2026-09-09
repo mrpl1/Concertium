@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { clientScope } from "@/lib/access";
 import { isEmailConfigured } from "@/lib/email";
 import { isSlackConfigured } from "@/lib/slack";
 import { buildAlertDigest } from "@/lib/automations";
@@ -16,7 +17,7 @@ export default async function AutomationsPage() {
   const [digest, weeklyClients, workspace] = await Promise.all([
     buildAlertDigest(user.workspaceId),
     prisma.client.findMany({
-      where: { weeklyReport: true, workspaceId: user.workspaceId },
+      where: { weeklyReport: true, ...clientScope(user) },
       orderBy: { name: "asc" },
     }),
     prisma.workspace.findUnique({ where: { id: user.workspaceId } }),

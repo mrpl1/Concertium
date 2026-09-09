@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { clientScope, projectScope } from "@/lib/access";
 import { ProjectForm } from "@/components/ProjectForm";
 import { updateProjectAction } from "@/app/actions/projects";
 
@@ -15,12 +16,12 @@ export default async function EditProjectPage({
   const user = await requireUser();
 
   const [project, clients, users] = await Promise.all([
-    prisma.project.findUnique({
-      where: { id: (await params).id },
+    prisma.project.findFirst({
+      where: { id: (await params).id, ...projectScope(user) },
       include: { tags: true },
     }),
     prisma.client.findMany({
-      where: { workspaceId: user.workspaceId },
+      where: clientScope(user),
       orderBy: { name: "asc" },
     }),
     prisma.user.findMany({
@@ -29,7 +30,7 @@ export default async function EditProjectPage({
     }),
   ]);
 
-  if (!project || project.workspaceId !== user.workspaceId) notFound();
+  if (!project) notFound();
 
   const action = updateProjectAction.bind(null, project.id);
   const tagsDefault = project.tags.map((t) => t.name).join(", ");

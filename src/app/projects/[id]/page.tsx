@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { projectScope } from "@/lib/access";
 import { StatusBadge, PriorityBadge, ProgressBar } from "@/components/Badge";
 import { formatDate } from "@/lib/report";
 import { AddUpdateForm } from "@/components/AddUpdateForm";
@@ -26,8 +27,8 @@ export default async function ProjectDetailPage({
   const user = await requireUser();
 
   const [project, users] = await Promise.all([
-    prisma.project.findUnique({
-      where: { id: (await params).id },
+    prisma.project.findFirst({
+      where: { id: (await params).id, ...projectScope(user) },
       include: {
         client: true,
         owner: true,
@@ -54,7 +55,7 @@ export default async function ProjectDetailPage({
     }),
   ]);
 
-  if (!project || project.workspaceId !== user.workspaceId) notFound();
+  if (!project) notFound();
 
   const addUpdate = addUpdateAction.bind(null, project.id);
 

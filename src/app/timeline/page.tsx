@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { projectScope } from "@/lib/access";
 import { StatusBadge } from "@/components/Badge";
 import { deliverableBadgeClass } from "@/lib/constants";
 import { formatDate } from "@/lib/report";
@@ -23,7 +24,7 @@ export default async function TimelinePage() {
   const user = await requireUser();
 
   const projects = await prisma.project.findMany({
-    where: { workspaceId: user.workspaceId, status: { not: "Completed" } },
+    where: { ...projectScope(user), status: { not: "Completed" } },
     include: {
       client: true,
       deliverables: { where: { status: { not: "Approved" } } },
