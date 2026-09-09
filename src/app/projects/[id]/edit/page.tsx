@@ -12,18 +12,24 @@ export default async function EditProjectPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireUser();
+  const user = await requireUser();
 
   const [project, clients, users] = await Promise.all([
     prisma.project.findUnique({
       where: { id: (await params).id },
       include: { tags: true },
     }),
-    prisma.client.findMany({ orderBy: { name: "asc" } }),
-    prisma.user.findMany({ orderBy: { name: "asc" } }),
+    prisma.client.findMany({
+      where: { workspaceId: user.workspaceId },
+      orderBy: { name: "asc" },
+    }),
+    prisma.user.findMany({
+      where: { workspaceId: user.workspaceId },
+      orderBy: { name: "asc" },
+    }),
   ]);
 
-  if (!project) notFound();
+  if (!project || project.workspaceId !== user.workspaceId) notFound();
 
   const action = updateProjectAction.bind(null, project.id);
   const tagsDefault = project.tags.map((t) => t.name).join(", ");

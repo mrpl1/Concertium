@@ -16,10 +16,14 @@ export type AlertDigest = {
   counts: { overdue: number; atRisk: number; dueSoon: number };
 };
 
-// Scan all active projects and build a digest of what needs attention.
-export async function buildAlertDigest(now = Date.now()): Promise<AlertDigest> {
+// Scan a workspace's active projects and build a digest of what needs
+// attention. Scoped to a single workspace for tenant isolation.
+export async function buildAlertDigest(
+  workspaceId: string,
+  now = Date.now()
+): Promise<AlertDigest> {
   const projects = await prisma.project.findMany({
-    where: { status: { not: "Completed" } },
+    where: { workspaceId, status: { not: "Completed" } },
     include: {
       client: true,
       deliverables: { select: { status: true, dueDate: true } },
@@ -59,6 +63,13 @@ export async function buildAlertDigest(now = Date.now()): Promise<AlertDigest> {
     }
   }
 
+  // Label the digest with the workspace's own name rather than a product brand.
+  const workspace = await prisma.workspace.findUnique({
+    where: { id: workspaceId },
+    select: { name: true },
+  });
+  const brand = workspace?.name?.trim() || "Project";
+
   const counts = { overdue: overdue.length, atRisk: atRisk.length, dueSoon: dueSoon.length };
   const empty = counts.overdue + counts.atRisk + counts.dueSoon === 0;
 
@@ -83,20 +94,20 @@ export async function buildAlertDigest(now = Date.now()): Promise<AlertDigest> {
       : "";
 
   const html = `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#1a1a1a;max-width:680px;">
-    <h2 style="margin:0 0 4px;">Concertium — Daily Project Alerts</h2>
+    <h2 style="margin:0 0 4px;">${escapeHtml(brand)} — Daily Project Alerts</h2>
     <p style="color:#666;margin:0 0 8px;">As of ${formatDate(new Date(now))}</p>
     ${empty ? "<p>All projects are on track. 🎉</p>" : htmlSection("⛔ Overdue", overdue, "#b91c1c") + htmlSection("⚠️ At risk", atRisk, "#b45309") + htmlSection("📅 Due within 7 days", dueSoon, "#1d4ed8")}
   </div>`;
 
   const slackText = empty
-    ? "*Concertium daily alerts:* all projects on track. :tada:"
-    : `*Concertium daily alerts* (${counts.overdue} overdue, ${counts.atRisk} at risk, ${counts.dueSoon} due soon)\n\n${text}`;
+    ? `*${brand} daily alerts:* all projects on track. :tada:`
+    : `*${brand} daily alerts* (${counts.overdue} overdue, ${counts.atRisk} at risk, ${counts.dueSoon} due soon)\n\n${text}`;
 
   return {
     empty,
     subject: empty
-      ? "Concertium: all projects on track"
-      : `Concertium alerts: ${counts.overdue} overdue, ${counts.atRisk} at risk`,
+      ? `${brand}: all projects on track`
+      : `${brand} alerts: ${counts.overdue} overdue, ${counts.atRisk} at risk`,
     text,
     html,
     slackText,
@@ -104,16 +115,19 @@ export async function buildAlertDigest(now = Date.now()): Promise<AlertDigest> {
   };
 }
 
-function alertRecipients(): Promise<string[]> {
+// Email recipients for a workspace's alert digest: NOTIFY_EMAIL (global
+// fallback) if set, otherwise the workspace's own admin users.
+async function alertRecipients(workspaceId: string): Promise<string[]> {
   const fromEnv = (process.env.NOTIFY_EMAIL || "")
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
-  if (fromEnv.length) return Promise.resolve(fromEnv);
-  // Fall back to all admin users.
-  return prisma.user
-    .findMany({ where: { role: "admin" }, select: { email: true } })
-    .then((us) => us.map((u) => u.email));
+  if (fromEnv.length) return fromEnv;
+  const admins = await prisma.user.findMany({
+    where: { role: "admin", workspaceId },
+    select: { email: true },
+  });
+  return admins.map((u) => u.email);
 }
 
 export type SendResult = {
@@ -123,39 +137,73 @@ export type SendResult = {
   counts: AlertDigest["counts"];
 };
 
-// Send the alert digest via email (to NOTIFY_EMAIL or admins) and Slack.
-// When sendIfEmpty is false, a clean digest is skipped silently.
-export async function sendAlertDigest(opts: { sendIfEmpty?: boolean } = {}): Promise<SendResult> {
-  const digest = await buildAlertDigest();
+// Send a single workspace's alert digest via email (to NOTIFY_EMAIL or that
+// workspace's admins) and to that workspace's Slack webhook. When sendIfEmpty
+// is false, a clean digest is skipped silently.
+export async function sendAlertDigest(
+  workspaceId: string,
+  opts: { sendIfEmpty?: boolean } = {}
+): Promise<SendResult> {
+  const digest = await buildAlertDigest(workspaceId);
   const result: SendResult = { empty: digest.empty, emailSentTo: [], slackSent: false, counts: digest.counts };
 
   if (digest.empty && !opts.sendIfEmpty) return result;
 
   if (isEmailConfigured()) {
-    const recipients = await alertRecipients();
+    const recipients = await alertRecipients(workspaceId);
     for (const to of recipients) {
       await sendEmail({ to, subject: digest.subject, text: digest.text, html: digest.html });
       result.emailSentTo.push(to);
     }
   }
-  if (isSlackConfigured()) {
-    await sendSlack(digest.slackText);
+  const workspace = await prisma.workspace.findUnique({ where: { id: workspaceId } });
+  if (isSlackConfigured(workspace?.slackWebhookUrl)) {
+    await sendSlack(workspace?.slackWebhookUrl ?? null, digest.slackText);
     result.slackSent = true;
   }
   return result;
 }
 
+export type AllSendResult = {
+  workspaceId: string;
+  workspaceName: string;
+  result: SendResult;
+};
+
+// Iterate every workspace and send each its own digest to its own channels.
+export async function sendAllAlertDigests(
+  opts: { sendIfEmpty?: boolean } = {}
+): Promise<AllSendResult[]> {
+  const workspaces = await prisma.workspace.findMany({
+    select: { id: true, name: true },
+  });
+  const out: AllSendResult[] = [];
+  for (const w of workspaces) {
+    const result = await sendAlertDigest(w.id, opts);
+    out.push({ workspaceId: w.id, workspaceName: w.name, result });
+  }
+  return out;
+}
+
 export type WeeklyResult = { sent: { client: string; to: string }[]; skipped: string[] };
 
-// Email a status report to every client opted into weekly reports.
-export async function runWeeklyReports(): Promise<WeeklyResult> {
+// Email a status report to every opted-in client in a single workspace.
+export async function runWeeklyReports(workspaceId: string): Promise<WeeklyResult> {
   const out: WeeklyResult = { sent: [], skipped: [] };
   if (!isEmailConfigured()) {
     out.skipped.push("SMTP not configured");
     return out;
   }
 
-  const clients = await prisma.client.findMany({ where: { weeklyReport: true } });
+  const workspace = await prisma.workspace.findUnique({
+    where: { id: workspaceId },
+    select: { name: true },
+  });
+  const brand = workspace?.name?.trim() || undefined;
+
+  const clients = await prisma.client.findMany({
+    where: { weeklyReport: true, workspaceId },
+  });
   for (const c of clients) {
     if (!c.email) {
       out.skipped.push(`${c.company || c.name} (no email)`);
@@ -178,10 +226,27 @@ export async function runWeeklyReports(): Promise<WeeklyResult> {
     const report = buildReport({
       client: { name: c.name, company: c.company },
       projects: reportProjects,
+      brand,
     });
     await sendEmail({ to: c.email, subject: report.subject, text: report.text, html: report.html });
     await prisma.client.update({ where: { id: c.id }, data: { lastReportSentAt: new Date() } });
     out.sent.push({ client: c.company || c.name, to: c.email });
+  }
+  return out;
+}
+
+// Iterate every workspace that has weekly reports enabled and run its reports.
+export async function runAllWeeklyReports(): Promise<
+  { workspaceId: string; workspaceName: string; result: WeeklyResult }[]
+> {
+  const workspaces = await prisma.workspace.findMany({
+    where: { weeklyReportEnabled: true },
+    select: { id: true, name: true },
+  });
+  const out: { workspaceId: string; workspaceName: string; result: WeeklyResult }[] = [];
+  for (const w of workspaces) {
+    const result = await runWeeklyReports(w.id);
+    out.push({ workspaceId: w.id, workspaceName: w.name, result });
   }
   return out;
 }

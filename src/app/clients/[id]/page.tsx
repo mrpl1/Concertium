@@ -14,7 +14,7 @@ export default async function ClientDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireUser();
+  const user = await requireUser();
 
   const client = await prisma.client.findUnique({
     where: { id: (await params).id },
@@ -26,7 +26,7 @@ export default async function ClientDetailPage({
     },
   });
 
-  if (!client) notFound();
+  if (!client || client.workspaceId !== user.workspaceId) notFound();
 
   return (
     <div className="space-y-6">

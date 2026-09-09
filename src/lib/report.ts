@@ -40,6 +40,9 @@ export function buildReport(opts: {
   asOf?: Date;
   intro?: string;
   authorName?: string;
+  // Optional label shown in the footer (e.g. the workspace name). When absent,
+  // the footer stays generic with no product branding.
+  brand?: string;
 }): BuiltReport {
   const asOf = opts.asOf ?? new Date();
   const asOfStr = formatDate(asOf);
@@ -119,7 +122,9 @@ export function buildReport(opts: {
       </thead>
       <tbody>${rows || `<tr><td colspan="5" style="padding:12px;color:#888;">No projects.</td></tr>`}</tbody>
     </table>
-    <p style="margin:20px 0 0;color:#999;font-size:12px;">Sent via Concertium</p>
+    <p style="margin:20px 0 0;color:#999;font-size:12px;">${
+      opts.brand ? `Sent via ${escapeHtml(opts.brand)}` : "Automated status report"
+    }</p>
   </div>`;
 
   return { subject, text, html };

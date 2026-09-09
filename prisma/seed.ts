@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
@@ -11,14 +11,22 @@ async function main() {
   const adminEmail = process.env.SEED_ADMIN_EMAIL || "admin@concertium.local";
   const adminPassword = process.env.SEED_ADMIN_PASSWORD || "changeme123";
 
+  // Every tenant lives in a workspace. Seed data attaches to one workspace.
+  const workspace = await prisma.workspace.upsert({
+    where: { slug: "concertium-demo" },
+    update: {},
+    create: { name: "Concertium Demo", slug: "concertium-demo" },
+  });
+
   const admin = await prisma.user.upsert({
     where: { email: adminEmail },
-    update: {},
+    update: { workspaceId: workspace.id },
     create: {
       email: adminEmail,
       name: "Alex Morgan",
       passwordHash: await bcrypt.hash(adminPassword, 10),
       role: "admin",
+      workspaceId: workspace.id,
     },
   });
 
@@ -26,22 +34,24 @@ async function main() {
   const memberPassword = await bcrypt.hash("changeme123", 10);
   const priya = await prisma.user.upsert({
     where: { email: "priya@concertium.local" },
-    update: {},
+    update: { workspaceId: workspace.id },
     create: {
       email: "priya@concertium.local",
       name: "Priya Nair",
       passwordHash: memberPassword,
       role: "member",
+      workspaceId: workspace.id,
     },
   });
   const sam = await prisma.user.upsert({
     where: { email: "sam@concertium.local" },
-    update: {},
+    update: { workspaceId: workspace.id },
     create: {
       email: "sam@concertium.local",
       name: "Sam Chen",
       passwordHash: memberPassword,
       role: "member",
+      workspaceId: workspace.id,
     },
   });
 
@@ -65,6 +75,7 @@ async function main() {
         "Long-standing client. Quarterly business reviews. Prefers weekly email summaries on Fridays.",
       weeklyReport: true,
       shareToken: "demo-acme-status",
+      workspaceId: workspace.id,
     },
   });
 
@@ -75,6 +86,7 @@ async function main() {
       email: "john@globex.example",
       phone: "+1 555-0142",
       notes: "New client onboarded this quarter. Key contact is very responsive.",
+      workspaceId: workspace.id,
     },
   });
 
@@ -85,6 +97,7 @@ async function main() {
       email: "maria@initech.example",
       phone: "+1 555-0188",
       notes: "Enterprise account. Multiple stakeholders — loop in legal for contracts.",
+      workspaceId: workspace.id,
     },
   });
 
@@ -94,6 +107,7 @@ async function main() {
       company: "Umbrella Labs",
       email: "david@umbrella.example",
       notes: "Early-stage startup. Budget-conscious; scope changes frequently.",
+      workspaceId: workspace.id,
     },
   });
 
@@ -104,13 +118,15 @@ async function main() {
       email: "nina@wonka.example",
       phone: "+1 555-0117",
       notes: "Referral from Acme. Phase 1 wrapped up successfully.",
+      workspaceId: workspace.id,
     },
   });
 
   // ---- Projects (spanning every status & priority) ----
   // Each entry optionally carries updates that build a short history.
   const projects: {
-    data: Parameters<typeof prisma.project.create>[0]["data"];
+    // workspaceId is supplied in the create loop below.
+    data: Omit<Prisma.ProjectUncheckedCreateInput, "workspaceId">;
     updates?: { author: string; status?: string; body: string; daysAgo: number }[];
     deliverables?: {
       name: string;
@@ -136,8 +152,8 @@ async function main() {
         ownerId: admin.id,
         tags: {
           connectOrCreate: ["web", "design", "high-touch"].map((name) => ({
-            where: { name },
-            create: { name },
+            where: { workspaceId_name: { workspaceId: workspace.id, name } },
+            create: { name, workspaceId: workspace.id },
           })),
         },
       },
@@ -345,7 +361,11 @@ async function main() {
 
   for (const p of projects) {
     const created = await prisma.project.create({
-      data: { ...p.data, baselineDueDate: p.data.dueDate ?? null },
+      data: {
+        ...p.data,
+        workspaceId: workspace.id,
+        baselineDueDate: p.data.dueDate ?? null,
+      },
     });
     for (const u of p.updates ?? []) {
       await prisma.statusUpdate.create({

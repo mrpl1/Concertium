@@ -12,10 +12,10 @@ export default async function EditClientPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireUser();
+  const user = await requireUser();
 
   const client = await prisma.client.findUnique({ where: { id: (await params).id } });
-  if (!client) notFound();
+  if (!client || client.workspaceId !== user.workspaceId) notFound();
 
   const action = updateClientAction.bind(null, client.id);
 

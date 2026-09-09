@@ -10,13 +10,14 @@ export default async function SearchPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
-  await requireUser();
+  const user = await requireUser();
   const q = ((await searchParams).q || "").trim();
 
   const [clients, projects] = q
     ? await Promise.all([
         prisma.client.findMany({
           where: {
+            workspaceId: user.workspaceId,
             OR: [
               { name: { contains: q } },
               { company: { contains: q } },
@@ -28,6 +29,7 @@ export default async function SearchPage({
         }),
         prisma.project.findMany({
           where: {
+            workspaceId: user.workspaceId,
             OR: [
               { name: { contains: q } },
               { description: { contains: q } },

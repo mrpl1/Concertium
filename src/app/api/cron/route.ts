@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sendAlertDigest, runWeeklyReports } from "@/lib/automations";
+import { sendAllAlertDigests, runAllWeeklyReports } from "@/lib/automations";
 
 export const dynamic = "force-dynamic";
 
@@ -27,13 +27,14 @@ async function handle(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const alerts = await sendAlertDigest({ sendIfEmpty: false });
+  // Iterate every workspace; each gets its own digest sent to its own channels.
+  const alerts = await sendAllAlertDigests({ sendIfEmpty: false });
 
   const weeklyDay = Number(process.env.WEEKLY_REPORT_DAY ?? 5);
   const force = req.nextUrl.searchParams.get("weekly") === "1";
   let weekly = null;
   if (force || new Date().getDay() === weeklyDay) {
-    weekly = await runWeeklyReports();
+    weekly = await runAllWeeklyReports();
   }
 
   return NextResponse.json({ ran: new Date().toISOString(), alerts, weekly });

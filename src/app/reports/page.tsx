@@ -11,9 +11,12 @@ export default async function ReportsPage({
 }: {
   searchParams: Promise<{ clientId?: string }>;
 }) {
-  await requireUser();
+  const user = await requireUser();
 
-  const clients = await prisma.client.findMany({ orderBy: { name: "asc" } });
+  const clients = await prisma.client.findMany({
+    where: { workspaceId: user.workspaceId },
+    orderBy: { name: "asc" },
+  });
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">

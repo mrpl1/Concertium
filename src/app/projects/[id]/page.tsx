@@ -23,7 +23,7 @@ export default async function ProjectDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireUser();
+  const user = await requireUser();
 
   const [project, users] = await Promise.all([
     prisma.project.findUnique({
@@ -47,10 +47,14 @@ export default async function ProjectDetailPage({
         },
       },
     }),
-    prisma.user.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+    prisma.user.findMany({
+      where: { workspaceId: user.workspaceId },
+      orderBy: { name: "asc" },
+      select: { id: true, name: true },
+    }),
   ]);
 
-  if (!project) notFound();
+  if (!project || project.workspaceId !== user.workspaceId) notFound();
 
   const addUpdate = addUpdateAction.bind(null, project.id);
 

@@ -13,8 +13,12 @@ export default async function DashboardPage() {
   const user = await requireUser();
 
   const [clients, projects] = await Promise.all([
-    prisma.client.findMany({ orderBy: { name: "asc" } }),
+    prisma.client.findMany({
+      where: { workspaceId: user.workspaceId },
+      orderBy: { name: "asc" },
+    }),
     prisma.project.findMany({
+      where: { workspaceId: user.workspaceId },
       include: {
         client: true,
         owner: true,
