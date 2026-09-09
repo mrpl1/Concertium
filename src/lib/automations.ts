@@ -63,6 +63,13 @@ export async function buildAlertDigest(
     }
   }
 
+  // Label the digest with the workspace's own name rather than a product brand.
+  const workspace = await prisma.workspace.findUnique({
+    where: { id: workspaceId },
+    select: { name: true },
+  });
+  const brand = workspace?.name?.trim() || "Project";
+
   const counts = { overdue: overdue.length, atRisk: atRisk.length, dueSoon: dueSoon.length };
   const empty = counts.overdue + counts.atRisk + counts.dueSoon === 0;
 
@@ -87,20 +94,20 @@ export async function buildAlertDigest(
       : "";
 
   const html = `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#1a1a1a;max-width:680px;">
-    <h2 style="margin:0 0 4px;">Concertium — Daily Project Alerts</h2>
+    <h2 style="margin:0 0 4px;">${escapeHtml(brand)} — Daily Project Alerts</h2>
     <p style="color:#666;margin:0 0 8px;">As of ${formatDate(new Date(now))}</p>
     ${empty ? "<p>All projects are on track. 🎉</p>" : htmlSection("⛔ Overdue", overdue, "#b91c1c") + htmlSection("⚠️ At risk", atRisk, "#b45309") + htmlSection("📅 Due within 7 days", dueSoon, "#1d4ed8")}
   </div>`;
 
   const slackText = empty
-    ? "*Concertium daily alerts:* all projects on track. :tada:"
-    : `*Concertium daily alerts* (${counts.overdue} overdue, ${counts.atRisk} at risk, ${counts.dueSoon} due soon)\n\n${text}`;
+    ? `*${brand} daily alerts:* all projects on track. :tada:`
+    : `*${brand} daily alerts* (${counts.overdue} overdue, ${counts.atRisk} at risk, ${counts.dueSoon} due soon)\n\n${text}`;
 
   return {
     empty,
     subject: empty
-      ? "Concertium: all projects on track"
-      : `Concertium alerts: ${counts.overdue} overdue, ${counts.atRisk} at risk`,
+      ? `${brand}: all projects on track`
+      : `${brand} alerts: ${counts.overdue} overdue, ${counts.atRisk} at risk`,
     text,
     html,
     slackText,
@@ -188,6 +195,12 @@ export async function runWeeklyReports(workspaceId: string): Promise<WeeklyResul
     return out;
   }
 
+  const workspace = await prisma.workspace.findUnique({
+    where: { id: workspaceId },
+    select: { name: true },
+  });
+  const brand = workspace?.name?.trim() || undefined;
+
   const clients = await prisma.client.findMany({
     where: { weeklyReport: true, workspaceId },
   });
@@ -213,6 +226,7 @@ export async function runWeeklyReports(workspaceId: string): Promise<WeeklyResul
     const report = buildReport({
       client: { name: c.name, company: c.company },
       projects: reportProjects,
+      brand,
     });
     await sendEmail({ to: c.email, subject: report.subject, text: report.text, html: report.html });
     await prisma.client.update({ where: { id: c.id }, data: { lastReportSentAt: new Date() } });

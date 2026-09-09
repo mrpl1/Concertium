@@ -13,7 +13,15 @@ const baseLinks = [
   { href: "/reports", label: "Reports" },
 ];
 
-export function NavBar({ user }: { user: SessionUser }) {
+export function NavBar({
+  user,
+  workspaceName,
+}: {
+  user: SessionUser;
+  workspaceName?: string;
+}) {
+  const brand = workspaceName?.trim() || "Projects";
+  const initial = brand.charAt(0).toUpperCase();
   const links =
     user.role === "admin"
       ? [
@@ -30,9 +38,9 @@ export function NavBar({ user }: { user: SessionUser }) {
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2 font-semibold">
             <span className="grid h-7 w-7 place-items-center rounded-md bg-brand-600 text-white text-sm">
-              C
+              {initial}
             </span>
-            <span className="text-gray-900">Concertium</span>
+            <span className="text-gray-900">{brand}</span>
           </Link>
           <nav className="hidden gap-1 sm:flex">
             {links.map((l) => (
