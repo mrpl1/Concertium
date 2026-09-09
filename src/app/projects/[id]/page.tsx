@@ -3,6 +3,12 @@ import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { projectScope } from "@/lib/access";
+import { isAdmin } from "@/lib/access";
+import { AccessPanel } from "@/components/AccessPanel";
+import {
+  addProjectMemberAction,
+  removeProjectMemberAction,
+} from "@/app/actions/access";
 import { StatusBadge, PriorityBadge, ProgressBar } from "@/components/Badge";
 import { formatDate } from "@/lib/report";
 import { AddUpdateForm } from "@/components/AddUpdateForm";
@@ -41,6 +47,7 @@ export default async function ProjectDetailPage({
           orderBy: [{ order: "asc" }, { createdAt: "asc" }],
         },
         links: { orderBy: { createdAt: "asc" } },
+        members: { include: { user: true }, orderBy: { createdAt: "asc" } },
         tags: true,
         timeEntries: {
           include: { user: true },
@@ -51,7 +58,7 @@ export default async function ProjectDetailPage({
     prisma.user.findMany({
       where: { workspaceId: user.workspaceId },
       orderBy: { name: "asc" },
-      select: { id: true, name: true },
+      select: { id: true, name: true, email: true },
     }),
   ]);
 
@@ -232,6 +239,23 @@ export default async function ProjectDetailPage({
               <Meta label="Created" value={formatDate(project.createdAt)} />
             </dl>
           </div>
+
+          {isAdmin(user) ? (
+            <AccessPanel
+              title="Project members"
+              hint="Only these people, anyone assigned to the client, and admins can see this project."
+              showRole
+              entries={project.members.map((m) => ({
+                userId: m.userId,
+                name: m.user.name,
+                email: m.user.email,
+                role: m.role,
+              }))}
+              candidates={users}
+              addAction={addProjectMemberAction.bind(null, project.id)}
+              removeAction={removeProjectMemberAction.bind(null, project.id)}
+            />
+          ) : null}
 
           <form action={deleteProjectAction}>
             <input type="hidden" name="id" value={project.id} />
