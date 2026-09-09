@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
+import type { SessionUser } from "@/lib/auth";
+import { clientScope } from "@/lib/access";
 import { requireUser } from "@/lib/auth";
 
 export type ClientActionState = { error?: string } | undefined;
@@ -18,12 +20,11 @@ function readClientForm(formData: FormData) {
   };
 }
 
-// Confirm a client belongs to the user's workspace before mutating it.
-async function ownClient(id: string, workspaceId: string) {
+// Confirm the user may reach this client before mutating it. Scoped, so a
+// client outside their assignments/memberships is simply not found.
+async function ownClient(id: string, user: SessionUser) {
   if (!id) return null;
-  const client = await prisma.client.findUnique({ where: { id } });
-  if (!client || client.workspaceId !== workspaceId) return null;
-  return client;
+  return prisma.client.findFirst({ where: { id, ...clientScope(user) } });
 }
 
 export async function createClientAction(
@@ -36,6 +37,12 @@ export async function createClientAction(
 
   const client = await prisma.client.create({
     data: { ...data, workspaceId: user.workspaceId },
+  });
+
+  // The creator is assigned to the client, so they can still see what they
+  // just made. Admins see everything regardless.
+  await prisma.clientAssignment.create({
+    data: { clientId: client.id, userId: user.id },
   });
   revalidatePath("/clients");
   revalidatePath("/");
@@ -51,7 +58,7 @@ export async function updateClientAction(
   const data = readClientForm(formData);
   if (!data.name) return { error: "Client name is required." };
 
-  const existing = await ownClient(id, user.workspaceId);
+  const existing = await ownClient(id, user);
   if (!existing) return { error: "Client not found." };
 
   await prisma.client.update({ where: { id }, data });
@@ -63,7 +70,7 @@ export async function updateClientAction(
 export async function generateShareLinkAction(formData: FormData): Promise<void> {
   const user = await requireUser();
   const id = String(formData.get("id") || "");
-  if (!(await ownClient(id, user.workspaceId))) return;
+  if (!(await ownClient(id, user))) return;
   const { randomBytes } = await import("node:crypto");
   const token = randomBytes(18).toString("base64url");
   await prisma.client.update({ where: { id }, data: { shareToken: token } });
@@ -73,7 +80,7 @@ export async function generateShareLinkAction(formData: FormData): Promise<void>
 export async function revokeShareLinkAction(formData: FormData): Promise<void> {
   const user = await requireUser();
   const id = String(formData.get("id") || "");
-  if (!(await ownClient(id, user.workspaceId))) return;
+  if (!(await ownClient(id, user))) return;
   await prisma.client.update({ where: { id }, data: { shareToken: null } });
   revalidatePath(`/clients/${id}`);
 }
@@ -81,7 +88,7 @@ export async function revokeShareLinkAction(formData: FormData): Promise<void> {
 export async function deleteClientAction(formData: FormData): Promise<void> {
   const user = await requireUser();
   const id = String(formData.get("id") || "");
-  if (await ownClient(id, user.workspaceId)) {
+  if (await ownClient(id, user)) {
     await prisma.client.delete({ where: { id } });
   }
   revalidatePath("/clients");

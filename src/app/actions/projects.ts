@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { clientScope, projectScope } from "@/lib/access";
 import { requireUser } from "@/lib/auth";
 import { PROJECT_STATUSES, PRIORITIES } from "@/lib/constants";
 
@@ -78,8 +79,10 @@ export async function createProjectAction(
   if (!data.clientId) return { error: "Please choose a client." };
 
   // The chosen client must belong to the user's workspace.
-  const client = await prisma.client.findUnique({ where: { id: data.clientId } });
-  if (!client || client.workspaceId !== user.workspaceId) {
+  const client = await prisma.client.findFirst({
+    where: { id: data.clientId, ...clientScope(user) },
+  });
+  if (!client) {
     return { error: "Please choose a client." };
   }
 
@@ -95,6 +98,19 @@ export async function createProjectAction(
         : undefined,
     },
   });
+
+  // The creator, and the named owner if different, join the project. Without
+  // this a member creates a project and immediately cannot see it.
+  const memberIds = new Set([user.id, data.ownerId].filter(Boolean) as string[]);
+  await prisma.projectMember.createMany({
+    data: [...memberIds].map((userId) => ({
+      projectId: project.id,
+      userId,
+      role: userId === data.ownerId ? "lead" : "member",
+    })),
+    skipDuplicates: true,
+  });
+
   if (data.dueDate) {
     await prisma.deadlineChange.create({
       data: {
@@ -121,12 +137,16 @@ export async function updateProjectAction(
   if (!data.name) return { error: "Project name is required." };
   if (!data.clientId) return { error: "Please choose a client." };
 
-  const existing = await prisma.project.findUnique({ where: { id } });
-  if (!existing || existing.workspaceId !== user.workspaceId) {
+  const existing = await prisma.project.findFirst({
+    where: { id, ...projectScope(user) },
+  });
+  if (!existing) {
     return { error: "Project not found." };
   }
-  const client = await prisma.client.findUnique({ where: { id: data.clientId } });
-  if (!client || client.workspaceId !== user.workspaceId) {
+  const client = await prisma.client.findFirst({
+    where: { id: data.clientId, ...clientScope(user) },
+  });
+  if (!client) {
     return { error: "Please choose a client." };
   }
 
@@ -188,8 +208,10 @@ export async function addUpdateAction(
   const newStatus = String(formData.get("status") || "").trim();
   if (!body) return { error: "Update note cannot be empty." };
 
-  const project = await prisma.project.findUnique({ where: { id: projectId } });
-  if (!project || project.workspaceId !== user.workspaceId) {
+  const project = await prisma.project.findFirst({
+    where: { id: projectId, ...projectScope(user) },
+  });
+  if (!project) {
     return { error: "Project not found." };
   }
 
