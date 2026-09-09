@@ -152,14 +152,15 @@ Relevant `.env` settings: `CRON_SECRET`, `NOTIFY_EMAIL`, `SLACK_WEBHOOK_URL`,
 
 ## Deploying
 
-See **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)** for a step-by-step Hostinger
-(Node.js) guide: required environment variables, the MySQL connection string,
-first-deploy steps, automated deploys via GitHub Actions, and troubleshooting
-(e.g. the `Environment variable not found: DATABASE_URL` crash-loop).
+See **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)**. Production runs on Hostinger
+as a **Web App**, deployed by uploading a zip — there is no SSH, no terminal,
+and no push-to-deploy on the current plan. That doc covers the zip layout,
+the environment variables (which must be set in hPanel, since `.env` is not
+deployed), and how to handle schema changes without a shell.
 
-The app uses **MySQL** everywhere. In production, set `DATABASE_URL` to your
-host's MySQL connection string (Hostinger: hPanel → MySQL), then run
-`npx prisma db push` and `npm run db:seed` once on the server.
+The app uses **MySQL** everywhere. In production, set `DATABASE_URL` in
+hPanel → Environment variables and apply schema changes via the build command
+or phpMyAdmin — see DEPLOYMENT.md §3–4.
 
 ## Useful scripts
 
