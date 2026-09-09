@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
+import type { SessionUser } from "@/lib/auth";
+import { canReachProject } from "@/lib/access";
 import { requireUser } from "@/lib/auth";
 import { DELIVERABLE_STATUSES } from "@/lib/constants";
 
@@ -18,11 +20,10 @@ function cleanStatus(s: string): string {
   return (DELIVERABLE_STATUSES as readonly string[]).includes(s) ? s : "Pending";
 }
 
-// Confirm a project belongs to the workspace.
-async function ownsProject(projectId: string, workspaceId: string): Promise<boolean> {
+// Confirm the user may reach this project (workspace + membership/assignment).
+async function ownsProject(projectId: string, user: SessionUser): Promise<boolean> {
   if (!projectId) return false;
-  const p = await prisma.project.findUnique({ where: { id: projectId } });
-  return Boolean(p && p.workspaceId === workspaceId);
+  return canReachProject(projectId, user);
 }
 
 export async function createDeliverableAction(
@@ -32,7 +33,7 @@ export async function createDeliverableAction(
   const user = await requireUser();
   const projectId = String(formData.get("projectId") || "");
   if (!projectId) return { error: "Missing project." };
-  if (!(await ownsProject(projectId, user.workspaceId)))
+  if (!(await ownsProject(projectId, user)))
     return { error: "Project not found." };
   const name = String(formData.get("name") || "").trim();
   if (!name) return { error: "Deliverable name is required." };
@@ -74,7 +75,7 @@ export async function updateDeliverableAction(
   const id = String(formData.get("id") || "");
   const existing = await prisma.deliverable.findUnique({ where: { id } });
   if (!existing) return { error: "Deliverable not found." };
-  if (!(await ownsProject(existing.projectId, user.workspaceId)))
+  if (!(await ownsProject(existing.projectId, user)))
     return { error: "Deliverable not found." };
 
   const name = String(formData.get("name") || "").trim();
@@ -135,7 +136,7 @@ export async function setDeliverableStatusAction(
 
   const existing = await prisma.deliverable.findUnique({ where: { id } });
   if (!existing) return;
-  if (!(await ownsProject(existing.projectId, user.workspaceId))) return;
+  if (!(await ownsProject(existing.projectId, user))) return;
 
   await prisma.deliverable.update({
     where: { id },
@@ -158,7 +159,7 @@ export async function deleteDeliverableAction(
   if (!id) return;
   const existing = await prisma.deliverable.findUnique({ where: { id } });
   if (!existing) return;
-  if (!(await ownsProject(existing.projectId, user.workspaceId))) return;
+  if (!(await ownsProject(existing.projectId, user))) return;
   await prisma.deliverable.delete({ where: { id } });
   revalidatePath(`/projects/${existing.projectId}`);
   revalidatePath("/");

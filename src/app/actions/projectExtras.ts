@@ -2,15 +2,16 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
+import type { SessionUser } from "@/lib/auth";
+import { canReachProject } from "@/lib/access";
 import { requireUser } from "@/lib/auth";
 
 export type ExtrasState = { error?: string } | undefined;
 
-// Confirm a project belongs to the workspace.
-async function ownsProject(projectId: string, workspaceId: string): Promise<boolean> {
+// Confirm the user may reach this project (workspace + membership/assignment).
+async function ownsProject(projectId: string, user: SessionUser): Promise<boolean> {
   if (!projectId) return false;
-  const p = await prisma.project.findUnique({ where: { id: projectId } });
-  return Boolean(p && p.workspaceId === workspaceId);
+  return canReachProject(projectId, user);
 }
 
 // ---- Resources / links ----
@@ -23,7 +24,7 @@ export async function addLinkAction(
   const label = String(formData.get("label") || "").trim();
   let url = String(formData.get("url") || "").trim();
   if (!projectId) return { error: "Missing project." };
-  if (!(await ownsProject(projectId, user.workspaceId)))
+  if (!(await ownsProject(projectId, user)))
     return { error: "Project not found." };
   if (!label || !url) return { error: "Label and URL are required." };
   if (!/^https?:\/\//i.test(url)) url = `https://${url}`;
@@ -39,7 +40,7 @@ export async function deleteLinkAction(formData: FormData): Promise<void> {
   if (!id) return;
   const link = await prisma.projectLink.findUnique({ where: { id } });
   if (!link) return;
-  if (!(await ownsProject(link.projectId, user.workspaceId))) return;
+  if (!(await ownsProject(link.projectId, user))) return;
   await prisma.projectLink.delete({ where: { id } });
   revalidatePath(`/projects/${link.projectId}`);
 }
@@ -53,7 +54,7 @@ export async function addTimeEntryAction(
   const projectId = String(formData.get("projectId") || "");
   const hours = Number(formData.get("hours"));
   if (!projectId) return { error: "Missing project." };
-  if (!(await ownsProject(projectId, user.workspaceId)))
+  if (!(await ownsProject(projectId, user)))
     return { error: "Project not found." };
   if (!Number.isFinite(hours) || hours <= 0)
     return { error: "Enter a positive number of hours." };
@@ -80,7 +81,7 @@ export async function deleteTimeEntryAction(formData: FormData): Promise<void> {
   if (!id) return;
   const entry = await prisma.timeEntry.findUnique({ where: { id } });
   if (!entry) return;
-  if (!(await ownsProject(entry.projectId, user.workspaceId))) return;
+  if (!(await ownsProject(entry.projectId, user))) return;
   await prisma.timeEntry.delete({ where: { id } });
   revalidatePath(`/projects/${entry.projectId}`);
 }
