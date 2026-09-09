@@ -119,7 +119,7 @@ export function buildReport(opts: {
       </thead>
       <tbody>${rows || `<tr><td colspan="5" style="padding:12px;color:#888;">No projects.</td></tr>`}</tbody>
     </table>
-    <p style="margin:20px 0 0;color:#999;font-size:12px;">Sent via Concertium</p>
+    <p style="margin:20px 0 0;color:#999;font-size:12px;">Automated status report</p>
   </div>`;
 
   return { subject, text, html };

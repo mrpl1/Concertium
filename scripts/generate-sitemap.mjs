@@ -1,4 +1,4 @@
-// Generates a visual site map of the Concertium app.
+// Generates a visual site map of the app.
 //
 //   node scripts/generate-sitemap.mjs           → writes docs/sitemap.svg (+ .png if available)
 //   node scripts/generate-sitemap.mjs --check    → fails (exit 1) if docs/sitemap.svg is out of date
@@ -294,7 +294,7 @@ rrect(0, 0, W, H, 0, { fill: COLORS.bg, stroke: COLORS.bg });
 // header
 push(`<rect x="${MARGIN}" y="34" width="34" height="34" rx="8" fill="${COLORS.dashboard}"/>`);
 text(MARGIN + 17, 58, "C", { size: 20, weight: "bold", color: "#fff", anchor: "middle" });
-text(MARGIN + 46, 52, "Concertium — Site Map", { size: 27, weight: "bold" });
+text(MARGIN + 46, 52, "Site Map", { size: 27, weight: "bold" });
 text(MARGIN + 46, 74, "Team project management · routes, hierarchy & navigation", { size: 14, color: COLORS.sub });
 
 // legend
@@ -370,7 +370,7 @@ flows.forEach(([k, txt], i) => {
 });
 
 // footer (stable — no timestamp, so rebuilds don't churn the diff)
-text(MARGIN, H - 14, "Concertium site map · auto-generated from src/app — do not edit by hand", { size: 10.5, color: COLORS.faint });
+text(MARGIN, H - 14, "Site map · auto-generated from src/app — do not edit by hand", { size: 10.5, color: COLORS.faint });
 text(W - MARGIN, H - 14, `${routes.length} routes · Next.js App Router`, { size: 10.5, color: COLORS.faint, anchor: "end" });
 
 push(`</svg>`);

@@ -26,7 +26,7 @@ export default async function TeamPage() {
       <div>
         <h1 className="text-2xl font-semibold text-gray-900">Team</h1>
         <p className="text-sm text-gray-500">
-          Add teammates and manage who can access Concertium.
+          Add teammates and manage who can access this workspace.
         </p>
       </div>
 

@@ -83,20 +83,20 @@ export async function buildAlertDigest(now = Date.now()): Promise<AlertDigest> {
       : "";
 
   const html = `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#1a1a1a;max-width:680px;">
-    <h2 style="margin:0 0 4px;">Concertium — Daily Project Alerts</h2>
+    <h2 style="margin:0 0 4px;">Daily Project Alerts</h2>
     <p style="color:#666;margin:0 0 8px;">As of ${formatDate(new Date(now))}</p>
     ${empty ? "<p>All projects are on track. 🎉</p>" : htmlSection("⛔ Overdue", overdue, "#b91c1c") + htmlSection("⚠️ At risk", atRisk, "#b45309") + htmlSection("📅 Due within 7 days", dueSoon, "#1d4ed8")}
   </div>`;
 
   const slackText = empty
-    ? "*Concertium daily alerts:* all projects on track. :tada:"
-    : `*Concertium daily alerts* (${counts.overdue} overdue, ${counts.atRisk} at risk, ${counts.dueSoon} due soon)\n\n${text}`;
+    ? "*Daily project alerts:* all projects on track. :tada:"
+    : `*Daily project alerts* (${counts.overdue} overdue, ${counts.atRisk} at risk, ${counts.dueSoon} due soon)\n\n${text}`;
 
   return {
     empty,
     subject: empty
-      ? "Concertium: all projects on track"
-      : `Concertium alerts: ${counts.overdue} overdue, ${counts.atRisk} at risk`,
+      ? "All projects on track"
+      : `Project alerts: ${counts.overdue} overdue, ${counts.atRisk} at risk`,
     text,
     html,
     slackText,

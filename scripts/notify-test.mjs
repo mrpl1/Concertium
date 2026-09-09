@@ -30,7 +30,7 @@ const res = await fetch(url, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    text: "✅ Concertium test message — your Slack webhook is working. Daily alert digests will post here.",
+    text: "✅ Test message — your Slack webhook is working. Daily alert digests will post here.",
   }),
 });
 

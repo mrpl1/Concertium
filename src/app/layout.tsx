@@ -4,7 +4,7 @@ import { getSessionUser } from "@/lib/auth";
 import { NavBar } from "@/components/NavBar";
 
 export const metadata: Metadata = {
-  title: "Concertium — Project Management",
+  title: "Project Management",
   description:
     "Track clients, project status, and send email status reports for your team.",
 };

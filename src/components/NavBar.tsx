@@ -31,7 +31,7 @@ export function NavBar({ user }: { user: SessionUser }) {
             <span className="grid h-7 w-7 place-items-center rounded-md bg-brand-600 text-white text-sm">
               C
             </span>
-            <span className="text-gray-900">Concertium</span>
+            <span className="text-gray-900">Projects</span>
           </Link>
           <nav className="hidden gap-1 sm:flex">
             {links.map((l) => (

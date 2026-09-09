@@ -4,7 +4,7 @@
 <rect x="0" y="0" width="2634" height="902" rx="0" ry="0" fill="#f8fafc" stroke="#f8fafc" stroke-width="1"/>
 <rect x="40" y="34" width="34" height="34" rx="8" fill="#2147d8"/>
 <text x="57" y="58" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="20" font-weight="bold" fill="#fff" text-anchor="middle">C</text>
-<text x="86" y="52" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="27" font-weight="bold" fill="#0f172a" text-anchor="start">Concertium — Site Map</text>
+<text x="86" y="52" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="27" font-weight="bold" fill="#0f172a" text-anchor="start">Site Map</text>
 <text x="86" y="74" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#64748b" text-anchor="start">Team project management · routes, hierarchy &amp; navigation</text>
 <circle cx="2124" cy="40" r="6" fill="#64748b"/>
 <text x="2136" y="44" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#0f172a" text-anchor="start">Auth / public</text>
@@ -216,6 +216,6 @@
 <text x="80" y="821" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#0f172a" text-anchor="start">Updates &amp; statuses feed the Dashboard graph and the Status reports in real time.</text>
 <circle cx="66" cy="836" r="5" fill="#9333ea"/>
 <text x="80" y="840" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#0f172a" text-anchor="start">Admin adds teammates from Team; everyone signs in at /login (no public self-registration after the first user).</text>
-<text x="40" y="888" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#94a3b8" text-anchor="start">Concertium site map · auto-generated from src/app — do not edit by hand</text>
+<text x="40" y="888" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#94a3b8" text-anchor="start">Site map · auto-generated from src/app — do not edit by hand</text>
 <text x="2594" y="888" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#94a3b8" text-anchor="end">18 routes · Next.js App Router</text>
 </svg>
