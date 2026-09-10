@@ -4,7 +4,6 @@
 // Workers has no long-lived process between requests for that to run in.
 // @ts-expect-error — .open-next/worker.js is generated at build time
 import openNextHandler from "./.open-next/worker.js";
-import { sendAllAlertDigests, runAllWeeklyReports } from "@/lib/automations";
 
 export default {
   fetch: openNextHandler.fetch,
@@ -13,21 +12,23 @@ export default {
     env: CloudflareEnv,
     ctx: ExecutionContext
   ) {
-    // Mirrors src/app/api/cron/route.ts's logic, called in-process instead of
-    // via HTTP self-fetch — no CRON_SECRET round-trip needed here since this
-    // only runs from Cloudflare's own cron trigger, not a public request.
-    // Both helpers iterate every workspace, each getting its own digest.
+    // worker.ts is bundled by wrangler outside the Next build. Importing
+    // @/lib/automations directly pulls in the "server-only" package, which
+    // throws unconditionally when loaded by any bundler other than Next's own
+    // ("This module cannot be imported from a Client Component module") —
+    // fails at deploy time with a cryptic 10021 validation error, even though
+    // it typechecks and builds fine. Self-fetch the existing /api/cron route
+    // through the WORKER_SELF_REFERENCE service binding instead.
     ctx.waitUntil(
-      (async () => {
-        const alerts = await sendAllAlertDigests({ sendIfEmpty: false });
-        console.log("[cron] alert digest:", JSON.stringify(alerts));
-
-        const weeklyDay = Number(env.WEEKLY_REPORT_DAY ?? 5);
-        if (new Date().getDay() === weeklyDay) {
-          const weekly = await runAllWeeklyReports();
-          console.log("[cron] weekly reports:", JSON.stringify(weekly));
-        }
-      })()
+      env.WORKER_SELF_REFERENCE!.fetch(
+        `https://self/api/cron?secret=${encodeURIComponent(env.CRON_SECRET ?? "")}`
+      )
+        .then(async (res: Response) => {
+          console.log("[cron]", res.status, await res.text());
+        })
+        .catch((err: unknown) => {
+          console.error("[cron] self-fetch failed:", err);
+        })
     );
   },
 };
