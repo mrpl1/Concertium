@@ -67,6 +67,8 @@ model User {
   ownedDeliverables Deliverable[]  @relation("DeliverableOwner")
   deadlineChanges   DeadlineChange[]
   timeEntries       TimeEntry[]
+  projectMemberships ProjectMember[]
+  clientAssignments  ClientAssignment[]
 }
 
 model Client {
@@ -89,6 +91,7 @@ model Client {
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
   projects Project[]
+  assignees ClientAssignment[]
 }
 
 model Project {
@@ -125,6 +128,7 @@ model Project {
   links           ProjectLink[]
   timeEntries     TimeEntry[]
   tags            Tag[]
+  members         ProjectMember[]
 }
 
 // A labeled link/resource attached to a project (SOW, contract, asset, doc…).
@@ -216,4 +220,34 @@ model StatusUpdate {
 
   authorId String?
   author   User?   @relation(fields: [authorId], references: [id], onDelete: SetNull)
+}
+
+// A user's membership of a single project. Grants visibility of that project
+// and everything hanging off it (deliverables, time entries, updates).
+model ProjectMember {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // role: "lead" | "member" | "viewer"
+  role      String   @default("member")
+  createdAt DateTime @default(now())
+
+  @@unique([projectId, userId])
+  @@index([userId])
+}
+
+// A user's assignment to a whole client. Grants visibility of that client and
+// every project under it, without needing per-project membership rows.
+model ClientAssignment {
+  id        String   @id @default(cuid())
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([clientId, userId])
+  @@index([userId])
 }

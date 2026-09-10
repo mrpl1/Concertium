@@ -3,8 +3,8 @@
 <marker id="arrow" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#64748b"/></marker></defs>
 <rect x="0" y="0" width="3150" height="902" rx="0" ry="0" fill="#f8fafc" stroke="#f8fafc" stroke-width="1"/>
 <rect x="40" y="34" width="34" height="34" rx="8" fill="#2147d8"/>
-<text x="57" y="58" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="20" font-weight="bold" fill="#fff" text-anchor="middle">C</text>
-<text x="86" y="52" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="27" font-weight="bold" fill="#0f172a" text-anchor="start">Concertium — Site Map</text>
+<text x="57" y="58" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="20" font-weight="bold" fill="#fff" text-anchor="middle">P</text>
+<text x="86" y="52" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="27" font-weight="bold" fill="#0f172a" text-anchor="start">Site Map</text>
 <text x="86" y="74" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14" font-weight="normal" fill="#64748b" text-anchor="start">Team project management · routes, hierarchy &amp; navigation</text>
 <circle cx="2640" cy="40" r="6" fill="#64748b"/>
 <text x="2652" y="44" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#0f172a" text-anchor="start">Auth / public</text>
@@ -192,8 +192,8 @@
 <rect x="2022" y="336" width="46" height="18" rx="9" ry="9" fill="#9333ea1a" stroke="#9333ea55" stroke-width="1"/>
 <text x="2045" y="348.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#9333ea" text-anchor="middle">admin</text>
 <text x="1864" y="384" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Admin-only.</text>
-<text x="1864" y="398" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">List members; add a teammate</text>
-<text x="1864" y="412" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">(member or admin role).</text>
+<text x="1864" y="398" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">List members; invite teammates</text>
+<text x="1864" y="412" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">and revoke pending invites.</text>
 <rect x="2104" y="326" width="232" height="86" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
 <path d="M 2104 336 q 0 -10 10 -10 v 66 q -10 0 -10 -10 Z" fill="#475569"/>
 <text x="2122" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Search</text>
@@ -210,14 +210,24 @@
 <text x="2557.8" y="348.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#0ea5e9" text-anchor="middle">public</text>
 <text x="2398" y="384" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Read-only, tokenized status —</text>
 <text x="2398" y="398" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">no login required.</text>
-<rect x="2638" y="326" width="214" height="58" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
-<path d="M 2638 336 q 0 -10 10 -10 v 38 q -10 0 -10 -10 Z" fill="#0891b2"/>
-<text x="2656" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Token</text>
+<rect x="2638" y="326" width="214" height="100" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+<path d="M 2638 336 q 0 -10 10 -10 v 80 q -10 0 -10 -10 Z" fill="#0891b2"/>
+<text x="2656" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Accept invite</text>
 <text x="2656" y="367" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#0891b2" text-anchor="start">/invite/[token]</text>
-<rect x="2878" y="326" width="232" height="58" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
-<path d="M 2878 336 q 0 -10 10 -10 v 38 q -10 0 -10 -10 Z" fill="#db2777"/>
-<text x="2896" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Settings</text>
+<rect x="2789.6" y="336" width="52.400000000000006" height="18" rx="9" ry="9" fill="#0891b21a" stroke="#0891b255" stroke-width="1"/>
+<text x="2815.8" y="348.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#0891b2" text-anchor="middle">public</text>
+<text x="2656" y="384" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Tokenized join link — set name</text>
+<text x="2656" y="398" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">&amp; password, land in the</text>
+<text x="2656" y="412" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">workspace.</text>
+<rect x="2878" y="326" width="232" height="100" rx="10" ry="10" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+<path d="M 2878 336 q 0 -10 10 -10 v 80 q -10 0 -10 -10 Z" fill="#db2777"/>
+<text x="2896" y="350" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#0f172a" text-anchor="start">Workspace settings</text>
 <text x="2896" y="367" font-family="DejaVu Sans Mono, Liberation Mono, monospace" font-size="11" font-weight="normal" fill="#db2777" text-anchor="start">/settings</text>
+<rect x="3054" y="336" width="46" height="18" rx="9" ry="9" fill="#db27771a" stroke="#db277755" stroke-width="1"/>
+<text x="3077" y="348.5" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10" font-weight="bold" fill="#db2777" text-anchor="middle">admin</text>
+<text x="2896" y="384" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Admin-only.</text>
+<text x="2896" y="398" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">Slack webhook for alert digests,</text>
+<text x="2896" y="412" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="11" font-weight="normal" fill="#64748b" text-anchor="start">weekly report on/off.</text>
 <rect x="40" y="712" width="3070" height="150" rx="12" ry="12" fill="#fff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
 <text x="60" y="740" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#0f172a" text-anchor="start">KEY NAVIGATION FLOWS &amp; CROSS-LINKS</text>
 <circle cx="66" cy="760" r="5" fill="#2147d8"/>
@@ -230,6 +240,6 @@
 <text x="80" y="821" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#0f172a" text-anchor="start">Updates &amp; statuses feed the Dashboard graph and the Status reports in real time.</text>
 <circle cx="66" cy="836" r="5" fill="#9333ea"/>
 <text x="80" y="840" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="12" font-weight="normal" fill="#0f172a" text-anchor="start">Admin adds teammates from Team; everyone signs in at /login (no public self-registration after the first user).</text>
-<text x="40" y="888" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#94a3b8" text-anchor="start">Concertium site map · auto-generated from src/app — do not edit by hand</text>
+<text x="40" y="888" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#94a3b8" text-anchor="start">Site map · auto-generated from src/app — do not edit by hand</text>
 <text x="3110" y="888" font-family="DejaVu Sans, Liberation Sans, Arial, sans-serif" font-size="10.5" font-weight="normal" fill="#94a3b8" text-anchor="end">20 routes · Next.js App Router</text>
 </svg>

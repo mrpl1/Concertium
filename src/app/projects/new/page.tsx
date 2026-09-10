@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { clientScope } from "@/lib/access";
 import { ProjectForm } from "@/components/ProjectForm";
 import { createProjectAction } from "@/app/actions/projects";
 
@@ -15,7 +16,7 @@ export default async function NewProjectPage({
 
   const [clients, users] = await Promise.all([
     prisma.client.findMany({
-      where: { workspaceId: user.workspaceId },
+      where: clientScope(user),
       orderBy: { name: "asc" },
     }),
     prisma.user.findMany({

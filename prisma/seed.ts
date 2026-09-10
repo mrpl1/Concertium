@@ -15,7 +15,7 @@ async function main() {
   const workspace = await prisma.workspace.upsert({
     where: { slug: "concertium-demo" },
     update: {},
-    create: { name: "Concertium Demo", slug: "concertium-demo" },
+    create: { name: "Demo Workspace", slug: "concertium-demo" },
   });
 
   const admin = await prisma.user.upsert({
