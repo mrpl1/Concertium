@@ -101,6 +101,9 @@ export async function createProjectAction(
 
   // The creator, and the named owner if different, join the project. Without
   // this a member creates a project and immediately cannot see it.
+  // memberIds is a Set, so this is already duplicate-free — no need for
+  // skipDuplicates (unsupported on SQLite/D1 anyway) since the project was
+  // just created and can't already have members.
   const memberIds = new Set([user.id, data.ownerId].filter(Boolean) as string[]);
   await prisma.projectMember.createMany({
     data: [...memberIds].map((userId) => ({
@@ -108,7 +111,6 @@ export async function createProjectAction(
       userId,
       role: userId === data.ownerId ? "lead" : "member",
     })),
-    skipDuplicates: true,
   });
 
   if (data.dueDate) {

@@ -1,6 +1,10 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "concertium",
+  // Matches the Worker already connected to this repo's "Workers Builds"
+  // GitHub integration (created via the Cloudflare dashboard, not wrangler).
+  // A mismatched name here makes every CI build fail in 0s against the
+  // wrong script.
+  "name": "concertium-dashboard",
   "main": "worker.ts",
   "compatibility_date": "2026-09-09",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
@@ -9,7 +13,7 @@
     "binding": "ASSETS"
   },
   "services": [
-    { "binding": "WORKER_SELF_REFERENCE", "service": "concertium" }
+    { "binding": "WORKER_SELF_REFERENCE", "service": "concertium-dashboard" }
   ],
   "d1_databases": [
     {
@@ -22,6 +26,6 @@
     "WEEKLY_REPORT_DAY": "5"
   },
   "triggers": {
-    "crons": []
+    "crons": ["0 8 * * *"]
   }
 }

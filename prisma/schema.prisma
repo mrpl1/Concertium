@@ -5,7 +5,12 @@
 // migrations apply` — D1 doesn't support `prisma db push`/`migrate dev`.
 
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
+  // "client" mode ships a pure-JS query compiler instead of the native Rust
+  // query engine binary (.node file) — required for Workers, which cannot
+  // load native binaries at all. Only works with a driver adapter (adapter-d1
+  // here), which is all this app ever uses.
+  engineType = "client"
 }
 
 datasource db {

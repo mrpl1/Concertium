@@ -151,6 +151,27 @@ CREATE TABLE "StatusUpdate" (
 );
 
 -- CreateTable
+CREATE TABLE "ProjectMember" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "projectId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "role" TEXT NOT NULL DEFAULT 'member',
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "ProjectMember_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "ProjectMember_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "ClientAssignment" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "clientId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "ClientAssignment_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "Client" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "ClientAssignment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
 CREATE TABLE "_ProjectToTag" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL,
@@ -174,7 +195,20 @@ CREATE UNIQUE INDEX "Client_shareToken_key" ON "Client"("shareToken");
 CREATE UNIQUE INDEX "Tag_workspaceId_name_key" ON "Tag"("workspaceId", "name");
 
 -- CreateIndex
+CREATE INDEX "ProjectMember_userId_idx" ON "ProjectMember"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ProjectMember_projectId_userId_key" ON "ProjectMember"("projectId", "userId");
+
+-- CreateIndex
+CREATE INDEX "ClientAssignment_userId_idx" ON "ClientAssignment"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ClientAssignment_clientId_userId_key" ON "ClientAssignment"("clientId", "userId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "_ProjectToTag_AB_unique" ON "_ProjectToTag"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_ProjectToTag_B_index" ON "_ProjectToTag"("B");
+

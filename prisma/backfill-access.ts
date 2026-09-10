@@ -23,15 +23,16 @@ async function main() {
     select: { id: true, ownerId: true },
   });
   if (owned.length) {
-    const { count } = await prisma.projectMember.createMany({
-      data: owned.map((p) => ({
-        projectId: p.id,
-        userId: p.ownerId as string,
-        role: "lead",
-      })),
-      skipDuplicates: true,
-    });
-    console.log(`Project owners added as leads: ${count}`);
+    // createMany's skipDuplicates isn't supported on SQLite/D1, so upsert
+    // each row individually against the (projectId, userId) unique key.
+    for (const p of owned) {
+      await prisma.projectMember.upsert({
+        where: { projectId_userId: { projectId: p.id, userId: p.ownerId as string } },
+        update: {},
+        create: { projectId: p.id, userId: p.ownerId as string, role: "lead" },
+      });
+    }
+    console.log(`Project owners added as leads: ${owned.length}`);
   } else {
     console.log("No owned projects to backfill.");
   }
@@ -50,11 +51,14 @@ async function main() {
       select: { id: true },
     });
     if (!clients.length) continue;
-    const { count } = await prisma.clientAssignment.createMany({
-      data: clients.map((c) => ({ clientId: c.id, userId: user.id })),
-      skipDuplicates: true,
-    });
-    assignments += count;
+    for (const c of clients) {
+      await prisma.clientAssignment.upsert({
+        where: { clientId_userId: { clientId: c.id, userId: user.id } },
+        update: {},
+        create: { clientId: c.id, userId: user.id },
+      });
+      assignments += 1;
+    }
   }
   console.log(`Client assignments created: ${assignments}`);
   console.log("Done. Narrow access from each project or client page.");
