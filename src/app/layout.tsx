@@ -38,7 +38,7 @@ export default async function RootLayout({
       </head>
       <body>
         {user ? <NavBar user={user} workspaceName={workspaceName} /> : null}
-        <main className={user ? "mx-auto max-w-6xl px-4 py-8" : ""}>
+        <main className={user ? "mx-auto max-w-7xl px-4 py-8" : ""}>
           {children}
         </main>
       </body>
