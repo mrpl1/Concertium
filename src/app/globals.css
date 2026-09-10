@@ -75,6 +75,15 @@ body {
  * specificity than the base utilities, so they win without per-file edits.
  */
 @layer utilities {
+  /* Scroll the nav rows horizontally without showing a scrollbar track. */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   .dark .bg-white { background-color: #111827; }      /* gray-900 */
   .dark .bg-gray-50 { background-color: #0b1220; }
   .dark .bg-gray-100 { background-color: #1f2937; }    /* gray-800 */
