@@ -11,6 +11,9 @@ next-env.d.ts
 # production
 /build
 
+# deploy archives built by scripts/build-deploy-zip.mjs
+/dist/
+
 # database (sqlite)
 *.db
 *.db-journal

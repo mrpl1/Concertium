@@ -30,11 +30,30 @@ matters, because the deploy procedure is completely different for each.
 There is no `git pull` on the server. Hostinger serves whatever was in the last
 uploaded zip. A deploy is:
 
-1. Produce a zip whose **single top-level folder is `Concertium-main/`**, with
-   the project files inside it. GitHub's "Code → Download ZIP" of the `main`
-   branch produces exactly this shape and filename.
-2. hPanel → **Websites → lindenlaub.cloud → Deployments** → upload the zip.
-3. Hostinger unpacks it, runs the configured build, and restarts the app.
+1. **Back up the database** — hPanel → **Backups**. Do this first, every time:
+   the build runs `prisma db push` against production (§4), so a deploy can
+   alter the schema before anyone has looked at it.
+2. Produce a zip whose **single top-level folder is `Concertium-main/`**, with
+   the project files inside it:
+
+   ```bash
+   npm run deploy:zip            # packages HEAD
+   npm run deploy:zip -- main    # packages a specific ref
+   ```
+
+   This writes `dist/Concertium-main.zip` and prints its sha256. It builds the
+   archive with `git archive`, so the contents are exactly the tracked files at
+   that commit — uncommitted work is **not** included, and it refuses to write
+   an archive containing `node_modules`, `.next`, a real `.env`, a `.db` file
+   or a `.pem`. Zipping a working directory by hand is how those leak, and a
+   `.env` in the archive publishes the database password.
+
+   (GitHub's "Code → Download ZIP" of `main` produces the same shape, but only
+   for `main`, and with no such checks.)
+3. hPanel → **Websites → lindenlaub.cloud → Deployments** → upload the zip.
+4. Hostinger unpacks it, runs the configured build, and restarts the app.
+5. Run the one-time access backfill if it has never been run — see §5.
+6. **Check the site as a non-admin**, not only as the owner — see §5.
 
 The **Redeploy** button on the Dashboard re-runs the build for the zip that is
 already there. It does *not* fetch new code — use it after changing an
@@ -66,7 +85,14 @@ new env values on its own.
 
 > **Unverified:** whether these variables are also exposed to the *build* step,
 > as opposed to only the runtime. This matters for schema migrations — see §4.
-> Confirm before relying on it.
+>
+> The build no longer fails obscurely if they are not. `npm run build` starts
+> with `scripts/check-build-env.mjs`, which stops with an explicit message when
+> `DATABASE_URL` is missing or malformed, and warns when `AUTH_SECRET` is
+> missing or too short. If a deploy fails on that check, this question is
+> answered: the panel's variables do not reach the build step. The preflight
+> prints the host and database name only — never the user or the password,
+> since build logs are not a safe place for credentials.
 
 ---
 
@@ -99,7 +125,8 @@ For an **additive** change, the build command can carry the migration:
 prisma generate && prisma db push && next build
 ```
 
-(this is the `prod:deploy` script in `package.json`). Two caveats:
+(this is the `prod:deploy` script in `package.json`, and `build` does the same;
+both now run the environment preflight first). Two caveats:
 
 - It requires `DATABASE_URL` at *build* time — see the note in §2.
 - It runs a schema push against production on **every** deploy. That is fine for
@@ -119,7 +146,44 @@ backfill script before the new code goes live.
 
 ---
 
-## 5. Automated deploys
+## 5. Access backfill (one-time)
+
+`src/lib/access.ts` scopes every read through project membership and client
+assignment. Admins bypass that scoping. So on a database whose rows predate
+those tables, **the owner sees a working app and everybody else signs in to an
+empty one** — no clients, no projects, and no error to explain it.
+
+The `ProjectMember` and `ClientAssignment` tables are created by the
+`prisma db push` in the build, but nothing populates them. That is this step.
+
+With a shell, `npm run db:backfill-access`. Without one — which is this plan —
+paste **`prisma/backfill-access.sql`** into phpMyAdmin (hPanel → Databases →
+phpMyAdmin → the database → SQL tab).
+
+Both do the same two things:
+
+- every project owner becomes a `lead` on the project they own;
+- every user is assigned to every client **in their own workspace**.
+
+That deliberately grants more access than the eventual intent, so that turning
+scoping on changes nothing anyone can see. Access then narrows on purpose, when
+an admin removes an assignment from a project or client page — rather than by
+surprise, which is the failure mode where people arrive at work to find their
+projects gone.
+
+Run it **after** the build has created the tables, not before. It is safe to
+run more than once: both statements are `INSERT IGNORE` against the tables'
+unique keys, and the row ids are derived from the rows' own foreign keys, so a
+second run inserts nothing and rewrites nothing.
+
+Then verify as a non-admin. This is the whole point of the step and the only
+way to catch it — sign in as a member account and confirm the dashboard, the
+client list and the project list are populated. The owner's view proves
+nothing here, because admins bypass the scoping that this backfill feeds.
+
+---
+
+## 6. Automated deploys
 
 There are none, and the previous `.github/workflows/deploy.yml` has been removed
 because it could never have worked: it deployed over SSH to
@@ -138,7 +202,7 @@ If you want push-to-deploy back, the options are:
 
 ---
 
-## 6. Troubleshooting
+## 7. Troubleshooting
 
 Runtime logs: hPanel → **Websites → lindenlaub.cloud → Runtime logs**.
 
@@ -149,10 +213,12 @@ Runtime logs: hPanel → **Websites → lindenlaub.cloud → Runtime logs**.
 | `P2022` / "column does not exist" | Database schema is behind the deployed code — see §4. |
 | `Access denied` / `Can't reach database server` | `DATABASE_URL` credentials or host wrong, or the DB user is not assigned to the database. |
 | 503 / restart loop | The app must bind `process.env.PORT`. `server.js` does this; make sure the start command is `npm start`. |
+| Signs in fine, but the app is **empty for non-admins** while the owner sees everything | The access backfill has not been run — see §5. |
+| Build stops on `Cannot build: the environment is incomplete` | The preflight — the named variable is missing from the panel, or was added without a redeploy. See §2. |
 
 ---
 
-## 7. Local development
+## 8. Local development
 
 ```bash
 docker compose up -d          # MySQL on :3306
