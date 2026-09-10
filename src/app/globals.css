@@ -23,6 +23,12 @@ body {
   .btn-primary {
     @apply btn bg-brand-600 text-white hover:bg-brand-700;
   }
+  .btn-hero {
+    @apply btn rounded-full bg-gradient-to-r from-brand-600 to-brand-500 px-8 py-3.5
+           font-bold text-white shadow-lg shadow-brand-600/25
+           transition-all duration-300 hover:scale-105 hover:shadow-brand-600/40
+           disabled:hover:scale-100;
+  }
   .btn-secondary {
     @apply btn bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50;
   }

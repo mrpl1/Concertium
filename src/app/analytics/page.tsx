@@ -122,9 +122,9 @@ export default async function AnalyticsPage() {
           {PROJECT_STATUSES.map((s) => (
             <div key={s} className="flex items-center gap-3">
               <span className="w-24 shrink-0 text-sm text-gray-600">{s}</span>
-              <div className="h-5 flex-1 rounded bg-gray-100">
+              <div className="h-5 flex-1 rounded-md bg-gray-100">
                 <div
-                  className="h-5 rounded"
+                  className="h-5 rounded-md"
                   style={{ width: `${(dist[s] / maxDist) * 100}%`, background: statusHex(s), minWidth: dist[s] ? 6 : 0 }}
                 />
               </div>

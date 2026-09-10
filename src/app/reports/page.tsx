@@ -20,9 +20,9 @@ export default async function ReportsPage({
   });
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
+    <div className="mx-auto max-w-3xl space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Status reports</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Status reports</h1>
         <p className="text-sm text-gray-500">
           Generate a status report for a client (or all clients), then draft it
           in your mail app or send it automatically.
@@ -30,10 +30,10 @@ export default async function ReportsPage({
       </div>
 
       {clients.length === 0 ? (
-        <div className="card p-10 text-center text-sm text-gray-500">
+        <div className="card rounded-md border-0 bg-gray-100/60 dark:bg-gray-800/40 p-10 text-center text-base text-gray-500 shadow-sm">
           Add a client and some projects first, then come back to build a
           report.{" "}
-          <Link href="/clients/new" className="font-medium text-brand-600">
+          <Link href="/clients/new" className="font-semibold text-brand-600 underline-offset-4 hover:underline">
             Add a client
           </Link>
         </div>

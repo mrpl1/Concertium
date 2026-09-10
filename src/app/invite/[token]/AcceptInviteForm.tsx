@@ -62,7 +62,7 @@ export function AcceptInviteForm({
       {state?.error ? (
         <p className="text-sm text-red-600">{state.error}</p>
       ) : null}
-      <SubmitButton className="btn-primary w-full" pendingText="Joining…">
+      <SubmitButton className="w-full btn-hero" pendingText="Joining…">
         Join workspace
       </SubmitButton>
     </form>

@@ -62,7 +62,7 @@ function LaneRow({ lane }: { lane: LifecycleLane }) {
   const labelOnLeft = pos > 82;
 
   const inner = (
-    <div className="grid grid-cols-[120px_1fr] items-center gap-3 rounded-lg px-2 py-1.5 -mx-2 transition-colors group-hover:bg-gray-50 sm:grid-cols-[160px_1fr]">
+    <div className="grid grid-cols-[120px_1fr] items-center gap-3 rounded-md px-2 py-1.5 -mx-2 transition-colors group-hover:bg-gray-50 sm:grid-cols-[160px_1fr]">
       <div className="min-w-0">
         <div className="truncate text-sm font-medium text-gray-800 group-hover:text-brand-700">
           {lane.label}

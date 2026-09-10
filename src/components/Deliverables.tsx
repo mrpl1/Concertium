@@ -84,7 +84,7 @@ export function Deliverables({
       </div>
 
       {adding ? (
-        <div className="mb-4 rounded-lg bg-gray-50 p-4 ring-1 ring-gray-200">
+        <div className="mb-4 rounded-md bg-gray-50 p-4 ring-1 ring-gray-200">
           <DeliverableForm
             projectId={projectId}
             users={users}
@@ -104,7 +104,7 @@ export function Deliverables({
           {deliverables.map((d) =>
             editingId === d.id ? (
               <li key={d.id} className="py-3">
-                <div className="rounded-lg bg-gray-50 p-4 ring-1 ring-gray-200">
+                <div className="rounded-md bg-gray-50 p-4 ring-1 ring-gray-200">
                   <DeliverableForm
                     projectId={projectId}
                     users={users}

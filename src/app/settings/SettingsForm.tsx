@@ -41,7 +41,7 @@ export function SettingsForm({
           type="checkbox"
           name="weeklyReportEnabled"
           defaultChecked={weeklyReportEnabled}
-          className="h-4 w-4 rounded border-gray-300"
+          className="h-4 w-4 rounded-md border-gray-300"
         />
         Send weekly client reports for this workspace
       </label>
@@ -53,7 +53,7 @@ export function SettingsForm({
         <p className="text-sm text-green-600">{state.ok}</p>
       ) : null}
 
-      <SubmitButton className="btn-primary" pendingText="Saving…">
+      <SubmitButton className="btn-hero" pendingText="Saving…">
         Save settings
       </SubmitButton>
     </form>

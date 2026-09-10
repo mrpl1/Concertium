@@ -93,7 +93,7 @@ export default async function AutomationsPage() {
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
           Current alert digest preview
         </h2>
-        <pre className="max-h-80 overflow-auto whitespace-pre-wrap rounded-lg bg-gray-50 p-4 text-sm text-gray-700 ring-1 ring-gray-200">
+        <pre className="max-h-80 overflow-auto whitespace-pre-wrap rounded-md bg-gray-50 p-4 text-sm text-gray-700 ring-1 ring-gray-200">
           {digest.text}
         </pre>
       </section>

@@ -44,7 +44,7 @@ export function InviteForm() {
       {state?.error ? (
         <p className="text-sm text-red-600">{state.error}</p>
       ) : null}
-      <SubmitButton className="btn-primary" pendingText="Creating…">
+      <SubmitButton className="btn-hero" pendingText="Creating…">
         Create invite link
       </SubmitButton>
     </form>

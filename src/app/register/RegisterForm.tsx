@@ -47,7 +47,7 @@ export function RegisterForm() {
       {state?.error ? (
         <p className="text-sm text-red-600">{state.error}</p>
       ) : null}
-      <SubmitButton className="btn-primary w-full" pendingText="Creating…">
+      <SubmitButton className="w-full btn-hero" pendingText="Creating…">
         Create account
       </SubmitButton>
     </form>

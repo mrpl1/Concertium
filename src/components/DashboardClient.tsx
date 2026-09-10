@@ -226,7 +226,7 @@ export function DashboardClient({
                   type="checkbox"
                   checked={showCompleted}
                   onChange={(e) => setShowCompleted(e.target.checked)}
-                  className="h-3.5 w-3.5 rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+                  className="h-3.5 w-3.5 rounded-md border-gray-300 text-brand-600 focus:ring-brand-500"
                 />
                 Show completed
               </label>

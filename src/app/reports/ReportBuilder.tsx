@@ -120,7 +120,7 @@ export function ReportBuilder({
             <p className="mt-2 text-sm font-medium text-gray-900">
               {report.subject}
             </p>
-            <pre className="mt-3 max-h-80 overflow-auto whitespace-pre-wrap rounded-lg bg-gray-50 p-4 text-sm text-gray-700 ring-1 ring-gray-200">
+            <pre className="mt-3 max-h-80 overflow-auto whitespace-pre-wrap rounded-md bg-gray-50 p-4 text-sm text-gray-700 ring-1 ring-gray-200">
               {report.text}
             </pre>
           </div>

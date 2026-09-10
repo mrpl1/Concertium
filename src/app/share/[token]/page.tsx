@@ -131,7 +131,7 @@ export default async function SharedStatusPage({
                   ) : null}
 
                   {p.updates[0] ? (
-                    <div className="mt-3 rounded-lg bg-gray-50 p-3 text-sm text-gray-600 ring-1 ring-gray-100">
+                    <div className="mt-3 rounded-md bg-gray-50 p-3 text-sm text-gray-600 ring-1 ring-gray-100">
                       <span className="font-medium text-gray-700">Latest: </span>
                       {p.updates[0].body}
                     </div>

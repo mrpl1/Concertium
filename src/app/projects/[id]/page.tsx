@@ -132,7 +132,7 @@ export default async function ProjectDetailPage({
 
       {/* Risk banner */}
       {risk.level !== "none" ? (
-        <div className={`rounded-lg p-4 ring-1 ring-inset ${RISK_STYLES[risk.level]}`}>
+        <div className={`rounded-md p-4 ring-1 ring-inset ${RISK_STYLES[risk.level]}`}>
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold">
               {RISK_LABELS[risk.level]}
