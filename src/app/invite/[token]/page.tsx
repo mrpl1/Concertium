@@ -32,16 +32,16 @@ export default async function InvitePage({
       </div>
       <div className="w-full max-w-sm">
         <div className="mb-6 text-center">
-          <div className="mx-auto mb-3 grid h-11 w-11 place-items-center rounded-xl bg-brand-600 text-lg font-semibold text-white">
+          <div className="mx-auto mb-3 grid h-11 w-11 place-items-center rounded-[6px] bg-brand-600 text-lg font-semibold text-white">
             C
           </div>
-          <h1 className="text-xl font-semibold text-gray-900">
+          <h1 className="text-xl font-semibold text-[#ffffff]">
             {invalidReason ? "Invite unavailable" : "Join the workspace"}
           </h1>
           {!invalidReason && invite ? (
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-[#ffffff]">
               You&apos;ve been invited to{" "}
-              <span className="font-medium text-gray-700">
+              <span className="font-medium text-[#ffffff]">
                 {invite.workspace.name}
               </span>
               .
@@ -52,7 +52,7 @@ export default async function InvitePage({
         <div className="card p-6">
           {invalidReason || !invite ? (
             <div className="text-center">
-              <p className="text-sm text-gray-600">{invalidReason}</p>
+              <p className="text-sm text-[#ffffff]">{invalidReason}</p>
               <Link href="/login" className="btn-secondary mt-4 w-full">
                 Back to sign in
               </Link>
@@ -62,7 +62,7 @@ export default async function InvitePage({
           )}
         </div>
 
-        <p className="mt-4 text-center text-sm text-gray-500">
+        <p className="mt-4 text-center text-sm text-[#ffffff]">
           Already have an account?{" "}
           <Link href="/login" className="font-medium text-brand-600">
             Sign in

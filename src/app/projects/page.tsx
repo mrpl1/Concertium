@@ -49,7 +49,7 @@ export default async function ProjectsPage({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-gray-900">Projects</h1>
+        <h1 className="text-2xl font-semibold text-[#ffffff]">Projects</h1>
         <Link href="/projects/new" className="btn-primary">
           New project
         </Link>
@@ -73,9 +73,9 @@ export default async function ProjectsPage({
       </div>
 
       {activeClient ? (
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-[#ffffff]">
           Filtered to{" "}
-          <span className="font-medium text-gray-700">
+          <span className="font-medium text-[#ffffff]">
             {activeClient.company || activeClient.name}
           </span>{" "}
           ·{" "}
@@ -89,9 +89,9 @@ export default async function ProjectsPage({
       ) : null}
 
       {tagFilter ? (
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-[#ffffff]">
           Tagged{" "}
-          <span className="font-medium text-gray-700">#{tagFilter}</span> ·{" "}
+          <span className="font-medium text-[#ffffff]">#{tagFilter}</span> ·{" "}
           <Link
             href={buildHref({ status: statusFilter, clientId: clientFilter })}
             className="text-brand-600"
@@ -102,25 +102,25 @@ export default async function ProjectsPage({
       ) : null}
 
       {projects.length === 0 ? (
-        <div className="card p-10 text-center text-sm text-gray-500">
+        <div className="card p-10 text-center text-sm text-[#ffffff]">
           No projects match this view.
         </div>
       ) : (
-        <div className="card divide-y divide-gray-100">
+        <div className="card divide-y divide-[#000000]">
           {projects.map((p) => (
             <Link
               key={p.id}
               href={`/projects/${p.id}`}
-              className="flex flex-wrap items-center gap-4 px-5 py-4 hover:bg-gray-50"
+              className="flex flex-wrap items-center gap-4 px-5 py-4 hover:bg-[#141414]"
             >
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <p className="truncate font-medium text-gray-900">
+                  <p className="truncate font-medium text-[#ffffff]">
                     {p.name}
                   </p>
                   <PriorityBadge priority={p.priority} />
                 </div>
-                <p className="truncate text-xs text-gray-500">
+                <p className="truncate text-xs text-[#ffffff]">
                   {p.client.company || p.client.name}
                   {p.owner ? ` · ${p.owner.name}` : ""} · Due{" "}
                   {formatDate(p.dueDate)}
@@ -166,7 +166,7 @@ function FilterChip({
       className={`rounded-full px-3 py-1 text-sm font-medium ring-1 ring-inset ${
         active
           ? "bg-brand-600 text-white ring-brand-600"
-          : "bg-white text-gray-600 ring-gray-300 hover:bg-gray-50"
+          : "bg-white text-[#ffffff] ring-[#000000] hover:bg-[#141414]"
       }`}
     >
       {label}

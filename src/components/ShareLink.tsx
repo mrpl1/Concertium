@@ -23,17 +23,17 @@ export function ShareLink({
     <div className="card p-5">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
             Client status link
           </h2>
-          <p className="mt-0.5 text-xs text-gray-400">
+          <p className="mt-0.5 text-xs text-[#ffffff]">
             A read-only page the client can open — no login required.
           </p>
         </div>
         {token ? (
           <form action={revokeShareLinkAction}>
             <input type="hidden" name="id" value={clientId} />
-            <button type="submit" className="text-xs font-medium text-gray-400 hover:text-red-600">
+            <button type="submit" className="text-xs font-medium text-[#ffffff] hover:text-[#0066cc]">
               Disable link
             </button>
           </form>

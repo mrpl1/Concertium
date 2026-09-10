@@ -16,14 +16,14 @@ export default async function RegisterPage() {
       </div>
       <div className="w-full max-w-sm">
         <div className="mb-6 text-center">
-          <div className="mx-auto mb-3 grid h-11 w-11 place-items-center rounded-xl bg-brand-600 text-lg font-semibold text-white">
+          <div className="mx-auto mb-3 grid h-11 w-11 place-items-center rounded-[6px] bg-brand-600 text-lg font-semibold text-white">
             P
           </div>
-          <h1 className="text-xl font-semibold text-gray-900">
+          <h1 className="text-xl font-semibold text-[#ffffff]">
             {isBootstrap ? "Create the first account" : "Create an account"}
           </h1>
           {isBootstrap ? (
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-[#ffffff]">
               This first account will be the team admin.
             </p>
           ) : null}
@@ -34,7 +34,7 @@ export default async function RegisterPage() {
             <RegisterForm />
           ) : (
             <div className="text-center">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-[#ffffff]">
                 Registration is closed. Ask a workspace admin to send you an
                 invite link.
               </p>
@@ -46,7 +46,7 @@ export default async function RegisterPage() {
         </div>
 
         {isBootstrap ? (
-          <p className="mt-4 text-center text-sm text-gray-500">
+          <p className="mt-4 text-center text-sm text-[#ffffff]">
             Already have an account?{" "}
             <Link href="/login" className="font-medium text-brand-600">
               Sign in

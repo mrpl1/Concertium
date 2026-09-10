@@ -12,18 +12,18 @@ export default async function SettingsPage() {
   });
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <div className="mx-auto max-w-5xl space-y-10 px-8 py-10">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">
+        <h1 className="text-3xl font-bold tracking-tight text-[#ffffff]">
           Workspace settings
         </h1>
-        <p className="text-sm text-gray-500">
+        <p className="text-base text-[#ffffff] leading-relaxed">
           {workspace?.name ?? "Your workspace"} — Slack alerts and weekly
           reports.
         </p>
       </div>
 
-      <div className="card p-6">
+      <div className="card rounded-[6px] border-0 bg-white p-8 shadow-xl shadow-black/5">
         <SettingsForm
           slackWebhookUrl={workspace?.slackWebhookUrl ?? ""}
           weeklyReportEnabled={workspace?.weeklyReportEnabled ?? false}

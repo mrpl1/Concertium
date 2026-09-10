@@ -39,7 +39,7 @@ export function LoginForm({ next }: { next: string }) {
         />
       </div>
       {state?.error ? (
-        <p className="text-sm text-red-600">{state.error}</p>
+        <p className="text-sm text-[#0066cc]">{state.error}</p>
       ) : null}
       <SubmitButton className="btn-primary w-full" pendingText="Signing in…">
         Sign in

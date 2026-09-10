@@ -10,8 +10,8 @@ import {
 
 function Result({ state }: { state: AutomationState }) {
   if (!state) return null;
-  if (state.error) return <p className="mt-2 text-sm text-red-600">{state.error}</p>;
-  return <p className="mt-2 text-sm text-green-600">{state.ok}</p>;
+  if (state.error) return <p className="mt-2 text-sm text-[#0066cc]">{state.error}</p>;
+  return <p className="mt-2 text-sm text-[#e8e8ed]">{state.ok}</p>;
 }
 
 export function AutomationsPanel() {
@@ -27,8 +27,8 @@ export function AutomationsPanel() {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       <div className="card p-5">
-        <h3 className="font-medium text-gray-900">Alert digest</h3>
-        <p className="mt-1 text-sm text-gray-500">
+        <h3 className="font-medium text-[#ffffff]">Alert digest</h3>
+        <p className="mt-1 text-sm text-[#ffffff]">
           Send the current overdue / at-risk / due-soon digest now via email and
           Slack.
         </p>
@@ -41,8 +41,8 @@ export function AutomationsPanel() {
       </div>
 
       <div className="card p-5">
-        <h3 className="font-medium text-gray-900">Weekly client reports</h3>
-        <p className="mt-1 text-sm text-gray-500">
+        <h3 className="font-medium text-[#ffffff]">Weekly client reports</h3>
+        <p className="mt-1 text-sm text-[#ffffff]">
           Email a status report to every client opted in (Clients → Edit →
           “Weekly report”).
         </p>

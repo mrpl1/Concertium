@@ -34,7 +34,7 @@ export function ClientForm({
     <form action={formAction} className="space-y-4">
       <div>
         <label className="label" htmlFor="name">
-          Contact name <span className="text-red-500">*</span>
+          Contact name <span className="text-[#0066cc]">*</span>
         </label>
         <input
           id="name"
@@ -97,23 +97,23 @@ export function ClientForm({
           placeholder="Context, history, preferences…"
         />
       </div>
-      <label className="flex items-start gap-2 rounded-lg bg-gray-50 p-3 ring-1 ring-gray-200">
+      <label className="flex items-start gap-2 rounded-[6px] bg-[#141414] p-3 ring-1 ring-[#000000]">
         <input
           type="checkbox"
           name="weeklyReport"
           defaultChecked={defaults?.weeklyReport ?? false}
-          className="mt-0.5 h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+          className="mt-0.5 h-4 w-4 rounded-[6px] border-[#000000] text-brand-600 focus:ring-brand-500"
         />
         <span className="text-sm">
-          <span className="font-medium text-gray-800">Send weekly status report</span>
-          <span className="block text-xs text-gray-500">
+          <span className="font-medium text-[#ffffff]">Send weekly status report</span>
+          <span className="block text-xs text-[#ffffff]">
             Emails this client a status report automatically on the scheduled day
             (requires the client&apos;s email + SMTP configured).
           </span>
         </span>
       </label>
       {state?.error ? (
-        <p className="text-sm text-red-600">{state.error}</p>
+        <p className="text-sm text-[#0066cc]">{state.error}</p>
       ) : null}
       <div className="flex gap-2">
         <SubmitButton className="btn-primary">{submitLabel}</SubmitButton>

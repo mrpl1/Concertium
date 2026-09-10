@@ -43,40 +43,40 @@ export default async function TeamPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Team</h1>
-        <p className="text-sm text-gray-500">
+        <h1 className="text-2xl font-semibold text-[#ffffff]">Team</h1>
+        <p className="text-sm text-[#ffffff]">
           Invite teammates to your workspace. New members join via an invite
           link — open self-registration is closed.
         </p>
       </div>
 
       <section className="card overflow-hidden">
-        <div className="border-b border-gray-100 px-5 py-3">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+        <div className="border-b border-[#000000] px-5 py-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
             Members ({members.length})
           </h2>
         </div>
-        <ul className="divide-y divide-gray-100">
+        <ul className="divide-y divide-[#000000]">
           {members.map((m) => (
             <li
               key={m.id}
               className="flex items-center justify-between px-5 py-3"
             >
               <div>
-                <p className="font-medium text-gray-900">{m.name}</p>
-                <p className="text-sm text-gray-500">{m.email}</p>
+                <p className="font-medium text-[#ffffff]">{m.name}</p>
+                <p className="text-sm text-[#ffffff]">{m.email}</p>
               </div>
               <div className="text-right">
                 <span
                   className={`badge ${
                     m.role === "admin"
                       ? "bg-brand-100 text-brand-700 ring-brand-300"
-                      : "bg-gray-100 text-gray-600 ring-gray-300"
+                      : "bg-[#141414] text-[#ffffff] ring-[#000000]"
                   }`}
                 >
                   {m.role}
                 </span>
-                <p className="mt-1 text-xs text-gray-400">
+                <p className="mt-1 text-xs text-[#ffffff]">
                   Joined {formatDate(m.createdAt)}
                 </p>
               </div>
@@ -86,19 +86,19 @@ export default async function TeamPage() {
       </section>
 
       <section className="card p-6">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-500">
+        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
           Invite a team member
         </h2>
         <InviteForm />
-        <p className="mt-3 text-xs text-gray-500">
+        <p className="mt-3 text-xs text-[#ffffff]">
           Create an invite, then share the generated link. It expires in 14
           days and can be used once.
         </p>
       </section>
 
       <section className="card overflow-hidden">
-        <div className="border-b border-gray-100 px-5 py-3">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+        <div className="border-b border-[#000000] px-5 py-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
             Pending invites ({pending.length})
           </h2>
         </div>

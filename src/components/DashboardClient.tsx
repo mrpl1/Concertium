@@ -163,8 +163,8 @@ export function DashboardClient({
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
-          <p className="text-sm text-gray-500">
+          <h1 className="text-2xl font-semibold text-[#ffffff]">Dashboard</h1>
+          <p className="text-sm text-[#ffffff]">
             {selectedClient
               ? `Viewing ${clientLabel(selectedClient)}`
               : `Welcome back, ${firstName}.`}
@@ -210,10 +210,10 @@ export function DashboardClient({
       <section className="card p-5">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
               Project lifecycle
             </h2>
-            <p className="mt-0.5 text-xs text-gray-400">
+            <p className="mt-0.5 text-xs text-[#ffffff]">
               {selected === "all"
                 ? "Where each client sits overall — click a client to drill in."
                 : "Each project's position in the lifecycle — click to open it."}
@@ -221,12 +221,12 @@ export function DashboardClient({
           </div>
           <div className="flex items-center gap-3">
             {selected !== "all" ? (
-              <label className="flex items-center gap-1.5 text-xs text-gray-500">
+              <label className="flex items-center gap-1.5 text-xs text-[#ffffff]">
                 <input
                   type="checkbox"
                   checked={showCompleted}
                   onChange={(e) => setShowCompleted(e.target.checked)}
-                  className="h-3.5 w-3.5 rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+                  className="h-3.5 w-3.5 rounded-[6px] border-[#000000] text-brand-600 focus:ring-brand-500"
                 />
                 Show completed
               </label>
@@ -246,9 +246,9 @@ export function DashboardClient({
         <LifecycleGraph lanes={lanes} />
 
         {/* Legend */}
-        <div className="mt-5 flex flex-wrap gap-x-4 gap-y-1.5 border-t border-gray-100 pt-4">
+        <div className="mt-5 flex flex-wrap gap-x-4 gap-y-1.5 border-t border-[#000000] pt-4">
           {PROJECT_STATUSES.map((s) => (
-            <span key={s} className="flex items-center gap-1.5 text-xs text-gray-500">
+            <span key={s} className="flex items-center gap-1.5 text-xs text-[#ffffff]">
               <span
                 className="h-2.5 w-2.5 rounded-full"
                 style={{ background: statusHex(s) }}
@@ -261,7 +261,7 @@ export function DashboardClient({
 
       {/* Status distribution */}
       <section className="card p-5">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
           Status breakdown
         </h2>
         <StackedBar counts={distribution} total={metrics.total} />
@@ -307,7 +307,7 @@ export function DashboardClient({
             primary: p.name,
             secondary: p.clientName,
             right: (
-              <span className="whitespace-nowrap text-sm text-gray-600">
+              <span className="whitespace-nowrap text-sm text-[#ffffff]">
                 {formatDate(p.dueDate)}
               </span>
             ),
@@ -317,8 +317,8 @@ export function DashboardClient({
 
       {/* Recently updated */}
       <section className="card overflow-hidden">
-        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-3">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+        <div className="flex items-center justify-between border-b border-[#000000] px-5 py-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
             Recently updated
           </h2>
           <Link href="/projects" className="text-sm font-medium text-brand-600">
@@ -326,22 +326,22 @@ export function DashboardClient({
           </Link>
         </div>
         {recent.length === 0 ? (
-          <div className="p-8 text-center text-sm text-gray-500">
+          <div className="p-8 text-center text-sm text-[#ffffff]">
             No projects in this view.
           </div>
         ) : (
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-[#000000]">
             {recent.map((p) => (
               <li key={p.id}>
                 <Link
                   href={`/projects/${p.id}`}
-                  className="flex items-center gap-4 px-5 py-3 hover:bg-gray-50"
+                  className="flex items-center gap-4 px-5 py-3 hover:bg-[#141414]"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium text-gray-900">
+                    <p className="truncate font-medium text-[#ffffff]">
                       {p.name}
                     </p>
-                    <p className="truncate text-xs text-gray-500">
+                    <p className="truncate text-xs text-[#ffffff]">
                       {p.clientName}
                     </p>
                   </div>
@@ -375,7 +375,7 @@ function SelectorPill({
       className={`rounded-full px-3.5 py-1.5 text-sm font-medium ring-1 ring-inset transition-colors ${
         active
           ? "bg-brand-600 text-white ring-brand-600"
-          : "bg-white text-gray-600 ring-gray-300 hover:bg-gray-50"
+          : "bg-white text-[#ffffff] ring-[#000000] hover:bg-[#141414]"
       }`}
     >
       {label}
@@ -394,9 +394,9 @@ function Stat({
 }) {
   const isWarn = warn && typeof value === "number" && value > 0;
   return (
-    <div className={`card p-4 ${isWarn ? "ring-2 ring-amber-300" : ""}`}>
-      <p className="text-sm text-gray-500">{label}</p>
-      <p className="mt-1 text-3xl font-semibold text-gray-900">{value}</p>
+    <div className={`card p-4 ${isWarn ? "ring-2 ring-[#0066cc]" : ""}`}>
+      <p className="text-sm text-[#ffffff]">{label}</p>
+      <p className="mt-1 text-3xl font-semibold text-[#ffffff]">{value}</p>
     </div>
   );
 }
@@ -410,13 +410,13 @@ function StackedBar({
 }) {
   if (total === 0) {
     return (
-      <div className="grid h-4 place-items-center rounded-full bg-gray-100 text-[10px] text-gray-400">
+      <div className="grid h-4 place-items-center rounded-full bg-[#141414] text-[10px] text-[#ffffff]">
         No projects
       </div>
     );
   }
   return (
-    <div className="flex h-4 w-full overflow-hidden rounded-full ring-1 ring-inset ring-gray-200">
+    <div className="flex h-4 w-full overflow-hidden rounded-full ring-1 ring-inset ring-[#000000]">
       {PROJECT_STATUSES.map((s) =>
         counts[s] > 0 ? (
           <div
@@ -452,13 +452,13 @@ function ListCard({
 }) {
   return (
     <section className="card p-5">
-      <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-500">
+      <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
         {title}
       </h2>
       {items.length === 0 ? (
-        <p className="text-sm text-gray-500">{empty}</p>
+        <p className="text-sm text-[#ffffff]">{empty}</p>
       ) : (
-        <ul className="divide-y divide-gray-100">
+        <ul className="divide-y divide-[#000000]">
           {items.map((it) => (
             <li key={it.id} className="py-3">
               <Link
@@ -466,10 +466,10 @@ function ListCard({
                 className="flex items-center justify-between gap-3"
               >
                 <div className="min-w-0">
-                  <p className="truncate font-medium text-gray-900">
+                  <p className="truncate font-medium text-[#ffffff]">
                     {it.primary}
                   </p>
-                  <p className="truncate text-xs text-gray-500">
+                  <p className="truncate text-xs text-[#ffffff]">
                     {it.secondary}
                   </p>
                 </div>

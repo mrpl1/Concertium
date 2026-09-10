@@ -45,9 +45,9 @@ export function RegisterForm() {
         />
       </div>
       {state?.error ? (
-        <p className="text-sm text-red-600">{state.error}</p>
+        <p className="text-sm text-[#0066cc]">{state.error}</p>
       ) : null}
-      <SubmitButton className="btn-primary w-full" pendingText="Creating…">
+      <SubmitButton className="w-full rounded-full bg-gradient-to-r from-[var(--vibemaxx-primary)] to-[var(--vibemaxx-accent)] px-8 py-3.5 font-bold text-white shadow-lg shadow-[var(--vibemaxx-primary)]/30 transition-all duration-300 hover:scale-105 hover:shadow-[var(--vibemaxx-accent)]/50" pendingText="Creating…">
         Create account
       </SubmitButton>
     </form>

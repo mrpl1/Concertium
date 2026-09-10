@@ -28,7 +28,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       onClick={toggle}
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
       title={dark ? "Switch to light mode" : "Switch to dark mode"}
-      className={`grid h-8 w-8 place-items-center rounded-md text-gray-500 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:text-gray-300 dark:ring-gray-600 dark:hover:bg-gray-800 ${className}`}
+      className={`grid h-8 w-8 place-items-center rounded-[6px] text-[#ffffff] ring-1 ring-inset ring-[#000000] hover:bg-[#141414] dark:text-[#ffffff] dark:ring-[#000000] dark:hover:bg-[#141414] ${className}`}
     >
       {/* Render icon only after mount to avoid a hydration mismatch. */}
       {mounted ? (

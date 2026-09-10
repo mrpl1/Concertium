@@ -53,10 +53,10 @@ export function TimeTracking({
   return (
     <section className="card p-5">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
           Time & budget
         </h2>
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-[#ffffff]">
           {logged}h logged
           {budgetHours != null ? ` / ${budgetHours}h budget` : ""}
         </span>
@@ -64,41 +64,41 @@ export function TimeTracking({
 
       {budgetHours != null ? (
         <div className="mb-4">
-          <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+          <div className="h-2 w-full overflow-hidden rounded-full bg-[#141414]">
             <div
-              className={`h-full rounded-full ${over ? "bg-red-500" : "bg-brand-500"}`}
+              className={`h-full rounded-full ${over ? "bg-[#0066cc]" : "bg-brand-500"}`}
               style={{ width: `${pct}%` }}
             />
           </div>
-          <p className={`mt-1 text-xs ${over ? "text-red-600" : "text-gray-400"}`}>
+          <p className={`mt-1 text-xs ${over ? "text-[#0066cc]" : "text-[#ffffff]"}`}>
             {over
               ? `Over budget by ${(logged - budgetHours).toFixed(1)}h`
               : `${pct}% of budget used`}
           </p>
         </div>
       ) : (
-        <p className="mb-4 text-xs text-gray-400">
+        <p className="mb-4 text-xs text-[#ffffff]">
           Set a budget in the project’s Edit form to track burn.
         </p>
       )}
 
       {entries.length > 0 ? (
-        <ul className="mb-4 divide-y divide-gray-100">
+        <ul className="mb-4 divide-y divide-[#000000]">
           {entries.map((e) => (
             <li key={e.id} className="flex items-center justify-between gap-3 py-2 text-sm">
               <div className="min-w-0">
-                <span className="font-medium text-gray-800">{e.hours}h</span>
-                <span className="ml-2 text-gray-500">{fmt(e.date)}</span>
+                <span className="font-medium text-[#ffffff]">{e.hours}h</span>
+                <span className="ml-2 text-[#ffffff]">{fmt(e.date)}</span>
                 {e.userName ? (
-                  <span className="ml-2 text-xs text-gray-400">{e.userName}</span>
+                  <span className="ml-2 text-xs text-[#ffffff]">{e.userName}</span>
                 ) : null}
                 {e.note ? (
-                  <span className="ml-2 text-gray-500">— {e.note}</span>
+                  <span className="ml-2 text-[#ffffff]">— {e.note}</span>
                 ) : null}
               </div>
               <form action={deleteTimeEntryAction}>
                 <input type="hidden" name="id" value={e.id} />
-                <button className="text-xs text-gray-400 hover:text-red-600">
+                <button className="text-xs text-[#ffffff] hover:text-[#0066cc]">
                   Remove
                 </button>
               </form>
@@ -123,7 +123,7 @@ export function TimeTracking({
         <SubmitButton className="btn-secondary !py-1.5">Log time</SubmitButton>
       </form>
       {state?.error ? (
-        <p className="mt-2 text-sm text-red-600">{state.error}</p>
+        <p className="mt-2 text-sm text-[#0066cc]">{state.error}</p>
       ) : null}
     </section>
   );

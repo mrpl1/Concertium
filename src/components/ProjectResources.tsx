@@ -30,12 +30,12 @@ export function ProjectResources({
 
   return (
     <section className="card p-5">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
         Resources & links
       </h2>
 
       {links.length > 0 ? (
-        <ul className="mb-4 divide-y divide-gray-100">
+        <ul className="mb-4 divide-y divide-[#000000]">
           {links.map((l) => (
             <li key={l.id} className="flex items-center justify-between gap-3 py-2">
               <a
@@ -45,13 +45,13 @@ export function ProjectResources({
                 className="min-w-0 truncate text-sm font-medium text-brand-700 hover:underline"
               >
                 {l.label}
-                <span className="ml-2 truncate text-xs font-normal text-gray-400">
+                <span className="ml-2 truncate text-xs font-normal text-[#ffffff]">
                   {l.url}
                 </span>
               </a>
               <form action={deleteLinkAction}>
                 <input type="hidden" name="id" value={l.id} />
-                <button className="text-xs text-gray-400 hover:text-red-600">
+                <button className="text-xs text-[#ffffff] hover:text-[#0066cc]">
                   Remove
                 </button>
               </form>
@@ -59,7 +59,7 @@ export function ProjectResources({
           ))}
         </ul>
       ) : (
-        <p className="mb-4 text-sm text-gray-500">
+        <p className="mb-4 text-sm text-[#ffffff]">
           Link the SOW, contract, designs, or any shared docs for this project.
         </p>
       )}
@@ -71,7 +71,7 @@ export function ProjectResources({
         <SubmitButton className="btn-secondary !py-1.5">Add</SubmitButton>
       </form>
       {state?.error ? (
-        <p className="mt-2 text-sm text-red-600">{state.error}</p>
+        <p className="mt-2 text-sm text-[#0066cc]">{state.error}</p>
       ) : null}
     </section>
   );

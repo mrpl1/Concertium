@@ -98,3 +98,17 @@ body {
   .dark .bg-brand-50 { background-color: #1e293b; }
   .dark .bg-brand-100 { background-color: #1e3a8a; }
 }
+
+/* vibemaxx:start */
+/* Applied by Vibemaxx — safe to delete this whole block to remove the theme. */
+:root {
+  --vibemaxx-primary: #0066cc;
+  --vibemaxx-secondary: #e8e8ed;
+  --vibemaxx-accent: #0066cc;
+  --vibemaxx-background: #141414;
+  --vibemaxx-surface: #000000;
+  --vibemaxx-text: #ffffff;
+  --vibemaxx-radius: 6px;
+  --vibemaxx-font: "SF Pro Text", ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+/* vibemaxx:end */

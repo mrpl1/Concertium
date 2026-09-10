@@ -60,11 +60,11 @@ export function Deliverables({
     <section className="card p-5">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
             Deliverables
           </h2>
           {total > 0 ? (
-            <p className="mt-0.5 text-xs text-gray-400">
+            <p className="mt-0.5 text-xs text-[#ffffff]">
               {approved} of {total} approved
             </p>
           ) : null}
@@ -84,7 +84,7 @@ export function Deliverables({
       </div>
 
       {adding ? (
-        <div className="mb-4 rounded-lg bg-gray-50 p-4 ring-1 ring-gray-200">
+        <div className="mb-4 rounded-[6px] bg-[#141414] p-4 ring-1 ring-[#000000]">
           <DeliverableForm
             projectId={projectId}
             users={users}
@@ -95,16 +95,16 @@ export function Deliverables({
       ) : null}
 
       {total === 0 && !adding ? (
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-[#ffffff]">
           No deliverables yet. Break this project into the concrete items you
           owe the client, each with its own owner and due date.
         </p>
       ) : (
-        <ul className="divide-y divide-gray-100">
+        <ul className="divide-y divide-[#000000]">
           {deliverables.map((d) =>
             editingId === d.id ? (
               <li key={d.id} className="py-3">
-                <div className="rounded-lg bg-gray-50 p-4 ring-1 ring-gray-200">
+                <div className="rounded-[6px] bg-[#141414] p-4 ring-1 ring-[#000000]">
                   <DeliverableForm
                     projectId={projectId}
                     users={users}
@@ -147,23 +147,23 @@ function DeliverableRow({
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
           <span
-            className={`font-medium ${isDone(d.status) ? "text-gray-400 line-through" : "text-gray-900"}`}
+            className={`font-medium ${isDone(d.status) ? "text-[#ffffff] line-through" : "text-[#ffffff]"}`}
           >
             {d.name}
           </span>
           {overdue ? (
-            <span className="badge bg-red-100 text-red-800 ring-red-300">
+            <span className="badge bg-[#0066cc] text-[#0066cc] ring-[#0066cc]">
               Overdue
             </span>
           ) : null}
         </div>
-        <p className="mt-0.5 text-xs text-gray-500">
+        <p className="mt-0.5 text-xs text-[#ffffff]">
           {d.ownerName ? `${d.ownerName} · ` : ""}
-          <span className={overdue ? "font-medium text-red-600" : ""}>
+          <span className={overdue ? "font-medium text-[#0066cc]" : ""}>
             {fmt(d.dueDate)}
           </span>
           {slip > 0 ? (
-            <span className="text-amber-600">
+            <span className="text-[#0066cc]">
               {" "}
               · slipped {slip}d{d.changeCount > 1 ? ` (${d.changeCount}×)` : ""}
             </span>
@@ -200,7 +200,7 @@ function DeliverableRow({
         <input type="hidden" name="id" value={d.id} />
         <button
           type="submit"
-          className="text-xs font-medium text-gray-400 hover:text-red-600"
+          className="text-xs font-medium text-[#ffffff] hover:text-[#0066cc]"
         >
           Delete
         </button>
@@ -284,7 +284,7 @@ function DeliverableForm({
         />
       ) : null}
       {state?.error ? (
-        <p className="text-sm text-red-600">{state.error}</p>
+        <p className="text-sm text-[#0066cc]">{state.error}</p>
       ) : null}
       <div className="flex gap-2">
         <SubmitButton className="btn-primary !py-1.5">

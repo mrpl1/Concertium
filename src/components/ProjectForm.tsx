@@ -52,7 +52,7 @@ export function ProjectForm({
     <form action={formAction} className="space-y-4">
       <div>
         <label className="label" htmlFor="name">
-          Project name <span className="text-red-500">*</span>
+          Project name <span className="text-[#0066cc]">*</span>
         </label>
         <input
           id="name"
@@ -67,7 +67,7 @@ export function ProjectForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className="label" htmlFor="clientId">
-            Client <span className="text-red-500">*</span>
+            Client <span className="text-[#0066cc]">*</span>
           </label>
           <select
             id="clientId"
@@ -229,7 +229,7 @@ export function ProjectForm({
       </div>
 
       {state?.error ? (
-        <p className="text-sm text-red-600">{state.error}</p>
+        <p className="text-sm text-[#0066cc]">{state.error}</p>
       ) : null}
       <div className="flex gap-2">
         <SubmitButton className="btn-primary">{submitLabel}</SubmitButton>
