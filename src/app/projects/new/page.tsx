@@ -28,7 +28,7 @@ export default async function NewProjectPage({
     return (
       <div className="mx-auto max-w-2xl">
         <div className="card p-10 text-center">
-          <p className="text-gray-600">
+          <p className="text-[#ffffff]">
             You need a client before creating a project.
           </p>
           <Link href="/clients/new" className="btn-primary mt-4">
@@ -45,7 +45,7 @@ export default async function NewProjectPage({
         <Link href="/projects" className="text-sm text-brand-600">
           ← Projects
         </Link>
-        <h1 className="mt-1 text-2xl font-semibold text-gray-900">
+        <h1 className="mt-1 text-2xl font-semibold text-[#ffffff]">
           New project
         </h1>
       </div>

@@ -48,42 +48,42 @@ export default async function SearchPage({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Search</h1>
+        <h1 className="text-2xl font-semibold text-[#ffffff]">Search</h1>
         {q ? (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-[#ffffff]">
             Results for “{q}” — {clients.length} client(s), {projects.length}{" "}
             project(s)
           </p>
         ) : (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-[#ffffff]">
             Type a query in the search box to find clients and projects.
           </p>
         )}
       </div>
 
       {empty ? (
-        <div className="card p-10 text-center text-sm text-gray-500">
+        <div className="card p-10 text-center text-sm text-[#ffffff]">
           No matches for “{q}”.
         </div>
       ) : null}
 
       {projects.length > 0 ? (
         <section className="card overflow-hidden">
-          <div className="border-b border-gray-100 px-5 py-3">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+          <div className="border-b border-[#000000] px-5 py-3">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
               Projects
             </h2>
           </div>
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-[#000000]">
             {projects.map((p) => (
               <li key={p.id}>
                 <Link
                   href={`/projects/${p.id}`}
-                  className="flex items-center gap-4 px-5 py-3 hover:bg-gray-50"
+                  className="flex items-center gap-4 px-5 py-3 hover:bg-[#141414]"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium text-gray-900">{p.name}</p>
-                    <p className="truncate text-xs text-gray-500">
+                    <p className="truncate font-medium text-[#ffffff]">{p.name}</p>
+                    <p className="truncate text-xs text-[#ffffff]">
                       {p.client.company || p.client.name}
                     </p>
                   </div>
@@ -97,22 +97,22 @@ export default async function SearchPage({
 
       {clients.length > 0 ? (
         <section className="card overflow-hidden">
-          <div className="border-b border-gray-100 px-5 py-3">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+          <div className="border-b border-[#000000] px-5 py-3">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
               Clients
             </h2>
           </div>
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-[#000000]">
             {clients.map((c) => (
               <li key={c.id}>
                 <Link
                   href={`/clients/${c.id}`}
-                  className="flex items-center justify-between gap-4 px-5 py-3 hover:bg-gray-50"
+                  className="flex items-center justify-between gap-4 px-5 py-3 hover:bg-[#141414]"
                 >
-                  <span className="font-medium text-gray-900">
+                  <span className="font-medium text-[#ffffff]">
                     {c.company || c.name}
                   </span>
-                  <span className="text-sm text-gray-500">{c.email}</span>
+                  <span className="text-sm text-[#ffffff]">{c.email}</span>
                 </Link>
               </li>
             ))}

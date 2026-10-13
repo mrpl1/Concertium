@@ -106,7 +106,7 @@ export function ReportBuilder({
           Generate report
         </SubmitButton>
         {genState && !genState.ok ? (
-          <p className="text-sm text-red-600">{genState.error}</p>
+          <p className="text-sm text-[#0066cc]">{genState.error}</p>
         ) : null}
       </form>
 
@@ -114,18 +114,18 @@ export function ReportBuilder({
       {report ? (
         <div className="card space-y-5 p-6">
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
               Preview
             </h2>
-            <p className="mt-2 text-sm font-medium text-gray-900">
+            <p className="mt-2 text-sm font-medium text-[#ffffff]">
               {report.subject}
             </p>
-            <pre className="mt-3 max-h-80 overflow-auto whitespace-pre-wrap rounded-lg bg-gray-50 p-4 text-sm text-gray-700 ring-1 ring-gray-200">
+            <pre className="mt-3 max-h-80 overflow-auto whitespace-pre-wrap rounded-[6px] bg-[#141414] p-4 text-sm text-[#ffffff] ring-1 ring-[#000000]">
               {report.text}
             </pre>
           </div>
 
-          <div className="space-y-3 border-t border-gray-100 pt-5">
+          <div className="space-y-3 border-t border-[#000000] pt-5">
             <label className="label" htmlFor="to">
               Recipient email
             </label>
@@ -167,7 +167,7 @@ export function ReportBuilder({
             </div>
 
             {!emailConfigured ? (
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-[#ffffff]">
                 Automatic sending isn&apos;t configured yet. Use “Open draft in
                 mail client” for now, or add SMTP settings to your{" "}
                 <code>.env</code> to enable one-click sending.
@@ -175,10 +175,10 @@ export function ReportBuilder({
             ) : null}
 
             {sendState && sendState.ok ? (
-              <p className="text-sm text-green-600">{sendState.message}</p>
+              <p className="text-sm text-[#e8e8ed]">{sendState.message}</p>
             ) : null}
             {sendState && !sendState.ok ? (
-              <p className="text-sm text-red-600">{sendState.error}</p>
+              <p className="text-sm text-[#0066cc]">{sendState.error}</p>
             ) : null}
           </div>
         </div>

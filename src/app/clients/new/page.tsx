@@ -7,16 +7,16 @@ export default async function NewClientPage() {
   await requireUser();
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <div className="mx-auto max-w-5xl space-y-10 px-8 py-10">
       <div>
-        <Link href="/clients" className="text-sm text-brand-600">
+        <Link href="/clients" className="text-sm font-medium text-[var(--vibemaxx-primary)] hover:underline">
           ← Clients
         </Link>
-        <h1 className="mt-1 text-2xl font-semibold text-gray-900">
+        <h1 className="mt-1 text-3xl font-bold tracking-tight text-[#ffffff]">
           New client
         </h1>
       </div>
-      <div className="card p-6">
+      <div className="card rounded-[6px] border-0 bg-white p-8 shadow-xl shadow-black/5">
         <ClientForm
           action={createClientAction}
           submitLabel="Create client"

@@ -21,7 +21,7 @@ export function InviteForm() {
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className="label" htmlFor="email">
-            Email <span className="text-gray-400">(optional)</span>
+            Email <span className="text-[#ffffff]">(optional)</span>
           </label>
           <input
             id="email"
@@ -42,9 +42,9 @@ export function InviteForm() {
         </div>
       </div>
       {state?.error ? (
-        <p className="text-sm text-red-600">{state.error}</p>
+        <p className="text-sm text-[#0066cc]">{state.error}</p>
       ) : null}
-      <SubmitButton className="btn-primary" pendingText="Creating…">
+      <SubmitButton className="rounded-full bg-gradient-to-r from-[var(--vibemaxx-primary)] to-[var(--vibemaxx-accent)] px-8 py-3.5 font-bold text-white shadow-lg shadow-[var(--vibemaxx-primary)]/30 transition-all duration-300 hover:scale-105 hover:shadow-[var(--vibemaxx-accent)]/50" pendingText="Creating…">
         Create invite link
       </SubmitButton>
     </form>

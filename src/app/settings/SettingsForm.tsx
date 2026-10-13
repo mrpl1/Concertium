@@ -30,30 +30,30 @@ export function SettingsForm({
           className="input"
           placeholder="https://hooks.slack.com/services/…"
         />
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="mt-1 text-xs text-[#ffffff]">
           The daily alert digest for this workspace posts here. Leave blank to
           disable Slack.
         </p>
       </div>
 
-      <label className="flex items-center gap-2 text-sm text-gray-700">
+      <label className="flex items-center gap-2 text-sm text-[#ffffff]">
         <input
           type="checkbox"
           name="weeklyReportEnabled"
           defaultChecked={weeklyReportEnabled}
-          className="h-4 w-4 rounded border-gray-300"
+          className="h-4 w-4 rounded-[6px] border-[#000000]"
         />
         Send weekly client reports for this workspace
       </label>
 
       {state?.error ? (
-        <p className="text-sm text-red-600">{state.error}</p>
+        <p className="text-sm text-[#0066cc]">{state.error}</p>
       ) : null}
       {state?.ok ? (
-        <p className="text-sm text-green-600">{state.ok}</p>
+        <p className="text-sm text-[#e8e8ed]">{state.ok}</p>
       ) : null}
 
-      <SubmitButton className="btn-primary" pendingText="Saving…">
+      <SubmitButton className="rounded-full bg-gradient-to-r from-[var(--vibemaxx-primary)] to-[var(--vibemaxx-accent)] px-8 py-3.5 font-bold text-white shadow-lg shadow-[var(--vibemaxx-primary)]/30 transition-all duration-300 hover:scale-105 hover:shadow-[var(--vibemaxx-accent)]/50" pendingText="Saving…">
         Save settings
       </SubmitButton>
     </form>

@@ -36,7 +36,7 @@ export function AddUpdateForm({
         placeholder="Post a status update…"
       />
       <div className="flex flex-wrap items-center gap-3">
-        <label className="text-sm text-gray-600">
+        <label className="text-sm text-[#ffffff]">
           Set status to
           <select
             name="status"
@@ -55,7 +55,7 @@ export function AddUpdateForm({
         </SubmitButton>
       </div>
       {state?.error ? (
-        <p className="text-sm text-red-600">{state.error}</p>
+        <p className="text-sm text-[#0066cc]">{state.error}</p>
       ) : null}
     </form>
   );

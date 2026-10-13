@@ -16,7 +16,7 @@ export default async function ClientsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-gray-900">Clients</h1>
+        <h1 className="text-2xl font-semibold text-[#ffffff]">Clients</h1>
         <Link href="/clients/new" className="btn-primary">
           New client
         </Link>
@@ -24,7 +24,7 @@ export default async function ClientsPage() {
 
       {clients.length === 0 ? (
         <div className="card p-10 text-center">
-          <p className="text-gray-500">No clients yet.</p>
+          <p className="text-[#ffffff]">No clients yet.</p>
           <Link href="/clients/new" className="btn-primary mt-4">
             Add your first client
           </Link>
@@ -37,14 +37,14 @@ export default async function ClientsPage() {
               href={`/clients/${c.id}`}
               className="card p-5 transition-shadow hover:shadow-md"
             >
-              <p className="font-semibold text-gray-900">
+              <p className="font-semibold text-[#ffffff]">
                 {c.company || c.name}
               </p>
               {c.company ? (
-                <p className="text-sm text-gray-500">{c.name}</p>
+                <p className="text-sm text-[#ffffff]">{c.name}</p>
               ) : null}
               {c.email ? (
-                <p className="mt-2 truncate text-sm text-gray-500">{c.email}</p>
+                <p className="mt-2 truncate text-sm text-[#ffffff]">{c.email}</p>
               ) : null}
               <p className="mt-3 text-xs font-medium text-brand-600">
                 {c._count.projects} project

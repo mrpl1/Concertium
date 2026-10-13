@@ -20,16 +20,16 @@ export default async function EditClientPage({
   const action = updateClientAction.bind(null, client.id);
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <div className="mx-auto max-w-5xl space-y-10 px-8 py-10">
       <div>
-        <Link href={`/clients/${client.id}`} className="text-sm text-brand-600">
+        <Link href={`/clients/${client.id}`} className="text-base font-medium text-[var(--vibemaxx-primary)] hover:text-[var(--vibemaxx-accent)] transition-colors">
           ← {client.company || client.name}
         </Link>
-        <h1 className="mt-1 text-2xl font-semibold text-gray-900">
+        <h1 className="mt-2 text-4xl font-black tracking-tight text-[#ffffff]">
           Edit client
         </h1>
       </div>
-      <div className="card p-6">
+      <div className="card rounded-[2rem] bg-white p-8 shadow-xl shadow-[#0066cc]/10 border-0">
         <ClientForm
           action={action}
           defaults={client}

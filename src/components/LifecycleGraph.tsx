@@ -30,12 +30,12 @@ export function LifecycleGraph({ lanes }: { lanes: LifecycleLane[] }) {
       <div className="grid grid-cols-[120px_1fr] items-end gap-3 pb-2 sm:grid-cols-[160px_1fr]">
         <div />
         <div>
-          <div className="flex justify-between text-xs font-medium text-gray-500">
+          <div className="flex justify-between text-xs font-medium text-[#ffffff]">
             {LIFECYCLE_ZONES.map((z) => (
               <span key={z.label}>{z.label}</span>
             ))}
           </div>
-          <div className="mt-1 flex justify-between text-[10px] tabular-nums text-gray-300">
+          <div className="mt-1 flex justify-between text-[10px] tabular-nums text-[#ffffff]">
             {[0, 25, 50, 75, 100].map((t) => (
               <span key={t}>{t}%</span>
             ))}
@@ -46,7 +46,7 @@ export function LifecycleGraph({ lanes }: { lanes: LifecycleLane[] }) {
       {/* Lanes */}
       <div className="space-y-1">
         {lanes.length === 0 ? (
-          <p className="py-6 text-center text-sm text-gray-500">
+          <p className="py-6 text-center text-sm text-[#ffffff]">
             No projects to plot.
           </p>
         ) : (
@@ -62,22 +62,22 @@ function LaneRow({ lane }: { lane: LifecycleLane }) {
   const labelOnLeft = pos > 82;
 
   const inner = (
-    <div className="grid grid-cols-[120px_1fr] items-center gap-3 rounded-lg px-2 py-1.5 -mx-2 transition-colors group-hover:bg-gray-50 sm:grid-cols-[160px_1fr]">
+    <div className="grid grid-cols-[120px_1fr] items-center gap-3 rounded-[6px] px-2 py-1.5 -mx-2 transition-colors group-hover:bg-[#141414] sm:grid-cols-[160px_1fr]">
       <div className="min-w-0">
-        <div className="truncate text-sm font-medium text-gray-800 group-hover:text-brand-700">
+        <div className="truncate text-sm font-medium text-[#ffffff] group-hover:text-brand-700">
           {lane.label}
         </div>
         {lane.sublabel ? (
-          <div className="truncate text-xs text-gray-400">{lane.sublabel}</div>
+          <div className="truncate text-xs text-[#ffffff]">{lane.sublabel}</div>
         ) : null}
       </div>
 
       <div
-        className="relative h-7 rounded-md ring-1 ring-inset ring-gray-200"
+        className="relative h-7 rounded-[6px] ring-1 ring-inset ring-[#000000]"
         style={{ background: TRACK_BG }}
       >
         {lane.empty ? (
-          <span className="absolute inset-0 grid place-items-center text-xs text-gray-400">
+          <span className="absolute inset-0 grid place-items-center text-xs text-[#ffffff]">
             No projects yet
           </span>
         ) : (
@@ -98,7 +98,7 @@ function LaneRow({ lane }: { lane: LifecycleLane }) {
             />
             {/* percent label */}
             <span
-              className="absolute top-1/2 -translate-y-1/2 text-[11px] font-semibold tabular-nums text-gray-700"
+              className="absolute top-1/2 -translate-y-1/2 text-[11px] font-semibold tabular-nums text-[#ffffff]"
               style={
                 labelOnLeft
                   ? { left: `calc(${pos}% - 12px)`, transform: "translate(-100%, -50%)" }

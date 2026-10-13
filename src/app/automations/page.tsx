@@ -30,15 +30,15 @@ export default async function AutomationsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Automations</h1>
-        <p className="text-sm text-gray-500">
+        <h1 className="text-2xl font-semibold text-[#ffffff]">Automations</h1>
+        <p className="text-sm text-[#ffffff]">
           Proactive deadline alerts and scheduled client reports.
         </p>
       </div>
 
       {/* Config status */}
       <section className="card p-5">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
           Configuration
         </h2>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -48,13 +48,13 @@ export default async function AutomationsPage() {
           <Status on label={`Weekly reports: ${weeklyDay}`} hint="WEEKLY_REPORT_DAY in .env" />
         </div>
         {cronOn ? (
-          <p className="mt-4 rounded-md bg-gray-50 p-3 text-xs text-gray-600 ring-1 ring-gray-200">
+          <p className="mt-4 rounded-[6px] bg-[#141414] p-3 text-xs text-[#ffffff] ring-1 ring-[#000000]">
             Point a daily scheduler at{" "}
             <code className="font-mono">/api/cron?secret=YOUR_CRON_SECRET</code>.
             It sends the alert digest daily and weekly reports on {weeklyDay}.
           </p>
         ) : (
-          <p className="mt-4 text-xs text-gray-500">
+          <p className="mt-4 text-xs text-[#ffffff]">
             Set <code className="font-mono">CRON_SECRET</code> in <code>.env</code> to enable the
             scheduled endpoint. You can still run everything manually below.
           </p>
@@ -66,21 +66,21 @@ export default async function AutomationsPage() {
 
       {/* Weekly opt-ins */}
       <section className="card p-5">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
           Clients receiving weekly reports ({weeklyClients.length})
         </h2>
         {weeklyClients.length === 0 ? (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-[#ffffff]">
             None yet. Open a client, choose Edit, and enable “Weekly report”.
           </p>
         ) : (
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-[#000000]">
             {weeklyClients.map((c) => (
               <li key={c.id} className="flex items-center justify-between py-2 text-sm">
                 <Link href={`/clients/${c.id}`} className="font-medium text-brand-700">
                   {c.company || c.name}
                 </Link>
-                <span className="text-gray-500">{c.email || "no email set"}</span>
+                <span className="text-[#ffffff]">{c.email || "no email set"}</span>
               </li>
             ))}
           </ul>
@@ -89,10 +89,10 @@ export default async function AutomationsPage() {
 
       {/* Digest preview */}
       <section className="card p-5">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
           Current alert digest preview
         </h2>
-        <pre className="max-h-80 overflow-auto whitespace-pre-wrap rounded-lg bg-gray-50 p-4 text-sm text-gray-700 ring-1 ring-gray-200">
+        <pre className="max-h-80 overflow-auto whitespace-pre-wrap rounded-[6px] bg-[#141414] p-4 text-sm text-[#ffffff] ring-1 ring-[#000000]">
           {digest.text}
         </pre>
       </section>
@@ -104,10 +104,10 @@ function Status({ on, label, hint }: { on: boolean; label: string; hint: string 
   return (
     <div className="flex items-center gap-2">
       <span
-        className={`h-2.5 w-2.5 rounded-full ${on ? "bg-green-500" : "bg-gray-300"}`}
+        className={`h-2.5 w-2.5 rounded-full ${on ? "bg-[#e8e8ed]" : "bg-[#141414]"}`}
       />
-      <span className="text-sm text-gray-800">{label}</span>
-      <span className="text-xs text-gray-400">· {on ? "enabled" : hint}</span>
+      <span className="text-sm text-[#ffffff]">{label}</span>
+      <span className="text-xs text-[#ffffff]">· {on ? "enabled" : hint}</span>
     </div>
   );
 }

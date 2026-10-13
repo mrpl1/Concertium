@@ -76,14 +76,14 @@ export default async function TimelinePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Timeline</h1>
-        <p className="text-sm text-gray-500">
+        <h1 className="text-2xl font-semibold text-[#ffffff]">Timeline</h1>
+        <p className="text-sm text-[#ffffff]">
           Upcoming project and deliverable deadlines across all clients.
         </p>
       </div>
 
       {items.length === 0 ? (
-        <div className="card p-10 text-center text-sm text-gray-500">
+        <div className="card p-10 text-center text-sm text-[#ffffff]">
           No upcoming deadlines.
         </div>
       ) : (
@@ -93,41 +93,41 @@ export default async function TimelinePage() {
               <div
                 className={`flex items-center justify-between border-b px-5 py-2.5 ${
                   g.label === "Overdue"
-                    ? "border-red-100 bg-red-50"
-                    : "border-gray-100"
+                    ? "border-[#0066cc] bg-[#141414]"
+                    : "border-[#000000]"
                 }`}
               >
                 <h2
                   className={`text-sm font-semibold uppercase tracking-wide ${
-                    g.label === "Overdue" ? "text-red-700" : "text-gray-500"
+                    g.label === "Overdue" ? "text-[#0066cc]" : "text-[#ffffff]"
                   }`}
                 >
                   {g.label}
                 </h2>
-                <span className="text-xs text-gray-400">{g.items.length}</span>
+                <span className="text-xs text-[#ffffff]">{g.items.length}</span>
               </div>
-              <ul className="divide-y divide-gray-100">
+              <ul className="divide-y divide-[#000000]">
                 {g.items.map((it) => {
                   const days = Math.ceil((it.due - now) / DAY);
                   return (
                     <li key={it.id}>
                       <Link
                         href={`/projects/${it.projectId}`}
-                        className="flex items-center gap-4 px-5 py-3 hover:bg-gray-50"
+                        className="flex items-center gap-4 px-5 py-3 hover:bg-[#141414]"
                       >
                         <div className="w-28 shrink-0">
-                          <p className="text-sm font-medium text-gray-800">
+                          <p className="text-sm font-medium text-[#ffffff]">
                             {formatDate(new Date(it.due))}
                           </p>
-                          <p className={`text-xs ${days < 0 ? "text-red-600" : "text-gray-400"}`}>
+                          <p className={`text-xs ${days < 0 ? "text-[#0066cc]" : "text-[#ffffff]"}`}>
                             {days < 0 ? `${-days}d ago` : days === 0 ? "today" : `in ${days}d`}
                           </p>
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="truncate text-sm font-medium text-gray-900">
+                          <p className="truncate text-sm font-medium text-[#ffffff]">
                             {it.name}
                           </p>
-                          <p className="truncate text-xs text-gray-500">
+                          <p className="truncate text-xs text-[#ffffff]">
                             {it.client} ·{" "}
                             {it.kind === "deliverable" ? "Deliverable" : "Project"}
                           </p>

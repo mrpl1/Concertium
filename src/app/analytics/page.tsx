@@ -98,8 +98,8 @@ export default async function AnalyticsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Analytics</h1>
-        <p className="text-sm text-gray-500">Delivery performance across all clients.</p>
+        <h1 className="text-2xl font-semibold text-[#ffffff]">Analytics</h1>
+        <p className="text-sm text-[#ffffff]">Delivery performance across all clients.</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -114,55 +114,55 @@ export default async function AnalyticsPage() {
       </div>
 
       <section className="card p-5">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-500">
+        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
           Projects by status
         </h2>
         <div className="space-y-2">
           {PROJECT_STATUSES.map((s) => (
             <div key={s} className="flex items-center gap-3">
-              <span className="w-24 shrink-0 text-sm text-gray-600">{s}</span>
-              <div className="h-5 flex-1 rounded bg-gray-100">
+              <span className="w-24 shrink-0 text-sm text-[#ffffff]">{s}</span>
+              <div className="h-5 flex-1 rounded-[6px] bg-[#141414]">
                 <div
-                  className="h-5 rounded"
+                  className="h-5 rounded-[6px]"
                   style={{ width: `${(dist[s] / maxDist) * 100}%`, background: statusHex(s), minWidth: dist[s] ? 6 : 0 }}
                 />
               </div>
-              <span className="w-8 text-right text-sm tabular-nums text-gray-500">{dist[s]}</span>
+              <span className="w-8 text-right text-sm tabular-nums text-[#ffffff]">{dist[s]}</span>
             </div>
           ))}
         </div>
       </section>
 
       <section className="card overflow-hidden">
-        <div className="border-b border-gray-100 px-5 py-3">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+        <div className="border-b border-[#000000] px-5 py-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
             Client health
           </h2>
         </div>
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-left text-xs uppercase tracking-wide text-gray-400">
+            <tr className="text-left text-xs uppercase tracking-wide text-[#ffffff]">
               <th className="px-5 py-2 font-medium">Client</th>
               <th className="px-5 py-2 font-medium">Projects</th>
               <th className="px-5 py-2 font-medium">Avg. progress</th>
               <th className="px-5 py-2 font-medium">Overdue</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-[#000000]">
             {rows.map((r) => (
-              <tr key={r.id} className="hover:bg-gray-50">
+              <tr key={r.id} className="hover:bg-[#141414]">
                 <td className="px-5 py-2.5">
                   <Link href={`/clients/${r.id}`} className="font-medium text-brand-700">
                     {r.name}
                   </Link>
                 </td>
-                <td className="px-5 py-2.5 text-gray-600">{r.count}</td>
-                <td className="px-5 py-2.5 text-gray-600">{r.avg}%</td>
+                <td className="px-5 py-2.5 text-[#ffffff]">{r.count}</td>
+                <td className="px-5 py-2.5 text-[#ffffff]">{r.avg}%</td>
                 <td className="px-5 py-2.5">
                   {r.overdue > 0 ? (
-                    <span className="badge bg-red-100 text-red-800 ring-red-300">{r.overdue}</span>
+                    <span className="badge bg-[#0066cc] text-[#0066cc] ring-[#0066cc]">{r.overdue}</span>
                   ) : (
-                    <span className="text-gray-400">0</span>
+                    <span className="text-[#ffffff]">0</span>
                   )}
                 </td>
               </tr>
@@ -186,10 +186,10 @@ function Metric({
   warn?: boolean;
 }) {
   return (
-    <div className={`card p-4 ${warn ? "ring-2 ring-amber-300" : ""}`}>
-      <p className="text-sm text-gray-500">{label}</p>
-      <p className="mt-1 text-3xl font-semibold text-gray-900">{value}</p>
-      {hint ? <p className="mt-1 text-xs text-gray-400">{hint}</p> : null}
+    <div className={`card p-4 ${warn ? "ring-2 ring-[#0066cc]" : ""}`}>
+      <p className="text-sm text-[#ffffff]">{label}</p>
+      <p className="mt-1 text-3xl font-semibold text-[#ffffff]">{value}</p>
+      {hint ? <p className="mt-1 text-xs text-[#ffffff]">{hint}</p> : null}
     </div>
   );
 }

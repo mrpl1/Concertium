@@ -40,7 +40,7 @@ export default async function EditProjectPage({
         <Link href={`/projects/${project.id}`} className="text-sm text-brand-600">
           ← {project.name}
         </Link>
-        <h1 className="mt-1 text-2xl font-semibold text-gray-900">
+        <h1 className="mt-1 text-2xl font-semibold text-[#ffffff]">
           Edit project
         </h1>
       </div>

@@ -97,7 +97,7 @@ export default async function ProjectDetailPage({
             ← {project.client.company || project.client.name}
           </Link>
           <div className="mt-1 flex flex-wrap items-center gap-2">
-            <h1 className="text-2xl font-semibold text-gray-900">
+            <h1 className="text-2xl font-semibold text-[#ffffff]">
               {project.name}
             </h1>
             <StatusBadge status={project.status} />
@@ -109,7 +109,7 @@ export default async function ProjectDetailPage({
                 <Link
                   key={t.id}
                   href={`/projects?tag=${encodeURIComponent(t.name)}`}
-                  className="badge bg-gray-100 text-gray-600 ring-gray-300 hover:bg-gray-200"
+                  className="badge bg-[#141414] text-[#ffffff] ring-[#000000] hover:bg-[#141414]"
                 >
                   {`#${t.name}`}
                 </Link>
@@ -124,7 +124,7 @@ export default async function ProjectDetailPage({
 
       {/* Risk banner */}
       {risk.level !== "none" ? (
-        <div className={`rounded-lg p-4 ring-1 ring-inset ${RISK_STYLES[risk.level]}`}>
+        <div className={`rounded-[6px] p-4 ring-1 ring-inset ${RISK_STYLES[risk.level]}`}>
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold">
               {RISK_LABELS[risk.level]}
@@ -139,7 +139,7 @@ export default async function ProjectDetailPage({
         <div className="space-y-6 lg:col-span-2">
           {project.description ? (
             <div className="card p-5">
-              <p className="whitespace-pre-wrap text-sm text-gray-700">
+              <p className="whitespace-pre-wrap text-sm text-[#ffffff]">
                 {project.description}
               </p>
             </div>
@@ -169,31 +169,31 @@ export default async function ProjectDetailPage({
           />
 
           <section className="card p-5">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
               Post an update
             </h2>
             <AddUpdateForm action={addUpdate} currentStatus={project.status} />
           </section>
 
           <section className="card p-5">
-            <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-500">
+            <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
               Update history
             </h2>
             {project.updates.length === 0 ? (
-              <p className="text-sm text-gray-500">No updates yet.</p>
+              <p className="text-sm text-[#ffffff]">No updates yet.</p>
             ) : (
               <ol className="space-y-4">
                 {project.updates.map((u) => (
-                  <li key={u.id} className="border-l-2 border-gray-200 pl-4">
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
-                      <span className="font-medium text-gray-700">
+                  <li key={u.id} className="border-l-2 border-[#000000] pl-4">
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-[#ffffff]">
+                      <span className="font-medium text-[#ffffff]">
                         {u.author?.name ?? "Unknown"}
                       </span>
                       <span>·</span>
                       <span>{formatDate(u.createdAt)}</span>
                       {u.status ? <StatusBadge status={u.status} /> : null}
                     </div>
-                    <p className="mt-1 whitespace-pre-wrap text-sm text-gray-800">
+                    <p className="mt-1 whitespace-pre-wrap text-sm text-[#ffffff]">
                       {u.body}
                     </p>
                   </li>
@@ -206,12 +206,12 @@ export default async function ProjectDetailPage({
         {/* Right: meta */}
         <aside className="space-y-4">
           <div className="card p-5">
-            <p className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-400">
+            <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[#ffffff]">
               Progress
             </p>
             <ProgressBar value={project.progress} />
             {risk.deliverableCompletion != null ? (
-              <p className="mt-2 text-xs text-gray-500">
+              <p className="mt-2 text-xs text-[#ffffff]">
                 Deliverables: {risk.approved}/{risk.totalDeliverables} approved (
                 {risk.deliverableCompletion}%)
               </p>
@@ -255,9 +255,9 @@ function Meta({
 }) {
   return (
     <div className="flex justify-between gap-3">
-      <dt className="text-gray-500">{label}</dt>
+      <dt className="text-[#ffffff]">{label}</dt>
       <dd
-        className={`text-right font-medium ${warn ? "text-amber-600" : "text-gray-800"}`}
+        className={`text-right font-medium ${warn ? "text-[#0066cc]" : "text-[#ffffff]"}`}
       >
         {value}
       </dd>

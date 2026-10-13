@@ -35,11 +35,11 @@ export default async function ClientDetailPage({
           <Link href="/clients" className="text-sm text-brand-600">
             ← Clients
           </Link>
-          <h1 className="mt-1 text-2xl font-semibold text-gray-900">
+          <h1 className="mt-1 text-2xl font-semibold text-[#ffffff]">
             {client.company || client.name}
           </h1>
           {client.company ? (
-            <p className="text-gray-500">{client.name}</p>
+            <p className="text-[#ffffff]">{client.name}</p>
           ) : null}
         </div>
         <div className="flex flex-wrap gap-2">
@@ -68,10 +68,10 @@ export default async function ClientDetailPage({
         <Detail label="Added" value={formatDate(client.createdAt)} />
         {client.notes ? (
           <div className="sm:col-span-3">
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+            <p className="text-xs font-medium uppercase tracking-wide text-[#ffffff]">
               Notes
             </p>
-            <p className="mt-1 whitespace-pre-wrap text-sm text-gray-700">
+            <p className="mt-1 whitespace-pre-wrap text-sm text-[#ffffff]">
               {client.notes}
             </p>
           </div>
@@ -80,31 +80,31 @@ export default async function ClientDetailPage({
 
       {/* Projects */}
       <section className="card overflow-hidden">
-        <div className="border-b border-gray-100 px-5 py-3">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+        <div className="border-b border-[#000000] px-5 py-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-[#ffffff]">
             Projects ({client.projects.length})
           </h2>
         </div>
         {client.projects.length === 0 ? (
-          <div className="p-8 text-center text-sm text-gray-500">
+          <div className="p-8 text-center text-sm text-[#ffffff]">
             No projects for this client yet.
           </div>
         ) : (
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-[#000000]">
             {client.projects.map((p) => (
               <li key={p.id}>
                 <Link
                   href={`/projects/${p.id}`}
-                  className="flex flex-wrap items-center gap-4 px-5 py-4 hover:bg-gray-50"
+                  className="flex flex-wrap items-center gap-4 px-5 py-4 hover:bg-[#141414]"
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <p className="truncate font-medium text-gray-900">
+                      <p className="truncate font-medium text-[#ffffff]">
                         {p.name}
                       </p>
                       <PriorityBadge priority={p.priority} />
                     </div>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-[#ffffff]">
                       {p.owner ? `Owner: ${p.owner.name} · ` : ""}
                       Due {formatDate(p.dueDate)}
                     </p>
@@ -129,7 +129,7 @@ export default async function ClientDetailPage({
         <button type="submit" className="btn-danger">
           Delete client
         </button>
-        <span className="ml-2 text-xs text-gray-400">
+        <span className="ml-2 text-xs text-[#ffffff]">
           This also deletes its projects and updates.
         </span>
       </form>
@@ -148,7 +148,7 @@ function Detail({
 }) {
   return (
     <div>
-      <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+      <p className="text-xs font-medium uppercase tracking-wide text-[#ffffff]">
         {label}
       </p>
       {value ? (
@@ -160,10 +160,10 @@ function Detail({
             {value}
           </a>
         ) : (
-          <p className="mt-1 text-sm text-gray-700">{value}</p>
+          <p className="mt-1 text-sm text-[#ffffff]">{value}</p>
         )
       ) : (
-        <p className="mt-1 text-sm text-gray-400">—</p>
+        <p className="mt-1 text-sm text-[#ffffff]">—</p>
       )}
     </div>
   );

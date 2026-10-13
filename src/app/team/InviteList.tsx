@@ -17,14 +17,14 @@ export type PendingInvite = {
 export function InviteList({ invites }: { invites: PendingInvite[] }) {
   if (invites.length === 0) {
     return (
-      <p className="px-5 py-6 text-sm text-gray-500">
+      <p className="px-5 py-6 text-sm text-[#ffffff]">
         No pending invites. Create one above to add a teammate.
       </p>
     );
   }
 
   return (
-    <ul className="divide-y divide-gray-100">
+    <ul className="divide-y divide-[#000000]">
       {invites.map((i) => (
         <InviteRow key={i.id} invite={i} />
       ))}
@@ -49,10 +49,10 @@ function InviteRow({ invite }: { invite: PendingInvite }) {
     <li className="space-y-2 px-5 py-3">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="truncate text-sm font-medium text-gray-900">
+          <p className="truncate text-sm font-medium text-[#ffffff]">
             {invite.email || "Anyone with the link"}
           </p>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-[#ffffff]">
             {invite.role}
             {invite.expired ? " · expired" : ""}
           </p>

@@ -20,7 +20,7 @@ export function SearchBox() {
         onChange={(e) => setQ(e.target.value)}
         placeholder="Search…"
         aria-label="Search"
-        className="w-32 rounded-md border-0 bg-gray-100 px-3 py-1.5 text-sm text-gray-800 placeholder:text-gray-400 focus:w-48 focus:bg-white focus:ring-2 focus:ring-brand-500 sm:w-40"
+        className="w-32 rounded-[6px] border-0 bg-[#141414] px-3 py-1.5 text-sm text-[#ffffff] placeholder:text-[#ffffff] focus:w-48 focus:bg-white focus:ring-2 focus:ring-brand-500 sm:w-40"
       />
     </form>
   );

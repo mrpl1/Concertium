@@ -1,16 +1,15 @@
 // Concertium — data model
-// Provider is MySQL (works on Hostinger and most hosts). For local development
-// run a MySQL instance (see docker-compose.yml) and point DATABASE_URL at it.
-// Long free-text fields use @db.Text so they aren't capped at MySQL's default
-// varchar(191).
+// Provider is SQLite, served by Cloudflare D1 in production via the
+// @prisma/adapter-d1 driver adapter (see src/lib/db.ts). Migrations are
+// generated with `prisma migrate diff` and applied with `wrangler d1
+// migrations apply` — D1 doesn't support `prisma db push`/`migrate dev`.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
 }
 
 // A tenant. Every user belongs to exactly one workspace, and all clients,
@@ -21,7 +20,7 @@ model Workspace {
   name                String
   slug                String   @unique
   // Per-workspace Slack Incoming Webhook URL for the daily alert digest.
-  slackWebhookUrl     String?  @db.Text
+  slackWebhookUrl     String?
   weeklyReportEnabled Boolean  @default(false)
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
@@ -76,7 +75,7 @@ model Client {
   company   String?
   email     String?
   phone     String?
-  notes     String?  @db.Text
+  notes     String?
   // When true, the scheduled job emails this client a status report on the
   // configured weekly day (requires SMTP + the client's email).
   weeklyReport     Boolean   @default(false)
@@ -95,7 +94,7 @@ model Client {
 model Project {
   id          String    @id @default(cuid())
   name        String
-  description String?   @db.Text
+  description String? 
   // status: "Not Started" | "On Track" | "At Risk" | "Off Track" | "On Hold" | "Completed"
   status      String    @default("Not Started")
   // priority: "Low" | "Medium" | "High"
@@ -132,7 +131,7 @@ model Project {
 model ProjectLink {
   id        String   @id @default(cuid())
   label     String
-  url       String   @db.Text
+  url       String 
   createdAt DateTime @default(now())
 
   projectId String
@@ -143,7 +142,7 @@ model ProjectLink {
 model TimeEntry {
   id        String   @id @default(cuid())
   hours     Float
-  note      String?  @db.Text
+  note      String?
   date      DateTime @default(now())
   createdAt DateTime @default(now())
 
@@ -168,7 +167,7 @@ model Tag {
 model Deliverable {
   id          String    @id @default(cuid())
   name        String
-  description String?   @db.Text
+  description String? 
   // status: "Pending" | "In Progress" | "In Review" | "Approved" | "Blocked"
   status      String    @default("Pending")
   dueDate     DateTime?
@@ -193,7 +192,7 @@ model DeadlineChange {
   id        String   @id @default(cuid())
   oldDate   DateTime?
   newDate   DateTime?
-  reason    String?  @db.Text
+  reason    String?
   createdAt DateTime @default(now())
 
   projectId String
@@ -208,7 +207,7 @@ model DeadlineChange {
 
 model StatusUpdate {
   id        String   @id @default(cuid())
-  body      String   @db.Text
+  body      String 
   status    String? // status snapshot at time of update
   createdAt DateTime @default(now())
 
